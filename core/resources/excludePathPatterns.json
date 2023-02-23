@@ -1,0 +1,12 @@
+{
+	"excludePathPatterns" : [
+		"/favicon.ico",
+		"/highcharts**",
+		"/highcharts/**",
+		"/highcharts-gantt**",
+		"/highcharts-gantt/**",
+		"/helloApi**",
+		"/helloApi/**",
+		"/user/gradeList"
+	]
+}
