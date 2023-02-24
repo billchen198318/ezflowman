@@ -1,0 +1,27 @@
+<sign_form>
+<comanyRadio id="comanyRadio" dataType="java.lang.String"></comanyRadio>
+<rec_empId id="rec_empId" dataType="java.lang.String" label="" hidden=""> </rec_empId>
+<form_date id="form_date" dataType="java.util.Date">2023/02/24</form_date>
+<subject id="subject" dataType="java.lang.String" perDataProId=""> </subject>
+<memo id="memo" dataType="java.lang.String" perDataProId=""> </memo>
+<txtU1 id="txtU1" dataType="java.lang.String" label="" hidden=""> </txtU1>
+<txtU2 id="txtU2" dataType="java.lang.String" label="" hidden=""> </txtU2>
+<txtU3 id="txtU3" dataType="java.lang.String" label="" hidden=""> </txtU3>
+<txtU4 id="txtU4" dataType="java.lang.String" label="" hidden=""> </txtU4>
+<txtU5 id="txtU5" dataType="java.lang.String" label="" hidden=""> </txtU5>
+<txtU6 id="txtU6" dataType="java.lang.String" label="" hidden=""> </txtU6>
+<txtU7 id="txtU7" dataType="java.lang.String" label="" hidden=""> </txtU7>
+<SerialNumber id="SerialNumber"></SerialNumber>
+<send_employeeId id="send_employeeId" dataType="java.lang.String" label="" hidden=""> </send_employeeId>
+<send_empDeptId id="send_empDeptId" dataType="java.lang.String" label="" hidden=""> </send_empDeptId>
+<asignGrid id="asignGrid">
+<records>
+<record id="">
+<item id="empId" dataType="java.lang.String" perDataProId=""> </item>
+<item id="empName" dataType="java.lang.String" perDataProId=""> </item>
+</record>
+</records>
+</asignGrid>
+<asignInp id="asignInp" dataType="java.lang.String" label="" hidden=""> </asignInp>
+<txtU99 id="txtU99" dataType="java.lang.String" perDataProId=""> </txtU99>
+</sign_form>

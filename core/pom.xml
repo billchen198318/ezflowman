@@ -191,7 +191,13 @@
 		    <scope>runtime</scope>
 		    <version>2.1.212</version>
 		</dependency>		
+
 		
+		<dependency>
+		    <groupId>org.json</groupId>
+		    <artifactId>json</artifactId>
+		    <version>20220924</version>
+		</dependency>		
 		
 	    <!-- CXF webservice -->
 	    <dependency>
