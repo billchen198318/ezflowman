@@ -54,7 +54,7 @@ public class EZFormSupportUtils implements java.io.Serializable {
         	}
         	Map<String, Object> fMap = (Map<String, Object>) fEntry.getValue();
         	if (MapUtils.isEmpty(fMap)) {
-        		throw new Exception("no form field content.");
+        		throw new Exception("form content no field.");
         	}     
         	ezform = new EzForm();
         	ezform.setFormId(formId);        	
@@ -98,7 +98,7 @@ public class EZFormSupportUtils implements java.io.Serializable {
         				if (l1Map.get("-id") != null && l1Map.get("-dataType") != null) {
         					String fieldId = StringUtils.defaultString((String)l1Map.get("-id"));
         					if (StringUtils.isBlank(fieldId)) {
-        						throw new Exception("form data error, field no id value.");
+        						throw new Exception("form content field no id value.");
         					}        					
         					EzFormField ff = new EzFormField();        					
         					ff.setId( fieldId );
