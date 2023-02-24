@@ -1,0 +1,140 @@
+--------------------------------------------
+## 一段 aimi150 拋送的log , 屬於 TT & EFGP 整合型
+## 不屬於開發需求, TT & EFGP 整合直接用其官方工具配置即可
+## 如特殊需要, 客製化開發 (如時碩 PDM -> 中介(寫入imaa_file,並將該料號改為送簽) -> 中介轉拋call EFGP轉拋料號申請流程, 參考專案 dataex  )
+--------------------------------------------
+2023-02-16T16:18:00.580+0800 [] WARN 拋轉EFGP easyFlowGPGateWay 送出xml內容: 
+<Request>
+    <RequestMethod>CreateForm</RequestMethod>
+    <LogOnInfo>
+        <SenderIP>192.168.36.51</SenderIP>
+        <ReceiverIP>192.168.36.80</ReceiverIP>
+        <EFSiteName>NaNaWeb</EFSiteName>
+        <EFLogonID>T1945</EFLogonID>
+        <OrgUnitID>1311005-A</OrgUnitID>
+        <TPServerIP>192.168.36.76</TPServerIP>
+        <TPServerEnv>topprod</TPServerEnv>
+    </LogOnInfo>
+    <RequestContent>
+        <Form>
+            <Language>Big5</Language>
+            <PlantID>GTAM</PlantID>
+            <ProgramID>aimi150</ProgramID>
+            <SourceFormID>AIZ1</SourceFormID>
+            <SourceFormNum>AIZ1-23020246</SourceFormNum>
+            <FormCreatorID>T1945</FormCreatorID>
+            <FormOwnerID>T1945</FormOwnerID>
+            <ContentText>
+                <title>PDM料號: GTAM 料件申請維護作業 - </title>
+                <head>
+                    <imaa00 type="0">I:新增</imaa00>
+                    <imaano type="0">AIZ1-23020246</imaano>
+                    <imaa01 type="0">P1-3139687-AA0</imaa01>
+                    <imaa02 type="0">STEEL SPACER</imaa02>
+                    <imaa021 type="0">3139687-AA REV. AA0</imaa021>
+                    <imaa06 type="0">006</imaa06>
+                    <imaa08 type="0">M:自製料件</imaa08>
+                    <imaa13 type="0"> </imaa13>
+                    <imaa25 type="0">PCE</imaa25>
+                    <imaauser type="0">T1945</imaauser>
+                    <imaagrup type="0">1311005-A</imaagrup>
+                    <imaa130 type="0"></imaa130>
+                    <imaa31 type="0"></imaa31>
+                    <imaa44 type="0"></imaa44>
+                    <imaa55 type="0"></imaa55>
+                    <imaa63 type="0"></imaa63>
+                    <imaa03 type="0"> </imaa03>
+                    <imaa915 type="0">0:不管制</imaa915>
+                    <imaa23 type="0"> </imaa23>
+                    <gen02 type="0"></gen02>
+                    <imaa35 type="0"> </imaa35>
+                    <imaa36 type="0"> </imaa36>
+                    <imaa37 type="0"> </imaa37>
+                    <imaa28 type="1">0</imaa28>
+                    <imaa51 type="1">0</imaa51>
+                    <imaa70 type="0">N</imaa70>
+                    <imaa07 type="0">A:A</imaa07>
+                    <imaa09 type="0">3</imaa09>
+                    <imaa10 type="0">1311100</imaa10>
+                    <imaa11 type="0"></imaa11>
+                    <imaa27 type="1">0</imaa27>
+                    <imaa271 type="1">0</imaa271>
+                    <imaa71 type="1">0</imaa71>
+                    <imaa911 type="0">N</imaa911>
+                    <imaa24 type="0">Y</imaa24>
+                    <imaa903 type="0">N</imaa903>
+                    <imaa109 type="0"> </imaa109>
+                    <imaa12 type="0"> </imaa12>
+                    <imaa39 type="0"> </imaa39>
+                    <imaa1001 type="0"></imaa1001>
+                    <imaa1002 type="0"></imaa1002>
+                    <imaa1014 type="0"></imaa1014>
+                    <imaa1015 type="0"></imaa1015>
+                    <imaa1016 type="0"></imaa1016>
+                    <imaa105 type="0">N</imaa105>
+                    <imaa107 type="0">N</imaa107>
+                    <imaa147 type="0">N</imaa147>
+                    <imaa14 type="0">N</imaa14>
+                    <imaa15 type="0">N</imaa15>
+                    <imaa905 type="0">N</imaa905>
+                    <imaa391 type="0"></imaa391>
+                    <imaa918 type="0"></imaa918>
+                    <imaa919 type="0"></imaa919>
+                    <imaa920 type="0"></imaa920>
+                    <imaa921 type="0">N</imaa921>
+                    <imaa922 type="0"></imaa922>
+                    <imaa923 type="0"></imaa923>
+                    <imaa924 type="0">N</imaa924>
+                    <imaa925 type="0"></imaa925>
+                    <imaa131 type="0"></imaa131>
+                    <imaa34 type="0"></imaa34>
+                    <imaaud02 type="0">GTAB</imaaud02>
+                </head>
+                <body></body>
+                <memo></memo>
+            </ContentText>
+        </Form>
+    </RequestContent>
+</Request>
+
+2023-02-16T16:18:02.103+0800 [] WARN 拋轉EFGP easyFlowGPGateWay 回覆xml內容: <Response>
+    <ResponseType>CreateForm</ResponseType>
+    <ResponseInfo>
+        <SenderIP>192.168.36.80</SenderIP>
+        <ReceiverIP>192.168.36.51</ReceiverIP>
+    </ResponseInfo>
+    <ResponseContent>
+        <ReturnInfo>
+            <ReturnStatus>Y</ReturnStatus>
+            <ReturnDescribe>NO ERROR</ReturnDescribe>
+        </ReturnInfo>
+        <ContentText>
+            <Form>
+                <StatSlip/>
+                <PlantID>GTAM</PlantID>
+                <ProgramID>aimi150</ProgramID>
+                <SourceFormID>AIZ1</SourceFormID>
+                <SourceFormNum>AIZ1-23020246</SourceFormNum>
+                <Date>23/02/16</Date>
+                <Time>16:17:15</Time>
+                <Status>1</Status>
+                <FormCreatorID>T1945</FormCreatorID>
+                <FormOwnerID>T1945</FormOwnerID>
+                <TargetFormID/>
+                <TargetSheetNo>7693b390efd11004814a1bf89323dac1</TargetSheetNo>
+                <ProcessSNo>TIPTOPPROCESSPKG_aimi15000034719</ProcessSNo>
+                <Description>TIPTOP Plant ID:GTAM PDM料號: GTAM 料件申請維護作業 -  AIZ1-23020246</Description>
+                <ActionStatus>Y</ActionStatus>
+                <ActionDescribe>Success</ActionDescribe>
+                <TPServerIP>192.168.36.76</TPServerIP>
+                <TPServerEnv>topprod</TPServerEnv>
+                <SourceFormKey3/>
+                <SourceFormKey4/>
+                <SourceFormKey5/>
+            </Form>
+        </ContentText>
+    </ResponseContent>
+</Response>
+
+
+
