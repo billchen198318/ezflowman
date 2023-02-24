@@ -1,3 +1,3 @@
 {
-	"initScript"	:	"ezflowman_h2.sql"
+	"initScript"	:	"ezflowman.sql"
 }
