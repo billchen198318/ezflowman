@@ -1,0 +1,13 @@
+<Car_form>
+	<formId id="formId" dataType="java.lang.String" perDataProId=""> </formId>
+	<applyDate id="applyDate" dataType="java.lang.String" perDataProId=""> </applyDate>
+	<departmentName id="departmentName" dataType="java.lang.String" perDataProId=""> </departmentName>
+	<employeeName id="employeeName" dataType="java.lang.String" perDataProId=""> </employeeName>
+	<memo id="memo" dataType="java.lang.String" perDataProId=""> </memo>
+	<employeeId id="employeeId" dataType="java.lang.String" perDataProId=""> </employeeId>
+	<carNumber id="carNumber" dataType="java.lang.String" perDataProId=""> </carNumber>
+	<carEmployeeId id="carEmployeeId" dataType="java.lang.String" perDataProId=""> </carEmployeeId>
+	<carEmployeeName id="carEmployeeName" dataType="java.lang.String" perDataProId=""> </carEmployeeName>
+	<managerUserId id="managerUserId" dataType="java.lang.String" perDataProId=""> </managerUserId>
+	<noticeUsers id="noticeUsers" dataType="java.lang.String" perDataProId=""> </noticeUsers>
+</Car_form>
