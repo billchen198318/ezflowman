@@ -199,6 +199,13 @@
 		    <version>20220924</version>
 		</dependency>		
 		
+		<dependency>
+		    <groupId>com.github.javadev</groupId>
+		    <artifactId>underscore</artifactId>
+		    <version>1.86</version>
+		</dependency>
+				
+		
 	    <!-- CXF webservice -->
 	    <dependency>
 	        <groupId>org.apache.cxf</groupId>
