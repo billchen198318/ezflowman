@@ -15,7 +15,8 @@ public class TestXmlToJson {
 		//String testXml = "aimi150.xml";
 		//String testXml = "apmt540.xml";
 		//String testXml = "sign_form.xml";
-		String testXml = "Car_form.xml";
+		//String testXml = "Car_form.xml";
+		String testXml = "Car_form-TEST.xml";
 		
 		String formXmlContent = FileUtils.readFileToString(new File("/home/git5/ezflowman/doc/"+testXml), "utf-8");		
         
