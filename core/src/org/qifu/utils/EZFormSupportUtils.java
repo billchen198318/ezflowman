@@ -21,6 +21,7 @@
  */
 package org.qifu.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.qifu.base.message.BaseSystemMessage;
 import org.qifu.vo.EzForm;
 import org.qifu.vo.EzFormField;
 import org.qifu.vo.EzFormRecord;
@@ -126,5 +128,87 @@ public class EZFormSupportUtils implements java.io.Serializable {
         }				
 		return ezform;
 	}
-
+	
+	public static Map<String, Object> loadFromObject(EzForm formObj) throws Exception {
+		if (null == formObj) {
+			throw new Exception(BaseSystemMessage.objectNull());
+		}
+		if (CollectionUtils.isEmpty(formObj.getFields())) {
+			throw new Exception("no field list value.");
+		}
+		if (StringUtils.isBlank(formObj.getFormId())) {
+			throw new Exception("parameter object no form id.");
+		}
+		
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("#omit-xml-declaration", "yes");		
+		Map<String, Object> formMap = new HashMap<String, Object>();
+		dataMap.put(formObj.getFormId(), formMap);		
+		for (EzFormField field : formObj.getFields()) {
+			if (StringUtils.isBlank(field.getId())) {
+				throw new Exception("form field no id.");
+			}
+			Map<String, Object> fieldMap = new HashMap<String, Object>();
+			formMap.put(field.getId(), fieldMap);
+			fieldMap.put(_attribute_id, field.getId());
+			if (!StringUtils.isBlank(field.getDataType())) {
+				fieldMap.put(_attribute_dataType, field.getDataType());
+			}			
+			if (!StringUtils.isBlank(field.getPerDataProId())) {
+				fieldMap.put(_attribute_perDataProId, field.getPerDataProId());
+			}			
+			if (!StringUtils.isBlank(field.getText())) {
+				fieldMap.put(_attribute_text, field.getText());
+			}
+		}
+		for (int r = 0; formObj.getRecords() != null && r < formObj.getRecords().size(); r++) {			
+			EzFormRecord record = formObj.getRecords().get(r);
+			if ( StringUtils.isBlank(record.getGridId()) ) {
+				throw new Exception("form grid no id.");
+			}
+			if (CollectionUtils.isEmpty(record.getItems())) {
+				throw new Exception("form grid-" + record.getGridId() + " no item list.");
+			}
+			Map<String, Object> gridMap = new HashMap<String, Object>();
+			gridMap.put(_attribute_id, record.getGridId());
+			formMap.put(record.getGridId(), gridMap);
+			Map<String, Object> recordsMap = new HashMap<String, Object>();
+			gridMap.put(_element_records, recordsMap);
+			Map<String, Object> recordMap = new HashMap<String, Object>();
+			recordsMap.put(_element_record, recordMap);
+			recordMap.put(_attribute_id, StringUtils.defaultString(record.getRecordId()));
+			List< Map<String, Object> > itemList = new ArrayList< Map<String, Object> >();
+			recordMap.put(_element_item, itemList);
+			for (int i = 0; i < record.getItems().size(); i++) {
+				EzFormRecordItem itemObj = record.getItems().get(i);
+				if (StringUtils.isBlank(itemObj.getId())) {
+					throw new Exception("form grid-" + record.getGridId() + " , item index " + i + " no id.");
+				}				
+				Map<String, Object> itemMap = new HashMap<String, Object>();
+				itemMap.put(_attribute_id, itemObj.getId());
+				if (!StringUtils.isBlank(itemObj.getDataType())) {
+					itemMap.put(_attribute_dataType, itemObj.getDataType());
+				}				
+				if (!StringUtils.isBlank(itemObj.getPerDataProId())) {
+					itemMap.put(_attribute_perDataProId, itemObj.getPerDataProId());
+				}
+				if (!StringUtils.isBlank(itemObj.getText())) {
+					itemMap.put(_attribute_text, itemObj.getText());
+				}
+				itemList.add(itemMap);
+			}
+		}
+		return dataMap;
+	}
+	
+	public static String loadJsonFromObject(EzForm formObj) throws Exception {
+		Map<String, Object> dataMap = loadFromObject(formObj);		
+		return new ObjectMapper().writeValueAsString(dataMap);
+	}
+	
+	public static String loadXmlFromObject(EzForm formObj) throws Exception {
+		String jsonStr = loadJsonFromObject(formObj);
+		return U.jsonToXml( jsonStr );
+	}	
+	
 }

@@ -1,6 +1,7 @@
 package org.qifu.test;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.qifu.utils.EZFormSupportUtils;
@@ -20,6 +21,18 @@ public class TestXmlToJson2 {
 		EzForm formObj = EZFormSupportUtils.loadFromXml(formXmlContent);
 		
 		System.out.println( formObj.toString() );
+		
+		System.out.println( "-------------------------------------------------------------------------------------" );
+		
+		//Map<String, Object> formMap = EZFormSupportUtils.loadFromObject(formObj);
+		//System.out.println( formMap.toString() );
+		
+		System.out.println( "re-convert to json>>" );
+		System.out.println( EZFormSupportUtils.loadJsonFromObject(formObj) );
+		
+		System.out.println( "re-convert to xml>>" );
+		System.out.println( EZFormSupportUtils.loadXmlFromObject(formObj) );
+		
 	}
 	
 }
