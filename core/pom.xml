@@ -70,14 +70,6 @@
         	<optional>true</optional>
         </dependency>		
 		
-		<!-- 2021-06-21 remove -->
-		<!--
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-cache</artifactId>
-		</dependency>         
-		-->		
-		
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-mail</artifactId>
@@ -102,15 +94,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-messaging</artifactId>
         </dependency>	    	    
-        
-        <!-- 2021-06-21 remove -->
-        <!-- 
-		<dependency>
-		  <groupId>org.springframework.security</groupId>
-		  <artifactId>spring-security-jwt</artifactId>
-		  <version>1.0.10.RELEASE</version>
-		</dependency>        
-		-->
 		
 		<dependency>
 		    <groupId>org.springframework.security.oauth</groupId>
@@ -159,35 +142,6 @@
 		    <artifactId>commons-validator</artifactId>
 		    <version>1.7</version>
 		</dependency>	
-				
-		<!-- 2021-06-21 remove -->
-		<!--
-		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger2</artifactId>
-		    <version>2.9.2</version>
-		</dependency>
-		<dependency>
-		    <groupId>io.springfox</groupId>
-		    <artifactId>springfox-swagger-ui</artifactId>
-		    <version>2.9.2</version>
-		</dependency>
-		-->
-		
-		<!-- 2021-06-21 remove -->
-		<!-- 
-		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports</artifactId>
-		    <version>6.17.0</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>net.sf.jasperreports</groupId>
-		    <artifactId>jasperreports-fonts</artifactId>
-		    <version>6.17.0</version>
-		</dependency>
-		-->
 		
 		<dependency>
 		    <groupId>org.codehaus.groovy</groupId>
@@ -201,65 +155,17 @@
 		    <version>3.2.21</version>
 		</dependency>	
 		
-		<!-- 2021-06-21 remove -->
-		<!-- 
-		<dependency>
-		    <groupId>com.auth0</groupId>
-		    <artifactId>java-jwt</artifactId>
-		    <version>3.8.2</version>
-		</dependency>
-		-->
-		
-		<!-- 2021-06-21 remove -->
-		<!-- 		
-        <dependency>
-            <groupId>org.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>3.6.3</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.cache</groupId>
-            <artifactId>cache-api</artifactId>
-            <version>1.1.1</version>
-        </dependency>			
-		-->
-        
 		<dependency>
 		    <groupId>joda-time</groupId>
 		    <artifactId>joda-time</artifactId>
 		    <version>2.10.5</version>
 		</dependency>		
 		
-		<!-- 2021-06-21 remove -->
-		<!-- 
-		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi</artifactId>
-		    <version>3.17</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>3.17</version>
-		</dependency>	
-		-->
-		
 		<dependency>
 		    <groupId>com.fasterxml.uuid</groupId>
 		    <artifactId>java-uuid-generator</artifactId>
 		    <version>4.0.1</version>
 		</dependency>
-		
-		<!-- 2021-06-21 remove -->
-		<!-- 
-		<dependency>
-		    <groupId>commons-net</groupId>
-		    <artifactId>commons-net</artifactId>
-		    <version>3.6</version>
-		</dependency>
-		-->
 		
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
@@ -273,65 +179,11 @@
 		    <version>2.17.1</version>
 		</dependency>		
 		
-		<!-- 2021-06-21 remove -->
-		<!-- 
-		<dependency>
-		    <groupId>com.jcraft</groupId>
-		    <artifactId>jsch</artifactId>
-		    <version>0.1.55</version>
-		</dependency>		
-		-->
-		
-		<!-- 2021-06-21 remove -->
-		<!--  
-		<dependency>
-		    <groupId>net.lingala.zip4j</groupId>
-		    <artifactId>zip4j</artifactId>
-		    <version>2.6.2</version>
-		</dependency>			      
-		-->		        
-		
-		<!-- 2021-06-21 remove -->
-		<!--
-		<dependency>
-		    <groupId>javax.xml.bind</groupId>
-		    <artifactId>jaxb-api</artifactId>
-		    <version>2.3.1</version>
-		</dependency>		
-		-->				
-		
-<!-- 		<dependency> -->
-<!-- 		    <groupId>com.oracle</groupId> -->
-<!-- 		    <artifactId>ojdbc7</artifactId> -->
-<!-- 		    <scope>system</scope> -->
-<!-- 		    <version>12.0.1</version> -->
-<!-- 		    <systemPath>${workspaceDir}/thirdpartylib/ojdbc7.jar</systemPath> -->
-<!-- 		</dependency>		 -->
-		
-<!-- 		<dependency> -->
-<!-- 		    <groupId>org.orchis</groupId> -->
-<!-- 		    <artifactId>font</artifactId> -->
-<!-- 		    <scope>system</scope> -->
-<!-- 		    <version>0.0.1</version> -->
-<!-- 		    <systemPath>${workspaceDir}/thirdpartylib/DFKai-SB.jar</systemPath> -->
-<!-- 		</dependency>					 -->
-        
-        <!-- Maybe can change to mariadb and mariadb-JDBC-driver is good for than MySQL. -->
-        <!--  
-		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>8.0.21</version>
-		</dependency>  
-		-->
-		
-		<!--  
 		<dependency>
 		    <groupId>org.mariadb.jdbc</groupId>
 		    <artifactId>mariadb-java-client</artifactId>
-		    <version>2.4.3</version>
+		    <version>3.1.2</version>
 		</dependency>
-		-->	
 		
 		<dependency>
 		    <groupId>com.h2database</groupId>
