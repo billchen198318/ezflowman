@@ -192,6 +192,20 @@
 		    <version>2.1.212</version>
 		</dependency>		
 		
+		
+	    <!-- CXF webservice -->
+	    <dependency>
+	        <groupId>org.apache.cxf</groupId>
+	        <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+	        <version>3.4.3</version>
+	    </dependency>	
+		<dependency>
+		    <groupId>org.apache.cxf</groupId>
+		    <artifactId>cxf-rt-features-logging</artifactId>
+		    <version>3.4.3</version>
+		</dependency>				
+		
+		
 		<dependency>
 		    <groupId>org.qifu</groupId>
 		    <artifactId>core-lib</artifactId>
@@ -215,7 +229,49 @@
 		    <version>0.0.1-SNAPSHOT</version>
 		    <systemPath>${workspaceDir}/thirdpartylib/core-standard-0.0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
-						        
+		
+		
+		<!-- ###################################################################################### -->
+		<!-- for old ver WSDL, EFGP webserver ver very old, apache CXF no support -->
+		<!-- ###################################################################################### -->
+		<dependency>
+    		<groupId>axis</groupId>
+    		<artifactId>axis</artifactId>
+    		<scope>system</scope>
+    		<version>1.4</version>
+		    <systemPath>${workspaceDir}/thirdpartylib/axis.jar</systemPath>
+		</dependency>	
+		<dependency>
+    		<groupId>axis-ant</groupId>
+    		<artifactId>axis-ant</artifactId>
+    		<scope>system</scope>
+    		<version>1.4</version>
+		    <systemPath>${workspaceDir}/thirdpartylib/axis-ant.jar</systemPath>
+		</dependency>	
+		<dependency>
+    		<groupId>commons-discovery</groupId>
+    		<artifactId>commons-discovery-0.2</artifactId>
+    		<scope>system</scope>
+    		<version>0.2</version>
+		    <systemPath>${workspaceDir}/thirdpartylib/commons-discovery-0.2.jar</systemPath>
+		</dependency>
+		<dependency>
+    		<groupId>jaxrpc</groupId>
+    		<artifactId>jaxrpc</artifactId>
+    		<scope>system</scope>
+    		<version>0.2</version>
+		    <systemPath>${workspaceDir}/thirdpartylib/jaxrpc_special.jar</systemPath>
+		</dependency>
+		<dependency>
+    		<groupId>saaj</groupId>
+    		<artifactId>saaj</artifactId>
+    		<scope>system</scope>
+    		<version>0.2</version>
+		    <systemPath>${workspaceDir}/thirdpartylib/saaj.jar</systemPath>
+		</dependency>
+		<!-- ###################################################################################### -->		
+		
+		   
   </dependencies>
   
   	<build>
