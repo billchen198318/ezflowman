@@ -12,7 +12,8 @@ const PageEventHandling = {
 	methods: {
 		initData		:	_initData,
 		clearPage		:	_clearPage,
-		queryDataList	:	_queryDataList
+		queryDataList	:	_queryDataList,
+		addDsItem		:	_addDsItem
 	},
 	mounted() {
 		this.initData();
@@ -32,6 +33,10 @@ function _clearPage() {
 
 function _queryDataList() {
 	alert('test...');
+}
+
+function _addDsItem() {
+	alert('456...');
 }
 
 function appUnmount() {

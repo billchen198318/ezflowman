@@ -54,7 +54,10 @@ $( document ).ready(function() {
 			
 			<div class="row">
 				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
-					<span class="btn badge btn-info" v-on:click="queryDataList"><h6><i class="icon fa fa-search"></i>&nbsp;查詢</h6></span>	
+					<button type="button" class="btn btn-primary" v-on:click="queryDataList"><i class="icon fa fa-search"></i>&nbsp;查詢</button>	
+					&nbsp;&nbsp;
+					<button type="button" class="btn btn-info" v-on:click="addDsItem"><i class="icon fa fa-plus"></i>&nbsp;新增</button>
+					
 				</div>
 			</div>			
 		</div>
