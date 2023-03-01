@@ -16,6 +16,135 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `ezf_ds`
+--
+
+DROP TABLE IF EXISTS `ezf_ds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ezf_ds` (
+  `OID` char(36) NOT NULL,
+  `DS_ID` varchar(25) NOT NULL,
+  `DS_NAME` varchar(100) NOT NULL,
+  `DRIVER_TYPE` varchar(1) NOT NULL,
+  `DB_ADDR` varchar(100) NOT NULL,
+  `DB_USER` varchar(30) NOT NULL,
+  `DB_PASSWD` varchar(50) NOT NULL,
+  `CUSERID` varchar(24) NOT NULL,
+  `CDATE` datetime NOT NULL,
+  `UUSERID` varchar(24) DEFAULT NULL,
+  `UDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`OID`),
+  UNIQUE KEY `DS_ID` (`DS_ID`),
+  KEY `DS_NAME` (`DS_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ezf_ds`
+--
+
+LOCK TABLES `ezf_ds` WRITE;
+/*!40000 ALTER TABLE `ezf_ds` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ezf_ds` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ezf_map`
+--
+
+DROP TABLE IF EXISTS `ezf_map`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ezf_map` (
+  `OID` char(36) NOT NULL,
+  `CNF_ID` varchar(25) NOT NULL,
+  `CNF_NAME` varchar(100) NOT NULL,
+  `DS_ID` varchar(25) NOT NULL,
+  `MAIN_TBL` varchar(20) NOT NULL,
+  `CUSERID` varchar(24) NOT NULL,
+  `CDATE` datetime NOT NULL,
+  `UUSERID` varchar(24) DEFAULT NULL,
+  `UDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`OID`),
+  UNIQUE KEY `CNF_ID` (`CNF_ID`),
+  KEY `CNF_NAME` (`CNF_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ezf_map`
+--
+
+LOCK TABLES `ezf_map` WRITE;
+/*!40000 ALTER TABLE `ezf_map` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ezf_map` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ezf_map_field`
+--
+
+DROP TABLE IF EXISTS `ezf_map_field`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ezf_map_field` (
+  `OID` char(36) NOT NULL,
+  `CNF_ID` varchar(25) NOT NULL,
+  `GRID_ID` varchar(25) NOT NULL DEFAULT 'N',
+  `FORM_FIELD` varchar(50) NOT NULL,
+  `TBL_FIELD` varchar(50) NOT NULL,
+  `CUSERID` varchar(24) NOT NULL,
+  `CDATE` datetime NOT NULL,
+  `UUSERID` varchar(24) DEFAULT NULL,
+  `UDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`OID`),
+  KEY `CNF_ID` (`CNF_ID`),
+  KEY `GRID_ID` (`GRID_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ezf_map_field`
+--
+
+LOCK TABLES `ezf_map_field` WRITE;
+/*!40000 ALTER TABLE `ezf_map_field` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ezf_map_field` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ezf_map_grd`
+--
+
+DROP TABLE IF EXISTS `ezf_map_grd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ezf_map_grd` (
+  `OID` char(36) NOT NULL,
+  `CNF_ID` varchar(25) NOT NULL,
+  `GRID_ID` varchar(25) NOT NULL,
+  `RECORD_ID` varchar(25) NOT NULL DEFAULT ' ',
+  `DTL_TBL` varchar(50) NOT NULL,
+  `CUSERID` varchar(24) NOT NULL,
+  `CDATE` datetime NOT NULL,
+  `UUSERID` varchar(24) DEFAULT NULL,
+  `UDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`OID`),
+  UNIQUE KEY `UK_1` (`CNF_ID`,`GRID_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ezf_map_grd`
+--
+
+LOCK TABLES `ezf_map_grd` WRITE;
+/*!40000 ALTER TABLE `ezf_map_grd` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ezf_map_grd` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tb_account`
 --
 
@@ -873,4 +1002,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-01 10:22:17
+-- Dump completed on 2023-03-01 16:07:13
