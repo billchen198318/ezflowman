@@ -37,6 +37,32 @@ $( document ).ready(function() {
 	<div class="row">	
 		<div id="main-content" class="col-xs-12 col-md-12 col-lg-12">
 		
+	<div class="row">
+		<div class="col p-2 bg-secondary rounded">
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="employeeId">編號</label>
+					<input type="text" name="dsId" id="dsId" class="form-control" placeholder="請輸入編號" v-model="queryParam.dsId" @input="queryParam.dsId=$event.target.value.toUpperCase()" >					
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="employeeId">名稱</label>
+					<input type="text" name="dsName" id="dsName" class="form-control" placeholder="請輸入名稱" v-model="queryParam.dsName" >					
+				</div>				
+			</div>
+			
+			<p style="margin-bottom: 10px"></p>
+			
+			<div class="row">
+				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+					<span class="btn badge btn-info" v-on:click="queryDataList"><h6><i class="icon fa fa-search"></i>&nbsp;查詢</h6></span>	
+				</div>
+			</div>			
+		</div>
+	</div>
+	
+	<br>		
+		
+		
 		
 		
 		</div>

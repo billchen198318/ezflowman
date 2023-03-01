@@ -8,13 +8,19 @@ import org.qifu.base.exception.AuthorityException;
 import org.qifu.base.exception.ControllerException;
 import org.qifu.base.exception.ServiceException;
 import org.qifu.base.model.ControllerMethodAuthority;
+import org.qifu.core.entity.EzfDs;
+import org.qifu.core.service.IEzfDsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class EzDsConfigController extends BaseControllerSupport implements IPageNamespaceProvide {
-
+	
+	@Autowired
+	IEzfDsService<EzfDs, String> ezfDsService;
+	
 	@Override
 	public String viewPageNamespace() {
 		return "ezf_ds";
@@ -36,7 +42,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
 	@RequestMapping("/ezfDsConfigPage")
-	public String mainPage(ModelMap mm, HttpServletRequest request) {
+	public String createPage(ModelMap mm, HttpServletRequest request) {
 		String viewName = this.viewCreatePage();
 		this.getDefaultModelMap(mm, this.currentMethodAuthority());
 		try {
