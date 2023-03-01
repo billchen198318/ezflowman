@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.qifu.core.mapper.EzfDsMapper">
+
+  <resultMap id="BaseResultMap" type="org.qifu.core.entity.EzfDs">
+    <id column="OID" jdbcType="CHAR" property="oid" />
+    <result column="DS_ID" jdbcType="VARCHAR" property="dsId" />
+    <result column="DS_NAME" jdbcType="VARCHAR" property="dsName" />
+    <result column="DRIVER_TYPE" jdbcType="VARCHAR" property="driverType" />
+    <result column="DB_ADDR" jdbcType="VARCHAR" property="dbAddr" />
+    <result column="DB_USER" jdbcType="VARCHAR" property="dbUser" />
+    <result column="DB_PASSWD" jdbcType="VARCHAR" property="dbPasswd" />
+    <result column="CUSERID" jdbcType="VARCHAR" property="cuserid" />
+    <result column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
+    <result column="UUSERID" jdbcType="VARCHAR" property="uuserid" />
+    <result column="UDATE" jdbcType="TIMESTAMP" property="udate" />
+  </resultMap>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    where OID = #{oid,jdbcType=CHAR}
+  </select>  
+  
+  <select id="selectListByParams" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select *
+    from <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    WHERE 1=1
+	<if test="dsId != null and dsId != ''.toString() ">
+		AND DS_ID = #{dsId,jdbcType=VARCHAR}
+	</if>					
+	<if test="orderBy != null and orderBy != ''.toString() and sortType != null and sortType != ''.toString() ">
+		ORDER BY  ${orderBy} ${sortType}
+	</if>	
+  </select>    
+  
+  <select id="findPage" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  	<include refid="org.qifu.core.mapper.DB1Config.sql1"/>
+  	
+    select *
+    from <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    WHERE 1=1
+	<if test="dsId != null and dsId != ''.toString() ">
+		AND DS_ID = #{dsId,jdbcType=VARCHAR}
+	</if>
+			
+	<include refid="org.qifu.core.mapper.DB1Config.sql2"/>
+  </select>  
+  
+  <select id="count" parameterType="java.util.HashMap" resultType="java.lang.Long">
+    select count(*) from <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    WHERE 1=1
+	<if test="dsId != null and dsId != ''.toString() ">
+		AND DS_ID = #{dsId,jdbcType=VARCHAR}
+	</if>				
+  </select>  
+  
+  <insert id="insert" parameterType="org.qifu.core.entity.EzfDs"> 
+    insert into <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="oid != null">
+        OID,
+      </if>
+      <if test="dsId != null">
+        DS_ID,
+      </if>
+      <if test="dsName != null">
+        DS_NAME,
+      </if>
+      <if test="driverType != null">
+        DRIVER_TYPE,
+      </if>
+      <if test="dbAddr != null">
+        DB_ADDR,
+      </if>
+      <if test="dbUser != null">
+        DB_USER,
+      </if>
+      <if test="dbPasswd != null">
+        DB_PASSWD,
+      </if>
+      <if test="cuserid != null">
+        CUSERID,
+      </if>
+      <if test="cdate != null">
+        CDATE,
+      </if>
+      <if test="uuserid != null">
+        UUSERID,
+      </if>
+      <if test="udate != null">
+        UDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="oid != null">
+        #{oid,jdbcType=CHAR},
+      </if>
+      <if test="dsId != null">
+        #{dsId,jdbcType=VARCHAR},
+      </if>
+      <if test="dsName != null">
+        #{dsName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverType != null">
+        #{driverType,jdbcType=VARCHAR},
+      </if>
+      <if test="dbAddr != null">
+        #{dbAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="dbUser != null">
+        #{dbUser,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPasswd != null">
+        #{dbPasswd,jdbcType=VARCHAR},
+      </if>
+      <if test="cuserid != null">
+        #{cuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="cdate != null">
+        #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uuserid != null">
+        #{uuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="udate != null">
+        #{udate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>  
+  
+  <update id="update" parameterType="org.qifu.core.entity.EzfDs">
+    update <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    <set>
+      <if test="dsId != null">
+        DS_ID = #{dsId,jdbcType=VARCHAR},
+      </if>
+      <if test="dsName != null">
+        DS_NAME = #{dsName,jdbcType=VARCHAR},
+      </if>
+      <if test="driverType != null">
+        DRIVER_TYPE = #{driverType,jdbcType=VARCHAR},
+      </if>
+      <if test="dbAddr != null">
+        DB_ADDR = #{dbAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="dbUser != null">
+        DB_USER = #{dbUser,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPasswd != null">
+        DB_PASSWD = #{dbPasswd,jdbcType=VARCHAR},
+      </if>
+      <!--  
+      <if test="cuserid != null">
+        CUSERID = #{cuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="cdate != null">
+        CDATE = #{cdate,jdbcType=TIMESTAMP},
+      </if>
+      -->
+      <if test="uuserid != null">
+        UUSERID = #{uuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="udate != null">
+        UDATE = #{udate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where OID = #{oid,jdbcType=CHAR}
+  </update>  
+  
+  <delete id="delete" parameterType="org.qifu.core.entity.EzfDs">
+    delete from <include refid="org.qifu.core.mapper.DB1Config.schema"/>ezf_ds
+    where OID = #{oid,jdbcType=CHAR}
+  </delete>
+  
+</mapper>
