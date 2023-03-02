@@ -3,10 +3,21 @@ var _queryParam = {
 	dsName	:	''
 }
 
+var _inpParam = {
+	oid			:	'',
+	dsId		:	'',
+	dsName		:	'',
+	driverType	:	'1',
+	dbAddr		:	'',
+	dbUser		:	'',
+	dbPasswd	:	''
+}
+
 const PageEventHandling = {
 	data() {
 		return {
-			queryParam	:	_queryParam
+			queryParam	:	_queryParam,
+			inpParam	:	_inpParam
 		}
 	},
 	methods: {

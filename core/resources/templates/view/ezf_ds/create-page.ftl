@@ -79,31 +79,31 @@ $( document ).ready(function() {
         <form>
           <div class="form-group">
             <label for="inp_dsId" class="col-form-label">編號:</label>
-            <input type="text" class="form-control" id="inp_dsId">
+            <input type="text" class="form-control" id="inp_dsId" v-model="inpParam.dsId" @input="inpParam.dsId=$event.target.value.toUpperCase()" >
           </div>
           <div class="form-group">
             <label for="inp_dsName" class="col-form-label">名稱:</label>
-            <input type="text" class="form-control" id="inp_dsName">
+            <input type="text" class="form-control" id="inp_dsName" v-model="inpParam.dsName" >
           </div>                 
           <div class="form-group">
 		    <label for="inp_dsDriveType">Driver</label>
-		    <select class="form-control" id="inp_dsDriveType">
-		      <option>1 - mariadb</option>
-		      <option>2 - mssql</option>
-		      <option>3 - oracle</option>
+		    <select class="form-control" id="inp_dsDriveType" v-model="inpParam.driverType" >
+		      <option value="1">1 - mariadb</option>
+		      <option value="2">2 - mssql</option>
+		      <option value="3">3 - oracle</option>
 		    </select>
           </div>          
           <div class="form-group">
-            <label for="inp_dsUrl" class="col-form-label">JDBC Url:</label>
-            <input type="text" class="form-control" id="inp_dsUrl">
+            <label for="inp_dbAddr" class="col-form-label">JDBC Url:</label>
+            <input type="text" class="form-control" id="inp_dbAddr" v-model="inpParam.dbAddr" >
           </div> 
           <div class="form-group">
-            <label for="inp_user" class="col-form-label">帳戶:</label>
-            <input type="text" class="form-control" id="inp_user">
+            <label for="inp_dbUser" class="col-form-label">帳戶:</label>
+            <input type="text" class="form-control" id="inp_dbUser" v-model="inpParam.dbUser" >
           </div>
           <div class="form-group">
-            <label for="inp_passwd" class="col-form-label">密碼:</label>
-            <input type="text" class="form-control" id="inp_passwd">
+            <label for="inp_dbPasswd" class="col-form-label">密碼:</label>
+            <input type="text" class="form-control" id="inp_dbPasswd" v-model="inpParam.dbPasswd" >
           </div>                                                                                                  
         </form>        
       </div>
