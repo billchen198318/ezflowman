@@ -16,7 +16,7 @@
     <section class="login-content">
 
       <div class="logo">
-        <h1>ezflowman</h1>
+        <h1>EzFlowMan</h1>
       </div>
       <div class="login-box">
         <form class="login-form" method="post" action="/login">

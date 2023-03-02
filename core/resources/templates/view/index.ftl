@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta name="description" content="QiFu 3 is an JAVA base backend WEB system.">
-    <title>QiFu-3</title>
+    <title>EzFlowMan</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -53,7 +53,7 @@ ${menuResult.modalHtmlData}
   
   
     <!-- Navbar-->
-    <header class="app-header"><a class="app-header__logo" href="${qifu_basePath}index">ezflowman</a>
+    <header class="app-header"><a class="app-header__logo" href="${qifu_basePath}index">EzFlowMan</a>
       <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
       <!-- Navbar Right Menu-->
       <ul class="app-nav">
