@@ -143,6 +143,60 @@ function xhrSendParameter(xhrUrl, jsonParam, successFn, errorFn, selfPleaseWaitS
 	});
 }
 
+function xhrSendParameter2(xhrUrl, jsonParam, successFn, errorFn, selfPleaseWaitShow) {
+	if (null == selfPleaseWaitShow || _qifu_success_flag != selfPleaseWaitShow) {
+		parent.showPleaseWait();
+	} else {
+		showPleaseWait();
+	}
+	$.ajax({
+		type : _qifu_jqXhrType,
+		headers: { 
+			'Accept': 'application/json',
+			'Content-Type': 'application/json' 
+		},				
+	    url : xhrUrl,
+	    timeout: _qifu_jqXhrTimeout,
+	    dataType : 'json',
+	    data : jsonParam,
+	    cache: _qifu_jqXhrCache,
+	    async: _qifu_jqXhrAsync,
+	    success : function(data, textStatus) {
+	    	if (null == selfPleaseWaitShow || _qifu_success_flag != selfPleaseWaitShow) {
+	    		parent.hidePleaseWait();
+	    	} else {
+	    		hidePleaseWait();
+	    	}
+			if (data==null || (typeof data=='undefined') ) {
+				alert('Unexpected error!');
+				return;
+			}    			
+			if ( _qifu_success_flag != data.login ) {
+				alert("Please try login again!");
+				return;
+			}       
+			if ( _qifu_success_flag != data.isAuthorize ) {
+				alert("No permission!");
+				return;        				
+			}        						
+			if ( 'E' == data.success ) { // xhr load success, but has Exception or Error
+				parent.notifyError( data.message );
+				return;
+			}			
+			successFn(data, textStatus);
+	    },
+	    error : function(jqXHR, textStatus, errorThrown) {
+	    	alert(textStatus);
+	    	if (null == selfPleaseWaitShow || _qifu_success_flag != selfPleaseWaitShow) {
+	    		parent.hidePleaseWait();
+	    	} else {
+	    		hidePleaseWait();
+	    	}
+	        errorFn(jqXHR, textStatus, errorThrown);
+	    }
+	});
+}
+
 function xhrSendForm(xhrUrl, formId, successFn, errorFn, selfPleaseWaitShow) {
 	if (null == selfPleaseWaitShow || _qifu_success_flag != selfPleaseWaitShow) {
 		parent.showPleaseWait();
