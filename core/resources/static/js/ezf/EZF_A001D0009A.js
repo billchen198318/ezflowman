@@ -43,11 +43,36 @@ function _clearPage() {
 }
 
 function _queryDataList() {
-	alert('test...');
+	/*
+	this.applyDataList.splice(0);
+	xhrSendParameter2(
+		'./carApplyFormQueryJson', 
+		JSON.stringify(this.queryParam), 
+		this.setQueryDataList, 
+		this.clearPage,
+		_qifu_defaultSelfPleaseWaitShow
+	);	
+		
+	*/
 }
 
 function _addDsItem() {
-	alert('456...');
+	/*
+	var url = './carApplyFormSaveJson';
+	if ('' != this.applyData.oid) {
+		url = './carApplyFormUpdateJson';
+	}
+	
+	clearWarningMessageField(msgFields);
+	xhrSendParameter(
+		url, 
+		this.applyData, 
+		this.setSaveApplyFormInfo, 
+		this.clearPage,
+		_qifu_defaultSelfPleaseWaitShow
+	);			
+	*/
+	
 }
 
 function appUnmount() {
