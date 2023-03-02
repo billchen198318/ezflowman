@@ -56,7 +56,7 @@ $( document ).ready(function() {
 				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
 					<button type="button" class="btn btn-primary" v-on:click="queryDataList"><i class="icon fa fa-search"></i>&nbsp;查詢</button>	
 					&nbsp;&nbsp;
-					<button type="button" class="btn btn-info" v-on:click="addDsItem"><i class="icon fa fa-plus"></i>&nbsp;新增</button>
+					<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dsConfigModal" ><i class="icon fa fa-plus"></i>&nbsp;新增</button>
 					
 				</div>
 			</div>			
@@ -64,6 +64,57 @@ $( document ).ready(function() {
 	</div>
 	
 	<br>		
+	
+<!-- modal -->
+<div class="modal fade" id="dsConfigModal" tabindex="-1" aria-labelledby="dsConfigModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dsConfigModalLabel">新增資料來源</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="inp_dsId" class="col-form-label">編號:</label>
+            <input type="text" class="form-control" id="inp_dsId">
+          </div>
+          <div class="form-group">
+            <label for="inp_dsName" class="col-form-label">名稱:</label>
+            <input type="text" class="form-control" id="inp_dsName">
+          </div>                 
+          <div class="form-group">
+		    <label for="inp_dsDriveType">Driver</label>
+		    <select class="form-control" id="inp_dsDriveType">
+		      <option>1 - mariadb</option>
+		      <option>2 - mssql</option>
+		      <option>3 - oracle</option>
+		    </select>
+          </div>          
+          <div class="form-group">
+            <label for="inp_dsUrl" class="col-form-label">JDBC Url:</label>
+            <input type="text" class="form-control" id="inp_dsUrl">
+          </div> 
+          <div class="form-group">
+            <label for="inp_user" class="col-form-label">帳戶:</label>
+            <input type="text" class="form-control" id="inp_user">
+          </div>
+          <div class="form-group">
+            <label for="inp_passwd" class="col-form-label">密碼:</label>
+            <input type="text" class="form-control" id="inp_passwd">
+          </div>                                                                                                  
+        </form>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>		
+<!-- modal -->	
 		
 		
 		
