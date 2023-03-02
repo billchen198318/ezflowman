@@ -29,6 +29,13 @@
 	<if test="dsId != null and dsId != ''.toString() ">
 		AND DS_ID = #{dsId,jdbcType=VARCHAR}
 	</if>					
+	<if test="dsIdLike != null and dsIdLike != ''.toString() ">
+		AND DS_ID like #{dsIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="dsNameLike != null and dsNameLike != ''.toString() ">
+		AND DS_NAME like #{dsNameLike,jdbcType=VARCHAR}
+	</if>	
+	
 	<if test="orderBy != null and orderBy != ''.toString() and sortType != null and sortType != ''.toString() ">
 		ORDER BY  ${orderBy} ${sortType}
 	</if>	
@@ -43,7 +50,13 @@
 	<if test="dsId != null and dsId != ''.toString() ">
 		AND DS_ID = #{dsId,jdbcType=VARCHAR}
 	</if>
-			
+	<if test="dsIdLike != null and dsIdLike != ''.toString() ">
+		AND DS_ID like #{dsIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="dsNameLike != null and dsNameLike != ''.toString() ">
+		AND DS_NAME like #{dsNameLike,jdbcType=VARCHAR}
+	</if>	
+				
 	<include refid="org.qifu.core.mapper.DB1Config.sql2"/>
   </select>  
   
@@ -52,7 +65,13 @@
     WHERE 1=1
 	<if test="dsId != null and dsId != ''.toString() ">
 		AND DS_ID = #{dsId,jdbcType=VARCHAR}
-	</if>				
+	</if>			
+	<if test="dsIdLike != null and dsIdLike != ''.toString() ">
+		AND DS_ID like #{dsIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="dsNameLike != null and dsNameLike != ''.toString() ">
+		AND DS_NAME like #{dsNameLike,jdbcType=VARCHAR}
+	</if>			
   </select>  
   
   <insert id="insert" parameterType="org.qifu.core.entity.EzfDs"> 

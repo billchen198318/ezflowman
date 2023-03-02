@@ -1,21 +1,33 @@
 package org.qifu.core.controller;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.qifu.base.controller.BaseControllerSupport;
 import org.qifu.base.controller.IPageNamespaceProvide;
 import org.qifu.base.exception.AuthorityException;
 import org.qifu.base.exception.ControllerException;
 import org.qifu.base.exception.ServiceException;
-import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
+import org.qifu.base.model.DefaultResult;
+import org.qifu.base.model.QueryParamBuilder;
+import org.qifu.base.model.SearchBody;
+import org.qifu.base.model.SortType;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.service.IEzfDsService;
+import org.qifu.model.DsDriverType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -62,39 +74,29 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	}	
 	
 	private void checkForCreateOrUpdate(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, ServiceException, Exception {
-		CheckControllerFieldHandler<EzfDs> chk = this.getCheckControllerFieldHandler(result);
-		
-		/*
-		chk
-		.testField("applyDate", form, "@org.apache.commons.lang3.StringUtils@isBlank(applyDate)", "請輸入申請日期!")
-		.testField("employeeId", form, "@org.apache.commons.lang3.StringUtils@isBlank(employeeId)", "請輸入申請人工號!")
-		.testField("carNumber", form, "@org.apache.commons.lang3.StringUtils@isBlank(carNumber)", "請輸入車牌號碼!")
-		.testField("startDate", form, "@org.apache.commons.lang3.StringUtils@isBlank(startDate)", "請輸入使用起日!")
-		.testField("endDate", form, "@org.apache.commons.lang3.StringUtils@isBlank(endDate)", "請輸入使用迄日!")
-		.testField("useTime1hh", form, "@org.apache.commons.lang3.StringUtils@isBlank(useTime1hh)", "請輸入使用時間(起)小時!")
-		.testField("useTime2hh", form, "@org.apache.commons.lang3.StringUtils@isBlank(useTime2hh)", "請輸入使用時間(迄)小時!")
-		.testField("useTime1mm", form, "@org.apache.commons.lang3.StringUtils@isBlank(useTime1mm)", "請輸入使用時間(起)分鐘!")
-		.testField("useTime2mm", form, "@org.apache.commons.lang3.StringUtils@isBlank(useTime2mm)", "請輸入使用時間(迄)分鐘!")		
-		.testField("reason", form, "@org.apache.commons.lang3.StringUtils@isBlank(reason)", "請輸入申請原因!")
-		;
-		chk.throwMessage();
-		
-		form.setUseTime1( form.getUseTime1hh() + ":" + form.getUseTime1mm() );
-		form.setUseTime2( form.getUseTime2hh() + ":" + form.getUseTime2mm() );
-		
-		chk
-		.testField("employeeId", form, "@org.apache.commons.lang3.StringUtils@isBlank(departmentId)", "資料錯誤,無申請人無部門資料!") // 有 employeeId, 卻沒有departmentId有問題,因為資料會透過employeeId取出.
+		this.getCheckControllerFieldHandler(result)
+		.testField("inp_dsId", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsId)", "請輸入編號!")
+		.testField("inp_dsName", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsName)", "請輸入名稱!")
+		.testField("inp_driveType", ds, "@org.qifu.base.model.PleaseSelect@noSelect(driverType)", "請選擇Driver類別!")
+		.testField("inp_dbAddr", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbAddr)", "請輸入JDBC Url!")
+		.testField("inp_dbUser", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbUser)", "請輸入帳戶!")
+		.testField("inp_dbPasswd", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbPasswd)", "請輸入密碼!")
 		.throwMessage();
-		*/
-		
 	}	
 	
 	private void save(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
-		/*
 		this.checkForCreateOrUpdate(result, ds);
-		DefaultResult<EzfDs> sResult = this.formLogicService.save(ds);		
-		this.setDefaultResponseJsonResult(result, sResult);
-		*/
+		if (DsDriverType.mariaDB.equals(ds.getDriverType())) { // 3
+			Class.forName("org.mariadb.jdbc.Driver");
+		} else if (DsDriverType.msSqlServer.equals(ds.getDriverType())) { // 1
+			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		} else { // 2 oracle
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		}
+		try (Connection conn = DriverManager.getConnection(ds.getDbAddr(), ds.getDbUser(), ds.getDbPasswd())) {
+			DefaultResult<EzfDs> sResult = this.ezfDsService.insert(ds);
+			this.setDefaultResponseJsonResult(result, sResult);
+		}
 	}	
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
@@ -105,7 +107,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 			return result;
 		}
 		try {
-			//this.save(result, form);			
+			this.save(result, ds);			
 		} catch (AuthorityException | ServiceException | ControllerException e) {
 			this.baseExceptionResult(result, e);	
 		} catch (Exception e) {
@@ -114,5 +116,36 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		return result;		
 	}		
 	
+	private void queryList(DefaultControllerJsonResultObj<List<EzfDs>> result, Map<String, String> param) throws ControllerException, AuthorityException, ServiceException, Exception {
+		SearchBody sb = new SearchBody(param);
+		Map<String, Object> qParam = QueryParamBuilder.build(sb).endingLike("dsIdLike").fullLink("dsNameLike").value();
+		if (MapUtils.isEmpty(qParam)) {
+			qParam.putAll(param);
+		}
+		DefaultResult<List<EzfDs>> queryResult = this.ezfDsService.selectListByParams(qParam, "DS_ID", SortType.ASC);
+		this.setDefaultResponseJsonResult(result, queryResult);
+		result.setSuccess(YES);
+		result.setMessage("查詢完成");
+		if (CollectionUtils.isEmpty(result.getValue())) {
+			result.setMessage("無資料來源配置筆數");
+		}
+	}
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@RequestMapping(value = "/ezfDsConfigQueryJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<List<EzfDs>> doQueryJson(HttpServletRequest request, @RequestBody Map<String, String> param) {
+		DefaultControllerJsonResultObj<List<EzfDs>> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {			
+			this.queryList(result, param);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}		
 	
 }
