@@ -20,13 +20,13 @@
       </div>
       <div class="login-box">
         <form class="login-form" method="post" action="/login">
-          <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>SIGN IN</h3>
+          <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>登入系統</h3>
           <div class="form-group">
-            <label class="control-label">USERNAME</label>
+            <label class="control-label">帳戶</label>
             <input class="form-control" type="text" name="username" id="username" placeholder="Account" maxlength="24" autofocus>
           </div>
           <div class="form-group">
-            <label class="control-label">PASSWORD</label>
+            <label class="control-label">密碼</label>
             <input class="form-control" type="password" name="password" id="password" placeholder="Password" maxlength="16">
           </div>
           <!--  
@@ -44,7 +44,7 @@
           </div>
           -->
           <div class="form-group btn-container">
-            <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>SIGN IN</button>
+            <button class="btn btn-primary btn-block"><i class="fa fa-sign-in fa-lg fa-fw"></i>登入</button>
             <#if errMsg?has_content>
             <span class="badge badge-danger">${errMsg}</span>
             </#if>
