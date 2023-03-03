@@ -146,6 +146,25 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 			this.exceptionResult(result, e);
 		}
 		return result;		
-	}		
+	}
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@RequestMapping(value = "/ezfDsConfigLoadJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<EzfDs> doLoadJson(HttpServletRequest request, EzfDs ds) {
+		DefaultControllerJsonResultObj<EzfDs> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {			
+			DefaultResult<EzfDs> qResult = this.ezfDsService.selectByPrimaryKey(ds.getOid());
+			qResult.getValueEmptyThrowMessage();
+			this.setDefaultResponseJsonResult(result, qResult);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}	
 	
 }

@@ -20,7 +20,8 @@ const PageEventHandling = {
 		return {
 			queryParam	:	_queryParam,
 			inpParam	:	_inpParam,
-			dsList		:	_dsList
+			dsList		:	_dsList,
+			editMode	:	false
 		}
 	},
 	methods: {
@@ -31,7 +32,8 @@ const PageEventHandling = {
 		addDsItem			:	_addDsItem,
 		clearInputParam		:	_clearInputParam,
 		setSaveDsInfo		:	_setSaveDsInfo,
-		hideDsModal			:	_hideDsModal
+		hideDsModal			:	_hideDsModal,
+		loadDsItem			:	_loadDsItem
 	},
 	mounted() {
 		this.initData();
@@ -43,6 +45,7 @@ const PageEventHandling = {
 
 function _initData() {
 	this.queryDataList();
+	this.editMode = false;
 }
 
 function _clearInputParam() {
@@ -56,6 +59,7 @@ function _clearInputParam() {
 }
 
 function _clearPage() {
+	this.editMode = false;
 	this.queryParam.dsIdLike = '';
 	this.queryParam.dsNameLike = '';
 	
@@ -113,7 +117,38 @@ function _setSaveDsInfo(data) {
 	this.queryDataList();
 }
 
+function _loadDsItem(oid) {
+	this.editMode = false;
+	if (null == oid || '' == oid) {
+		alert('error');
+		return;
+	}
+	var that = this;
+	xhrSendParameter(
+		'./ezfDsConfigLoadJson', 
+		{ 'oid' : oid }, 
+		function(data) {
+			if ( _qifu_success_flag != data.success ) {
+				parent.notifyWarning( data.message );
+				return;
+			}
+			that.inpParam.oid = data.value.oid;
+			that.inpParam.dsId = data.value.dsId;
+			that.inpParam.dsName = data.value.dsName;
+			that.inpParam.driverType = data.value.driverType;
+			that.inpParam.dbAddr = data.value.dbAddr;
+			that.inpParam.dbUser = data.value.dbUser;
+			that.inpParam.dbPasswd = data.value.dbPasswd;	
+			$('#dsConfigModal').modal('show');
+			that.editMode = true;
+		}, 
+		this.clearPage,
+		_qifu_defaultSelfPleaseWaitShow
+	);		
+}
+
 function _hideDsModal() {
+	this.editMode = false;
 	$('#dsConfigModal').modal('hide');
 	this.clearInputParam();
 	clearWarningMessageField(msgFields);

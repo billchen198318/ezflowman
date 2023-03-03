@@ -102,7 +102,7 @@ msgFields['inp_dbPasswd'] 	= 'inp_dbPasswd';
 			      
 			      <br>
 			      
-			      <button type="button" class="btn btn-info" title="編輯表單" ><i class="icon fa fa-edit"></i>編輯配置</button>
+			      <button type="button" class="btn btn-info" title="編輯表單" v-on:click="loadDsItem(d.oid)" ><i class="icon fa fa-edit"></i>編輯配置</button>
 			    	&nbsp;
 			      <button type="button" class="btn btn-danger" title="刪除" ><i class="icon fa fa-remove"></i>刪除</button>
 			      
@@ -134,7 +134,7 @@ msgFields['inp_dbPasswd'] 	= 'inp_dbPasswd';
         <form>
           <div class="form-group">
             <label for="inp_dsId" class="col-form-label">編號:</label>
-            <input type="text" class="form-control" id="inp_dsId" v-model="inpParam.dsId" @input="inpParam.dsId=$event.target.value.toUpperCase()" >
+            <input type="text" class="form-control" id="inp_dsId" v-model="inpParam.dsId" @input="inpParam.dsId=$event.target.value.toUpperCase()" :disabled=" editMode " >
           </div>
           <div class="form-group">
             <label for="inp_dsName" class="col-form-label">名稱:</label>
