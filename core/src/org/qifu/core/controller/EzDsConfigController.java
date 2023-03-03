@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.qifu.base.controller.BaseControllerSupport;
 import org.qifu.base.controller.IPageNamespaceProvide;
 import org.qifu.base.exception.AuthorityException;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class EzDsConfigController extends BaseControllerSupport implements IPageNamespaceProvide {
+	protected static Logger logger = LogManager.getLogger(EzDsConfigController.class);	
 	
 	@Autowired
 	IEzfDsService<EzfDs, String> ezfDsService;
@@ -84,8 +87,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		.throwMessage();
 	}	
 	
-	private void save(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
-		this.checkForCreateOrUpdate(result, ds);
+	private void handlerTestJdbcConnection(EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
 		if (DsDriverType.mariaDB.equals(ds.getDriverType())) { // 3
 			Class.forName("org.mariadb.jdbc.Driver");
 		} else if (DsDriverType.msSqlServer.equals(ds.getDriverType())) { // 1
@@ -94,10 +96,23 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 		}
 		try (Connection conn = DriverManager.getConnection(ds.getDbAddr(), ds.getDbUser(), ds.getDbPasswd())) {
-			DefaultResult<EzfDs> sResult = this.ezfDsService.insert(ds);
-			this.setDefaultResponseJsonResult(result, sResult);
-		}
+			logger.info( this.getClass().getSimpleName() + " test " + conn.toString() );
+		}		
+	}
+	
+	private void save(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
+		this.checkForCreateOrUpdate(result, ds);
+		this.handlerTestJdbcConnection(ds);
+		DefaultResult<EzfDs> sResult = this.ezfDsService.insert(ds);
+		this.setDefaultResponseJsonResult(result, sResult);
 	}	
+	
+	private void update(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
+		this.checkForCreateOrUpdate(result, ds);
+		this.handlerTestJdbcConnection(ds);
+		DefaultResult<EzfDs> uResult = this.ezfDsService.update(ds);
+		this.setDefaultResponseJsonResult(result, uResult);
+	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
 	@RequestMapping(value = "/ezfDsConfigSaveJson", produces = MediaType.APPLICATION_JSON_VALUE)		
@@ -115,6 +130,23 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		}
 		return result;		
 	}		
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@RequestMapping(value = "/ezfDsConfigUpdateJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<EzfDs> doUpdate(HttpServletRequest request, EzfDs ds) {
+		DefaultControllerJsonResultObj<EzfDs> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {
+			this.update(result, ds);			
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}	
 	
 	private void queryList(DefaultControllerJsonResultObj<List<EzfDs>> result, Map<String, String> param) throws ControllerException, AuthorityException, ServiceException, Exception {
 		SearchBody sb = new SearchBody(param);
