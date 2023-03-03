@@ -16,6 +16,7 @@ public class EzfMap implements java.io.Serializable {
     private String cnfId;
     private String cnfName;
     private String dsId;
+    private String efgpPkgId;
     private String mainTbl;
     private String cuserid;
     private Date cdate;
@@ -56,7 +57,15 @@ public class EzfMap implements java.io.Serializable {
         this.dsId = dsId;
     }
     
-    public String getMainTbl() {
+    public String getEfgpPkgId() {
+		return efgpPkgId;
+	}
+    
+	public void setEfgpPkgId(String efgpPkgId) {
+		this.efgpPkgId = efgpPkgId;
+	}
+	
+	public String getMainTbl() {
         return mainTbl;
     }
     

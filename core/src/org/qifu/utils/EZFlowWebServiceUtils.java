@@ -1,3 +1,24 @@
+/* 
+ * Copyright 2019-2023 qifu of copyright Chen Xin Nien
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * -----------------------------------------------------------------------
+ * 
+ * author: 	Chen Xin Nien
+ * contact: chen.xin.nien@gmail.com
+ * 
+ */
 package org.qifu.utils;
 
 import java.io.ByteArrayInputStream;
@@ -74,14 +95,14 @@ public class EZFlowWebServiceUtils {
 		return ws;
 	}
 	
-	private static String findManagerByAppLvlXml(String employeeId, String orgUnitOid, String levelType) throws ServiceException, Exception {
+	public static String findManagerByAppLvlXml(String employeeId, String orgUnitOid, String levelType) throws ServiceException, Exception {
 		if (StringUtils.isBlank(employeeId) || StringUtils.isBlank(orgUnitOid)) {
 			throw new ServiceException( BaseSystemMessage.parameterBlank() );
 		}
 		return getWorkflowService().findManagerByAppLvl(employeeId, orgUnitOid, levelType, "FunctionLevel", false);
 	}
 	
-	private static String fetchOrgUnitOfUserIdXml(String employeeId) throws ServiceException, Exception {
+	public static String fetchOrgUnitOfUserIdXml(String employeeId) throws ServiceException, Exception {
 		if (StringUtils.isBlank(employeeId)) {
 			throw new ServiceException( BaseSystemMessage.parameterBlank() );
 		}
@@ -97,7 +118,7 @@ public class EZFlowWebServiceUtils {
 		return result.getOrganizationUnits().getComDscNanaDataTransferOrganizationUnitForInvokingListDTO();
 	}
 	
-	private static String findFormOIDsOfProcess(String processPackageId) throws ServiceException, Exception {
+	public static String findFormOIDsOfProcess(String processPackageId) throws ServiceException, Exception {
 		if (StringUtils.isBlank(processPackageId)) {
 			throw new ServiceException( BaseSystemMessage.parameterBlank() );
 		}
@@ -121,7 +142,7 @@ public class EZFlowWebServiceUtils {
 	}	
 	
 	// 因為用 JAXB 轉表單xml了 , 所以不需要呼叫這個method
-	private static String getFormFieldTemplate(String formOid) throws ServiceException, Exception {
+	public static String getFormFieldTemplate(String formOid) throws ServiceException, Exception {
 		if (StringUtils.isBlank(formOid)) {
 			throw new ServiceException( BaseSystemMessage.parameterBlank() );
 		}

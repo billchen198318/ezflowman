@@ -46,6 +46,7 @@ CREATE TABLE `ezf_ds` (
 
 LOCK TABLES `ezf_ds` WRITE;
 /*!40000 ALTER TABLE `ezf_ds` DISABLE KEYS */;
+INSERT INTO `ezf_ds` VALUES ('0f6e5d3c-b8f6-11ed-89a2-6dba9949b0b7','TEST01','test','3','jdbc:mariadb://127.0.0.1/ezflowman?useUnicode=true','root','password','admin','2023-03-02 20:30:47',NULL,NULL);
 /*!40000 ALTER TABLE `ezf_ds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -61,6 +62,7 @@ CREATE TABLE `ezf_map` (
   `CNF_ID` varchar(25) NOT NULL,
   `CNF_NAME` varchar(100) NOT NULL,
   `DS_ID` varchar(25) NOT NULL,
+  `EFGP_PKG_ID` varchar(50) NOT NULL,
   `MAIN_TBL` varchar(20) NOT NULL,
   `CUSERID` varchar(24) NOT NULL,
   `CDATE` datetime NOT NULL,
@@ -68,7 +70,9 @@ CREATE TABLE `ezf_map` (
   `UDATE` datetime DEFAULT NULL,
   PRIMARY KEY (`OID`),
   UNIQUE KEY `CNF_ID` (`CNF_ID`),
-  KEY `CNF_NAME` (`CNF_NAME`)
+  KEY `CNF_NAME` (`CNF_NAME`),
+  KEY `DS_ID` (`DS_ID`),
+  KEY `EFGP_PKG_ID` (`EFGP_PKG_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1002,4 +1006,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-01 19:36:21
+-- Dump completed on 2023-03-03 21:56:05

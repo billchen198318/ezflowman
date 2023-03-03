@@ -38,6 +38,33 @@ $( document ).ready(function() {
 		<div id="main-content" class="col-xs-12 col-md-12 col-lg-12">
 		
 		
+	<div class="row">
+		<div class="col p-2 bg-secondary rounded">
+			<div class="row">
+				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+					<label for="efgpProcessPackageId">EFGP流程編號</label>
+					<input type="text" name="efgpProcessPackageId" id="efgpProcessPackageId" class="form-control" placeholder="請輸入EFGP流程編號" v-model="efgpProcessPackageId" >					
+				</div>
+			</div>
+			
+			<p style="margin-bottom: 10px"></p>
+			
+			<div class="row">
+				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+					<button type="button" class="btn btn-primary" v-on:click="loadEfgpPkg"><i class="icon fa fa-search"></i>&nbsp;載入流程</button>	
+					&nbsp;
+					<button type="button" class="btn btn-primary" ><i class="icon fa fa-eraser"></i>&nbsp;清除</button>	
+				</div>
+			</div>			
+		</div>
+	</div>
+	
+	<br>			
+		
+		
+		
+		
+		
 		
 		</div>
 	</div>

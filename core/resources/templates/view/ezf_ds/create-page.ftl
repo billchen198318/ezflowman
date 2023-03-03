@@ -49,11 +49,11 @@ msgFields['inp_dbPasswd'] 	= 'inp_dbPasswd';
 		<div class="col p-2 bg-secondary rounded">
 			<div class="row">
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
-					<label for="employeeId">編號</label>
+					<label for="dsId">編號</label>
 					<input type="text" name="dsId" id="dsId" class="form-control" placeholder="請輸入編號" v-model="queryParam.dsIdLike" @input="queryParam.dsIdLike=$event.target.value.toUpperCase()" >					
 				</div>
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
-					<label for="employeeId">名稱</label>
+					<label for="dsName">名稱</label>
 					<input type="text" name="dsName" id="dsName" class="form-control" placeholder="請輸入名稱" v-model="queryParam.dsNameLike" >					
 				</div>				
 			</div>

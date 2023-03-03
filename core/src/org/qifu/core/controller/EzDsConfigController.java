@@ -1,3 +1,24 @@
+/* 
+ * Copyright 2019-2023 qifu of copyright Chen Xin Nien
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * -----------------------------------------------------------------------
+ * 
+ * author: 	Chen Xin Nien
+ * contact: chen.xin.nien@gmail.com
+ * 
+ */
 package org.qifu.core.controller;
 
 import java.sql.Connection;
@@ -16,6 +37,7 @@ import org.qifu.base.controller.IPageNamespaceProvide;
 import org.qifu.base.exception.AuthorityException;
 import org.qifu.base.exception.ControllerException;
 import org.qifu.base.exception.ServiceException;
+import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
 import org.qifu.base.model.DefaultResult;
@@ -82,7 +104,9 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	}	
 	
 	private void checkForCreateOrUpdate(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, ServiceException, Exception {
-		this.getCheckControllerFieldHandler(result)
+		CheckControllerFieldHandler<EzfDs> chk = this.getCheckControllerFieldHandler(result);
+		
+		chk
 		.testField("inp_dsId", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsId)", "請輸入編號!")
 		.testField("inp_dsName", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsName)", "請輸入名稱!")
 		.testField("inp_driveType", ds, "@org.qifu.base.model.PleaseSelect@noSelect(driverType)", "請選擇Driver類別!")
@@ -90,6 +114,8 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		.testField("inp_dbUser", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbUser)", "請輸入帳戶!")
 		.testField("inp_dbPasswd", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbPasswd)", "請輸入密碼!")
 		.throwMessage();
+		
+		chk.testField("imp_dsId", ds, "@org.qifu.util.SimpleUtils@checkBeTrueOf_azAZ09(dsId)", "編號必須為0-9,a-z,A-Z等字元!").throwMessage();
 	}	
 	
 	private void handlerTestJdbcConnection(EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
