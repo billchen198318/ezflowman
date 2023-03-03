@@ -110,6 +110,7 @@ function _setSaveDsInfo(data) {
 	parent.notifyInfo( data.message );
 	this.clearInputParam();
 	this.hideDsModal();
+	this.queryDataList();
 }
 
 function _hideDsModal() {
