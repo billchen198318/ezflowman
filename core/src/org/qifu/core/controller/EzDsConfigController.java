@@ -23,6 +23,7 @@ import org.qifu.base.model.QueryParamBuilder;
 import org.qifu.base.model.SearchBody;
 import org.qifu.base.model.SortType;
 import org.qifu.core.entity.EzfDs;
+import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
 import org.qifu.model.DsDriverType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	
 	@Autowired
 	IEzfDsService<EzfDs, String> ezfDsService;
+	
+	@Autowired
+	IEzfMapperLogicService ezfMapperLogicService;
+	
 	
 	@Override
 	public String viewPageNamespace() {
@@ -198,5 +203,23 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		}
 		return result;		
 	}	
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@RequestMapping(value = "/ezfDsConfigDeleteJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<Boolean> doDelete(HttpServletRequest request, EzfDs ds) {
+		DefaultControllerJsonResultObj<Boolean> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {			
+			DefaultResult<Boolean> dResult = this.ezfMapperLogicService.deleteDs(ds);
+			this.setDefaultResponseJsonResult(result, dResult);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}			
 	
 }

@@ -33,7 +33,8 @@ const PageEventHandling = {
 		clearInputParam		:	_clearInputParam,
 		setSaveDsInfo		:	_setSaveDsInfo,
 		hideDsModal			:	_hideDsModal,
-		loadDsItem			:	_loadDsItem
+		loadDsItem			:	_loadDsItem,
+		deleteDs			:	_deleteDs
 	},
 	mounted() {
 		this.initData();
@@ -145,6 +146,30 @@ function _loadDsItem(oid) {
 		this.clearPage,
 		_qifu_defaultSelfPleaseWaitShow
 	);		
+}
+
+function _deleteDs(oid) {
+	var that = this;	
+	parent.bootbox.confirm(
+		"確定刪除?", 
+		function(result) { 
+			if (!result) {
+				return;
+			}
+			xhrSendParameter(
+				'./ezfDsConfigDeleteJson', 
+				{ 'oid' : oid }, 
+				function(data){
+					parent.notifyInfo( data.message );
+					that.queryDataList();		
+				}, 
+				function(){
+					parent.notifyError( '錯誤' );
+				},
+				_qifu_defaultSelfPleaseWaitShow
+			);	
+		}
+	);
 }
 
 function _hideDsModal() {

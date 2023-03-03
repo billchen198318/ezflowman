@@ -104,7 +104,7 @@ msgFields['inp_dbPasswd'] 	= 'inp_dbPasswd';
 			      
 			      <button type="button" class="btn btn-info" title="編輯表單" v-on:click="loadDsItem(d.oid)" ><i class="icon fa fa-edit"></i>編輯配置</button>
 			    	&nbsp;
-			      <button type="button" class="btn btn-danger" title="刪除" ><i class="icon fa fa-remove"></i>刪除</button>
+			      <button type="button" class="btn btn-danger" title="刪除" v-on:click="deleteDs(d.oid)" ><i class="icon fa fa-remove"></i>刪除</button>
 			      
 			    </div>
 			  </div>
