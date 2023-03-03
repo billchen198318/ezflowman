@@ -105,7 +105,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		if (StringUtils.isBlank(formOid)) {
 			throw new ServiceException("無法取得暫存流程表單OID");
 		}
-		
+		if (formOid.indexOf(",")>-1) { // findFormOIDsOfProcess 有可能帶回多筆 oid 所以取最後一筆
+			String arr[] = formOid.split(",");
+			formOid = arr[arr.length-1];
+		}
 		String formXml = EZFlowWebServiceUtils.getFormFieldTemplate(formOid);
 		if (StringUtils.isBlank(formXml)) {
 			throw new ServiceException("無法取得流程表單樣板xml");
@@ -116,6 +119,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		result.setValue(form);
 		result.setSuccess( YES );
 		result.setMessage( "載入EFGP流程樣板完成!" );
+		//System.out.println( form.toString() );
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
