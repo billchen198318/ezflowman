@@ -1,9 +1,9 @@
-var _inpList = [];
+var _inpForm = null;
 
 const PageEventHandling = {
 	data() {
 		return {
-			inpList					:	_inpList,
+			inpForm					:	_inpForm,
 			efgpProcessPackageId	:	''
 		}
 	},
@@ -25,6 +25,7 @@ function _initData() {
 }
 
 function _loadEfgpPkg() {
+	this.inpForm = null;
 	var that = this;
 	xhrSendParameter(
 		'./ezfMapEfgpPackageIdLoadJson', 
@@ -34,7 +35,8 @@ function _loadEfgpPkg() {
 				parent.notifyWarning( data.message );
 				return;
 			}
-			
+			that.inpForm = data.value;
+			//console.log( that.inpForm );
 		}, 
 		this.clearPage,
 		_qifu_defaultSelfPleaseWaitShow
