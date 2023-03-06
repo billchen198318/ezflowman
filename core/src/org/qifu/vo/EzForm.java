@@ -29,8 +29,6 @@ public class EzForm implements java.io.Serializable {
 	
 	private String formId;
 	
-	private String efgpProcessPackageId;
-	
 	private List<EzFormField> fields = new ArrayList<EzFormField>();
 	
 	private List<EzFormRecord> records = new ArrayList<EzFormRecord>();
@@ -41,14 +39,6 @@ public class EzForm implements java.io.Serializable {
 
 	public void setFormId(String formId) {
 		this.formId = formId;
-	}
-	
-	public String getEfgpProcessPackageId() {
-		return efgpProcessPackageId;
-	}
-
-	public void setEfgpProcessPackageId(String efgpProcessPackageId) {
-		this.efgpProcessPackageId = efgpProcessPackageId;
 	}
 
 	public List<EzFormField> getFields() {
@@ -69,8 +59,7 @@ public class EzForm implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "EzForm [formId=" + formId + ", efgpProcessPackageId=" + efgpProcessPackageId + ", fields=" + fields
-				+ ", records=" + records + "]";
+		return "EzForm [formId=" + formId + ", fields=" + fields + ", records=" + records + "]";
 	}
 	
 }

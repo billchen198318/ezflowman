@@ -32,9 +32,16 @@ import org.qifu.base.exception.ServiceException;
 import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
+import org.qifu.base.model.YesNo;
+import org.qifu.core.entity.EzfMap;
+import org.qifu.core.entity.EzfMapField;
+import org.qifu.core.entity.EzfMapGrd;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.vo.EzForm;
+import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormRecord;
+import org.qifu.vo.EzFormRecordItem;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -97,10 +104,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return viewName;
 	}	
 	
-	private void loadProcessPackageIdFromEFGP(DefaultControllerJsonResultObj<EzForm> result, EzForm form) throws AuthorityException, ControllerException, ServiceException, Exception {
-		CheckControllerFieldHandler<EzForm> chk = this.getCheckControllerFieldHandler(result);
-		chk.testField("pProcessPackageId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpProcessPackageId)", "請輸入EFGP流程編號!").throwMessage();
-		String pProcessPackageId = form.getEfgpProcessPackageId();
+	private void loadProcessPackageIdFromEFGP(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws AuthorityException, ControllerException, ServiceException, Exception {
+		CheckControllerFieldHandler<EzfMap> chk = this.getCheckControllerFieldHandler(result);
+		chk.testField("efgpPkgId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpPkgId)", "請輸入EFGP流程編號!").throwMessage();
+		String pProcessPackageId = form.getEfgpPkgId();
 		String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess(pProcessPackageId);
 		if (StringUtils.isBlank(formOid)) {
 			throw new ServiceException("無法取得暫存流程表單OID");
@@ -114,8 +121,40 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			throw new ServiceException("無法取得流程表單樣板xml");
 		}
 		
-		form = EZFormSupportUtils.loadFromXml(formXml);
-		form.setEfgpProcessPackageId(pProcessPackageId);
+		EzForm ezform = EZFormSupportUtils.loadFromXml(formXml);
+		
+		// 處理頁面要顯示用的欄位
+		form.setMainTbl("");
+		if (ezform != null && ezform.getFields() != null && ezform.getFields().size() > 0) {
+			for (EzFormField ezfield : ezform.getFields()) {
+				EzfMapField field = new EzfMapField();
+				field.setFormField( ezfield.getId() );
+				field.setTblField("");
+				field.setGridId(YesNo.NO);
+				form.getFields().add(field);
+			}
+		}
+		if (ezform != null && ezform.getRecords() != null && ezform.getRecords().size() > 0) {
+			for (EzFormRecord ezRecord : ezform.getRecords()) {
+				if (ezRecord.getItems() == null) {
+					continue;
+				}
+				EzfMapGrd grid = new EzfMapGrd();
+				grid.setDtlTbl("");
+				grid.setGridId(ezRecord.getGridId());
+				grid.setRecordId(ezRecord.getRecordId());
+				form.getGrids().add(grid);
+				for (EzFormRecordItem ezRecordItem : ezRecord.getItems()) {
+					EzfMapField gridItem = new EzfMapField();
+					gridItem.setGridId(grid.getGridId());
+					gridItem.setTblField("");
+					gridItem.setFormField(ezRecordItem.getId());
+					grid.getItems().add(gridItem);
+				}
+			}
+		}
+		
+		
 		result.setValue(form);
 		result.setSuccess( YES );
 		result.setMessage( "載入EFGP流程樣板完成!" );
@@ -124,8 +163,8 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
 	@RequestMapping(value = "/ezfMapEfgpPackageIdLoadJson", produces = MediaType.APPLICATION_JSON_VALUE)		
-	public @ResponseBody DefaultControllerJsonResultObj<EzForm> doEfgpPackageIdLoadJson(HttpServletRequest request, EzForm form) {
-		DefaultControllerJsonResultObj<EzForm> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doEfgpPackageIdLoadJson(HttpServletRequest request, EzfMap form) {
+		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
 		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
 			return result;
 		}

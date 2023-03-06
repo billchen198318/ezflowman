@@ -3,8 +3,8 @@ var _inpForm = null;
 const PageEventHandling = {
 	data() {
 		return {
-			inpForm					:	_inpForm,
-			efgpProcessPackageId	:	''
+			inpForm			:	_inpForm,
+			efgpPkgId		:	''
 		}
 	},
 	methods: {
@@ -29,14 +29,13 @@ function _loadEfgpPkg() {
 	var that = this;
 	xhrSendParameter(
 		'./ezfMapEfgpPackageIdLoadJson', 
-		{ 'efgpProcessPackageId' : this.efgpProcessPackageId }, 
+		{ 'efgpPkgId' : this.efgpPkgId }, 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {
 				parent.notifyWarning( data.message );
 				return;
 			}
 			that.inpForm = data.value;
-			//console.log( that.inpForm );
 		}, 
 		this.clearPage,
 		_qifu_defaultSelfPleaseWaitShow

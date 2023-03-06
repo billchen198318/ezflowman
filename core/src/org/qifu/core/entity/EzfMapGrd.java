@@ -1,6 +1,8 @@
 package org.qifu.core.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.qifu.base.model.CreateDateField;
 import org.qifu.base.model.CreateUserField;
@@ -21,6 +23,9 @@ public class EzfMapGrd implements java.io.Serializable {
     private Date cdate;
     private String uuserid;
     private Date udate;
+    
+    // 頁面用
+    private List<EzfMapField> items = new ArrayList<EzfMapField>();
     
     @EntityPK(name = "oid", autoUUID = true)
     public String getOid() {
@@ -100,5 +105,13 @@ public class EzfMapGrd implements java.io.Serializable {
     public void setUdate(Date udate) {
         this.udate = udate;
     }
+
+	public List<EzfMapField> getItems() {
+		return items;
+	}
+
+	public void setItems(List<EzfMapField> items) {
+		this.items = items;
+	}
 	
 }
