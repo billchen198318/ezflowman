@@ -4,7 +4,12 @@ const PageEventHandling = {
 	data() {
 		return {
 			inpForm			:	_inpForm,
-			efgpPkgId		:	''
+			dsList			:	_dsList, // create-page.ftl
+			efgpPkgId		:	'',
+			cnfId			:	'',
+			cnfName			:	'',
+			dsId			:	_qifu_please_select_id,
+			mainTbl			:	''
 		}
 	},
 	methods: {

@@ -24,6 +24,14 @@ $( document ).ready(function() {
 	
 });
 
+var _dsList = [];
+<@qifu.if test=" null != dsMap && dsMap.size > 0 ">
+	<#list dsMap?keys as k>
+_dsList.push({'id' : '${k}' , 'name' : '${dsMap[k]?js_string}'});
+	</#list>
+</@qifu.if>
+
+
 var msgFields = new Object();
 msgFields['efgpPkgId'] 		= 'efgpPkgId';
 
@@ -49,6 +57,35 @@ msgFields['efgpPkgId'] 		= 'efgpPkgId';
 					<input type="text" name="efgpPkgId" id="efgpPkgId" class="form-control" placeholder="請輸入EFGP流程編號" v-model="efgpPkgId" >					
 				</div>
 			</div>
+			
+			<p style="margin-bottom: 10px"></p>
+			
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">					
+					<label for="cnfId">配置編號</label>
+					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入配置編號" v-model="cnfId" >						
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="cnfName">配置名稱</label>
+					<input type="text" name="cnfName" id="cnfName" class="form-control" placeholder="請輸入配置名稱" v-model="cnfName" >					
+				</div>				
+			</div>			
+			
+			<p style="margin-bottom: 10px"></p>
+			
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="dsId">資料來源</label>
+					<select class="form-control" id="dsId" v-model="dsId">
+						<option v-for="(p, index) in dsList" v-bind:value="p.id">{{ p.name }}</option>
+					</select>							
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="mainTbl">映射資料表</label>
+					<input type="text" name="mainTbl" id="mainTbl" class="form-control" placeholder="請輸入映射資料表" v-model="mainTbl" >							
+				</div>				
+			</div>
+						
 			
 			<p style="margin-bottom: 10px"></p>
 			

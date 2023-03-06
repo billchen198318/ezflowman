@@ -33,15 +33,18 @@ import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
 import org.qifu.base.model.YesNo;
+import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
 import org.qifu.core.entity.EzfMapField;
 import org.qifu.core.entity.EzfMapGrd;
+import org.qifu.core.service.IEzfDsService;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.vo.EzForm;
 import org.qifu.vo.EzFormField;
 import org.qifu.vo.EzFormRecord;
 import org.qifu.vo.EzFormRecordItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -50,13 +53,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class EzFormMapperConfigController extends BaseControllerSupport implements IPageNamespaceProvide {
-
+	
+	@Autowired
+	IEzfDsService<EzfDs, String> ezfDsService;
+	
 	@Override
 	public String viewPageNamespace() {
 		return "ezf_conf";
 	}
 	
 	private void init(String type, ModelMap mm) throws AuthorityException, ControllerException, ServiceException, Exception {
+		mm.put("dsMap", this.ezfDsService.getSelectMap(true));
 		if ("mainPage".equals(type)) {
 			
 		}
