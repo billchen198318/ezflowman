@@ -4,7 +4,9 @@ var _inpForm = {
 	'cnfName'	:	'',
 	'dsId'		:	_qifu_please_select_id,
     'efgpPkgId'	:	'',
-    'mainTbl'	:	''
+    'mainTbl'	:	'',
+    'fields'	:	[],
+    'grids'		:	[]
 }
 
 const PageEventHandling = {
@@ -33,6 +35,9 @@ function _initData() {
 
 function _loadEfgpPkg() {
 	var that = this;
+	
+	console.log( JSON.stringify(this.inpForm) );
+	
 	clearWarningMessageField(msgFields);
 	xhrSendParameter(
 		'./ezfMapEfgpPackageIdLoadJson', 

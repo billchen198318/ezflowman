@@ -125,13 +125,35 @@ msgFields['mainTbl'] 		= 'mainTbl';
     </tr>
   </tbody>
 </table>
-
 					
 				</div>
 			</div>	
+			
 <!-- ###################################################################################### -->		
 		
-		
+			<div class="card border-dark" v-for="(g, index) in inpForm.grids">
+				<div class="card-body" >
+					<h5 class="card-title">表單Grid資料表欄位配置({{g.gridId}})</h5>		
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">表單欄位</th>
+      <th scope="col">資料表欄位</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(i, index) in g.items" >
+      <td>{{i.formField}}</td>
+      <td><input type="text" v-bind:id="'grid_tblField_'+i.formField" class="form-control" placeholder="請輸入table欄位" v-model="i.tblField"></td>
+    </tr>
+  </tbody>
+</table>
+
+				</div>
+			</div>
+			
+<!-- ###################################################################################### -->		
 		
 		</div>
 	</div>
