@@ -1,15 +1,17 @@
-var _inpForm = null;
+var _inpForm = {
+	'oid'		:	'',
+    'cnfId'		:	'',
+	'cnfName'	:	'',
+	'dsId'		:	_qifu_please_select_id,
+    'efgpPkgId'	:	'',
+    'mainTbl'	:	''
+}
 
 const PageEventHandling = {
 	data() {
 		return {
 			inpForm			:	_inpForm,
-			dsList			:	_dsList, // create-page.ftl
-			efgpPkgId		:	'',
-			cnfId			:	'',
-			cnfName			:	'',
-			dsId			:	_qifu_please_select_id,
-			mainTbl			:	''
+			dsList			:	_dsList // create-page.ftl
 		}
 	},
 	methods: {
@@ -30,13 +32,14 @@ function _initData() {
 }
 
 function _loadEfgpPkg() {
-	this.inpForm = null;
 	var that = this;
+	clearWarningMessageField(msgFields);
 	xhrSendParameter(
 		'./ezfMapEfgpPackageIdLoadJson', 
-		{ 'efgpPkgId' : this.efgpPkgId }, 
+		that.inpForm, 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {
+				setWarningMessageField(msgFields, data.checkFields);
 				parent.notifyWarning( data.message );
 				return;
 			}

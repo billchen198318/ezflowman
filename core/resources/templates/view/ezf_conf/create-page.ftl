@@ -34,6 +34,10 @@ _dsList.push({'id' : '${k}' , 'name' : '${dsMap[k]?js_string}'});
 
 var msgFields = new Object();
 msgFields['efgpPkgId'] 		= 'efgpPkgId';
+msgFields['cnfId'] 			= 'cnfId';
+msgFields['cnfName'] 		= 'cnfName';
+msgFields['dsId'] 			= 'dsId';
+msgFields['mainTbl'] 		= 'mainTbl';
 
 </script>
 
@@ -54,7 +58,7 @@ msgFields['efgpPkgId'] 		= 'efgpPkgId';
 			<div class="row">
 				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
 					<label for="efgpPkgId">EFGP流程編號</label>
-					<input type="text" name="efgpPkgId" id="efgpPkgId" class="form-control" placeholder="請輸入EFGP流程編號" v-model="efgpPkgId" >					
+					<input type="text" name="efgpPkgId" id="efgpPkgId" class="form-control" placeholder="請輸入EFGP流程編號" v-model="inpForm.efgpPkgId" >					
 				</div>
 			</div>
 			
@@ -63,11 +67,11 @@ msgFields['efgpPkgId'] 		= 'efgpPkgId';
 			<div class="row">
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">					
 					<label for="cnfId">配置編號</label>
-					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入配置編號" v-model="cnfId" >						
+					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入配置編號" v-model="inpForm.cnfId" >						
 				</div>
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 					<label for="cnfName">配置名稱</label>
-					<input type="text" name="cnfName" id="cnfName" class="form-control" placeholder="請輸入配置名稱" v-model="cnfName" >					
+					<input type="text" name="cnfName" id="cnfName" class="form-control" placeholder="請輸入配置名稱" v-model="inpForm.cnfName" >					
 				</div>				
 			</div>			
 			
@@ -76,13 +80,13 @@ msgFields['efgpPkgId'] 		= 'efgpPkgId';
 			<div class="row">
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 					<label for="dsId">資料來源</label>
-					<select class="form-control" id="dsId" v-model="dsId">
+					<select class="form-control" id="dsId" v-model="inpForm.dsId">
 						<option v-for="(p, index) in dsList" v-bind:value="p.id">{{ p.name }}</option>
 					</select>							
 				</div>
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 					<label for="mainTbl">映射資料表</label>
-					<input type="text" name="mainTbl" id="mainTbl" class="form-control" placeholder="請輸入映射資料表" v-model="mainTbl" >							
+					<input type="text" name="mainTbl" id="mainTbl" class="form-control" placeholder="請輸入映射資料表" v-model="inpForm.mainTbl" >							
 				</div>				
 			</div>
 						
