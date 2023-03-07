@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -132,6 +133,12 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		
 		// 處理頁面要顯示用的欄位
 		form.setMainTbl("");
+		if (form.getFields() != null) {
+			form.getFields().clear();
+		}
+		if (form.getGrids() != null) {
+			form.getGrids().clear();
+		}
 		if (ezform != null && ezform.getFields() != null && ezform.getFields().size() > 0) {
 			for (EzFormField ezfield : ezform.getFields()) {
 				EzfMapField field = new EzfMapField();
@@ -170,7 +177,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
 	@RequestMapping(value = "/ezfMapEfgpPackageIdLoadJson", produces = MediaType.APPLICATION_JSON_VALUE)		
-	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doEfgpPackageIdLoadJson(HttpServletRequest request, EzfMap form) {
+	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doEfgpPackageIdLoadJson(HttpServletRequest request, @RequestBody EzfMap form) {
 		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
 		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
 			return result;

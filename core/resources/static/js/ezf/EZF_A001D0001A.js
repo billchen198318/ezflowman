@@ -35,17 +35,16 @@ function _initData() {
 
 function _loadEfgpPkg() {
 	var that = this;
-	
-	console.log( JSON.stringify(this.inpForm) );
-	
+	//console.log( JSON.stringify(this.inpForm) );
 	clearWarningMessageField(msgFields);
-	xhrSendParameter(
+	xhrSendParameter2(
 		'./ezfMapEfgpPackageIdLoadJson', 
-		that.inpForm, 
+		JSON.stringify(that.inpForm), 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {
 				setWarningMessageField(msgFields, data.checkFields);
 				parent.notifyWarning( data.message );
+				that.clearPage();
 				return;
 			}
 			that.inpForm = data.value;
@@ -56,7 +55,14 @@ function _loadEfgpPkg() {
 }
 
 function _clearPage() {
-	
+	this.inpForm.oid = '';
+	this.inpForm.efgpPkgId = '';
+	if (this.inpForm.fields != null) {
+		this.inpForm.fields.splice(0);
+	}
+	if (this.inpForm.grids != null) {
+		this.inpForm.grids.splice(0);
+	}
 }
 
 function appUnmount() {
