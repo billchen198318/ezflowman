@@ -9,6 +9,8 @@
     <result column="DS_ID" jdbcType="VARCHAR" property="dsId" />
     <result column="EFGP_PKG_ID" jdbcType="VARCHAR" property="efgpPkgId" />
     <result column="MAIN_TBL" jdbcType="VARCHAR" property="mainTbl" />
+    <result column="EFGP_PROCESS_STATUS_FIELD" jdbcType="VARCHAR" property="efgpProcessStatusField" />
+    <result column="EFGP_PROCESS_NO_FIELD" jdbcType="VARCHAR" property="efgpProcessNoField" />    
     <result column="CUSERID" jdbcType="VARCHAR" property="cuserid" />
     <result column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
     <result column="UUSERID" jdbcType="VARCHAR" property="uuserid" />
@@ -93,6 +95,12 @@
       <if test="mainTbl != null">
         MAIN_TBL,
       </if>
+      <if test="efgpProcessStatusField != null">
+        EFGP_PROCESS_STATUS_FIELD,
+      </if>
+      <if test="efgpProcessNoField != null">
+        EFGP_PROCESS_NO_FIELD,
+      </if>
       <if test="cuserid != null">
         CUSERID,
       </if>
@@ -124,6 +132,12 @@
       </if>
       <if test="mainTbl != null">
         #{mainTbl,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpProcessStatusField != null">
+        #{efgpProcessStatusField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpProcessNoField != null">
+        #{efgpProcessNoField,jdbcType=VARCHAR},
       </if>
       <if test="cuserid != null">
         #{cuserid,jdbcType=VARCHAR},
@@ -158,6 +172,12 @@
       <if test="mainTbl != null">
         MAIN_TBL = #{mainTbl,jdbcType=VARCHAR},
       </if>
+      <if test="efgpProcessStatusField != null">
+        EFGP_PROCESS_STATUS_FIELD = #{efgpProcessStatusField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpProcessNoField != null">
+        EFGP_PROCESS_NO_FIELD = #{efgpProcessNoField,jdbcType=VARCHAR},
+      </if>    
       <!--  
       <if test="cuserid != null">
         CUSERID = #{cuserid,jdbcType=VARCHAR},

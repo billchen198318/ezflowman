@@ -64,6 +64,8 @@ CREATE TABLE `ezf_map` (
   `DS_ID` varchar(25) NOT NULL,
   `EFGP_PKG_ID` varchar(50) NOT NULL,
   `MAIN_TBL` varchar(20) NOT NULL,
+  `EFGP_PROCESS_STATUS_FIELD` varchar(50) NOT NULL,
+  `EFGP_PROCESS_NO_FIELD` varchar(50) NOT NULL,
   `CUSERID` varchar(24) NOT NULL,
   `CDATE` datetime NOT NULL,
   `UUSERID` varchar(24) DEFAULT NULL,
@@ -146,6 +148,38 @@ CREATE TABLE `ezf_map_grd` (
 LOCK TABLES `ezf_map_grd` WRITE;
 /*!40000 ALTER TABLE `ezf_map_grd` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ezf_map_grd` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ezf_map_grd_tbl_mp`
+--
+
+DROP TABLE IF EXISTS `ezf_map_grd_tbl_mp`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `ezf_map_grd_tbl_mp` (
+  `OID` char(36) NOT NULL,
+  `CNF_ID` varchar(25) NOT NULL,
+  `GRID_ID` varchar(25) NOT NULL,
+  `MST_FIELD_NAME` varchar(50) NOT NULL,
+  `DTL_FIELD_NAME` varchar(50) NOT NULL,
+  `CUSERID` varchar(24) NOT NULL,
+  `CDATE` datetime NOT NULL,
+  `UUSERID` varchar(24) DEFAULT NULL,
+  `UDATE` datetime DEFAULT NULL,
+  PRIMARY KEY (`OID`),
+  KEY `IDX_1` (`CNF_ID`),
+  KEY `IDX_2` (`GRID_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ezf_map_grd_tbl_mp`
+--
+
+LOCK TABLES `ezf_map_grd_tbl_mp` WRITE;
+/*!40000 ALTER TABLE `ezf_map_grd_tbl_mp` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ezf_map_grd_tbl_mp` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1006,4 +1040,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-03 21:56:05
+-- Dump completed on 2023-03-08 20:40:10

@@ -20,6 +20,8 @@ public class EzfMap implements java.io.Serializable {
     private String dsId;
     private String efgpPkgId;
     private String mainTbl;
+    private String efgpProcessStatusField;
+    private String efgpProcessNoField;    
     private String cuserid;
     private Date cdate;
     private String uuserid;
@@ -79,7 +81,23 @@ public class EzfMap implements java.io.Serializable {
         this.mainTbl = mainTbl;
     }
     
-    @CreateUserField(name = "cuserid")
+    public String getEfgpProcessStatusField() {
+		return efgpProcessStatusField;
+	}
+    
+	public void setEfgpProcessStatusField(String efgpProcessStatusField) {
+		this.efgpProcessStatusField = efgpProcessStatusField;
+	}
+	
+	public String getEfgpProcessNoField() {
+		return efgpProcessNoField;
+	}
+	
+	public void setEfgpProcessNoField(String efgpProcessNoField) {
+		this.efgpProcessNoField = efgpProcessNoField;
+	}
+	
+	@CreateUserField(name = "cuserid")
     public String getCuserid() {
         return cuserid;
     }
