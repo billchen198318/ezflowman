@@ -126,6 +126,25 @@ msgFields['mainTbl'] 		= 'mainTbl';
   </tbody>
 </table>
 					
+					
+					<p style="margin-bottom: 10px"></p>
+					
+					
+					<h5 class="card-title">流程序號&簽核狀態欄位配置</h5>
+					
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6 ">					
+					<label for="efgpProcessStatusField">簽核狀態欄位名稱</label>
+					<input type="text" name="efgpProcessStatusField" id="efgpProcessStatusField" class="form-control" placeholder="請輸入簽核狀態欄位名稱" v-model="inpForm.efgpProcessStatusField" >						
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6 ">
+					<label for="efgpProcessNoField">流程序號欄位名稱</label>
+					<input type="text" name="efgpProcessNoField" id="efgpProcessNoField" class="form-control" placeholder="請輸入流程序號欄位名稱" v-model="inpForm.efgpProcessNoField" >					
+				</div>				
+			</div>							
+			
+					
+					
 				</div>
 			</div>	
 			
