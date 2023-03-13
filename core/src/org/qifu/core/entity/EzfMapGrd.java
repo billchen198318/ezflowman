@@ -27,6 +27,10 @@ public class EzfMapGrd implements java.io.Serializable {
     // 頁面用
     private List<EzfMapField> items = new ArrayList<EzfMapField>();
     
+    // 頁面用
+    private List<EzfMapGrdTblMp> tblmps = new ArrayList<EzfMapGrdTblMp>();
+    
+    
     @EntityPK(name = "oid", autoUUID = true)
     public String getOid() {
         return oid;
@@ -112,6 +116,14 @@ public class EzfMapGrd implements java.io.Serializable {
 
 	public void setItems(List<EzfMapField> items) {
 		this.items = items;
+	}
+
+	public List<EzfMapGrdTblMp> getTblmps() {
+		return tblmps;
+	}
+
+	public void setTblmps(List<EzfMapGrdTblMp> tblmps) {
+		this.tblmps = tblmps;
 	}
 	
 }

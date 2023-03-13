@@ -37,6 +37,7 @@ import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
 import org.qifu.core.entity.EzfMapField;
 import org.qifu.core.entity.EzfMapGrd;
+import org.qifu.core.entity.EzfMapGrdTblMp;
 import org.qifu.core.service.IEzfDsService;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
@@ -165,6 +166,16 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 					gridItem.setFormField(ezRecordItem.getId());
 					grid.getItems().add(gridItem);
 				}
+				
+				if (grid.getTblmps().size() == 0) { // 最少補一筆 EzfMapGrdTblMp
+					EzfMapGrdTblMp tblMp = new EzfMapGrdTblMp();
+					tblMp.setCnfId("");
+					tblMp.setGridId(grid.getGridId());
+					tblMp.setMstFieldName("");
+					tblMp.setDtlFieldName("");
+					grid.getTblmps().add(tblMp);
+				}
+				
 			}
 		}
 		
