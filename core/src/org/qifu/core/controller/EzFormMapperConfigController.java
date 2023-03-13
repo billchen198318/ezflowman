@@ -179,11 +179,9 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			}
 		}
 		
-		
 		result.setValue(form);
 		result.setSuccess( YES );
 		result.setMessage( "載入EFGP流程樣板完成!" );
-		//System.out.println( form.toString() );
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
@@ -203,5 +201,25 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}		
 	
+	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
+		
+	}
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@RequestMapping(value = "/ezfMapSaveJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doSaveJson(HttpServletRequest request, @RequestBody EzfMap form) {
+		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {
+			this.save(result, form);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}	
 	
 }

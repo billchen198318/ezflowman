@@ -36,8 +36,14 @@ import org.qifu.base.model.ServiceMethodType;
 import org.qifu.base.service.BaseLogicService;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
+import org.qifu.core.entity.EzfMapField;
+import org.qifu.core.entity.EzfMapGrd;
+import org.qifu.core.entity.EzfMapGrdTblMp;
 import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
+import org.qifu.core.service.IEzfMapFieldService;
+import org.qifu.core.service.IEzfMapGrdService;
+import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,6 +64,15 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 	@Autowired
 	IEzfMapService<EzfMap, String> ezfMapService;
 	
+	@Autowired
+	IEzfMapFieldService<EzfMapField, String> ezfMapFieldService;	
+	
+	@Autowired
+	IEzfMapGrdService<EzfMapGrd, String> ezfMapGrdService;
+	
+	@Autowired
+	IEzfMapGrdTblMpService<EzfMapGrdTblMp, String> ezfMapGrdTblMpService;
+	
 	
 	@ServiceMethodAuthority(type = ServiceMethodType.DELETE)
 	@Transactional(
@@ -76,6 +91,17 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 			throw new ServiceException(ds.getDsId() + " 正在被使用,無法刪除!");
 		}		
 		return this.ezfDsService.delete(ds);
+	}
+	
+	@ServiceMethodAuthority(type = ServiceMethodType.INSERT)
+	@Transactional(
+			propagation=Propagation.REQUIRED, 
+			readOnly=false,
+			rollbackFor={RuntimeException.class, IOException.class, Exception.class} )	
+	@Override
+	public DefaultResult<EzfMap> create(EzfMap form) throws ServiceException, Exception {
+		
+		return null;
 	}
 	
 }
