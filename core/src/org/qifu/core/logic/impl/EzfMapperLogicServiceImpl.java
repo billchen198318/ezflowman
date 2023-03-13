@@ -100,8 +100,27 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 			rollbackFor={RuntimeException.class, IOException.class, Exception.class} )	
 	@Override
 	public DefaultResult<EzfMap> create(EzfMap form) throws ServiceException, Exception {
-		
-		return null;
+		if (null == form) {
+			throw new ServiceException( BaseSystemMessage.objectNull() );
+		}
+		EzfDs ds = new EzfDs();
+		ds.setDsId( form.getDsId() );
+		ds = this.ezfDsService.selectByUniqueKey(ds).getValueEmptyThrowMessage();
+		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
+		form = mResult.getValueEmptyThrowMessage();
+		for (EzfMapGrd grid : form.getGrids()) {
+			this.ezfMapGrdService.insert(grid);
+			for (EzfMapField field : grid.getItems()) {
+				this.ezfMapFieldService.insert(field);
+			}
+			for (EzfMapGrdTblMp tblMp : grid.getTblmps()) {
+				this.ezfMapGrdTblMpService.insert(tblMp);
+			}
+		}
+		for (EzfMapField field : form.getFields()) {
+			this.ezfMapFieldService.insert(field);
+		}
+		return mResult;
 	}
 	
 }
