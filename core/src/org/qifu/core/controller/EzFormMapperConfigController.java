@@ -202,7 +202,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	}		
 	
 	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
-		
+		throw new ControllerException("測試123");
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")

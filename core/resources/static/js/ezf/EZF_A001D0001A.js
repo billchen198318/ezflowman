@@ -24,7 +24,8 @@ const PageEventHandling = {
 	methods: {
 		initData	:	_initData,
 		clearPage	:	_clearPage,
-		loadEfgpPkg	:	_loadEfgpPkg
+		loadEfgpPkg	:	_loadEfgpPkg,
+		saveEzfMap	:	_saveEzfMap
 	},
 	mounted() {
 		this.initData();
@@ -40,10 +41,29 @@ function _initData() {
 
 function _loadEfgpPkg() {
 	var that = this;
-	//console.log( JSON.stringify(this.inpForm) );
 	clearWarningMessageField(msgFields);
 	xhrSendParameter2(
 		'./ezfMapEfgpPackageIdLoadJson', 
+		JSON.stringify(that.inpForm), 
+		function(data) {
+			if ( _qifu_success_flag != data.success ) {
+				setWarningMessageField(msgFields, data.checkFields);
+				parent.notifyWarning( data.message );
+				that.clearPage();
+				return;
+			}
+			that.inpForm = data.value;
+		}, 
+		this.clearPage,
+		_qifu_defaultSelfPleaseWaitShow
+	);		
+}
+
+function _saveEzfMap() {
+	var that = this;
+	clearWarningMessageField(msgFields);
+	xhrSendParameter2(
+		'./ezfMapSaveJson', 
 		JSON.stringify(that.inpForm), 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {

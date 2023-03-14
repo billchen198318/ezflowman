@@ -118,7 +118,7 @@ msgFields['mainTbl'] 		= 'mainTbl';
 							
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							
-							<button type="button" class="btn btn-success" ><i class="icon fa fa-edit"></i>&nbsp;儲存/更新</button>	
+							<button type="button" class="btn btn-success" v-on:click="saveEzfMap" ><i class="icon fa fa-edit"></i>&nbsp;儲存/更新</button>	
 							
 							
 						</div>
