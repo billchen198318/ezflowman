@@ -7,6 +7,9 @@ var _inpForm = {
     'mainTbl'	:	'',
     'efgpProcessStatusField'	:	'',
     'efgpProcessNoField'		:	'',
+    'efgpRequesterIdField'		:	'',
+    'efgpOrgUnitIdField'		:	'',
+    'efgpSubjectScript'			:	'',
     'fields'	:	[],
     'grids'		:	[]
 }
