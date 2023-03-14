@@ -11,6 +11,9 @@
     <result column="MAIN_TBL" jdbcType="VARCHAR" property="mainTbl" />
     <result column="EFGP_PROCESS_STATUS_FIELD" jdbcType="VARCHAR" property="efgpProcessStatusField" />
     <result column="EFGP_PROCESS_NO_FIELD" jdbcType="VARCHAR" property="efgpProcessNoField" />    
+    <result column="EFGP_REQUESTER_ID_FIELD" jdbcType="VARCHAR" property="efgpRequesterIdField" />
+    <result column="EFGP_ORG_UNIT_ID_FIELD" jdbcType="VARCHAR" property="efgpOrgUnitIdField" />
+    <result column="EFGP_SUBJECT_SCRIPT" jdbcType="VARCHAR" property="efgpSubjectScript" />    
     <result column="CUSERID" jdbcType="VARCHAR" property="cuserid" />
     <result column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
     <result column="UUSERID" jdbcType="VARCHAR" property="uuserid" />
@@ -101,6 +104,15 @@
       <if test="efgpProcessNoField != null">
         EFGP_PROCESS_NO_FIELD,
       </if>
+      <if test="efgpRequesterIdField != null">
+        EFGP_REQUESTER_ID_FIELD,
+      </if>
+      <if test="efgpOrgUnitIdField != null">
+        EFGP_ORG_UNIT_ID_FIELD,
+      </if>
+      <if test="efgpSubjectScript != null">
+        EFGP_SUBJECT_SCRIPT,
+      </if>      
       <if test="cuserid != null">
         CUSERID,
       </if>
@@ -139,6 +151,15 @@
       <if test="efgpProcessNoField != null">
         #{efgpProcessNoField,jdbcType=VARCHAR},
       </if>
+      <if test="efgpRequesterIdField != null">
+        #{efgpRequesterIdField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpOrgUnitIdField != null">
+        #{efgpOrgUnitIdField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpSubjectScript != null">
+        #{efgpSubjectScript,jdbcType=VARCHAR},
+      </if>      
       <if test="cuserid != null">
         #{cuserid,jdbcType=VARCHAR},
       </if>
@@ -178,6 +199,15 @@
       <if test="efgpProcessNoField != null">
         EFGP_PROCESS_NO_FIELD = #{efgpProcessNoField,jdbcType=VARCHAR},
       </if>    
+      <if test="efgpRequesterIdField != null">
+        EFGP_REQUESTER_ID_FIELD = #{efgpRequesterIdField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpOrgUnitIdField != null">
+        EFGP_ORG_UNIT_ID_FIELD = #{efgpOrgUnitIdField,jdbcType=VARCHAR},
+      </if>
+      <if test="efgpSubjectScript != null">
+        EFGP_SUBJECT_SCRIPT = #{efgpSubjectScript,jdbcType=VARCHAR},
+      </if>      
       <!--  
       <if test="cuserid != null">
         CUSERID = #{cuserid,jdbcType=VARCHAR},
