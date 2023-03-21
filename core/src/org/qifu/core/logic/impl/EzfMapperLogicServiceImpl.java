@@ -117,6 +117,9 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 			}
 			this.ezfMapGrdService.insert(grid);
 			for (EzfMapField field : grid.getItems()) {
+				if (StringUtils.isBlank(field.getTblField())) {
+					continue;
+				}
 				field.setGridId(grid.getGridId());
 				field.setCnfId(form.getCnfId());
 				this.ezfMapFieldService.insert(field);
@@ -130,10 +133,18 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 				this.ezfMapGrdTblMpService.insert(tblMp);
 			}
 		}
-		for (EzfMapField field : form.getFields()) {			
+		int baseRecord = 0;
+		for (EzfMapField field : form.getFields()) {
+			if (StringUtils.isBlank(field.getTblField())) {
+				continue;
+			}
 			field.setGridId(YesNo.NO);
 			field.setCnfId(form.getCnfId());			
 			this.ezfMapFieldService.insert(field);
+			baseRecord++;
+		}
+		if (baseRecord < 1) {
+			throw new ServiceException( "最少需輸入一筆field對應配置" );
 		}
 		return mResult;
 	}
