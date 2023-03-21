@@ -34,6 +34,7 @@ import org.qifu.base.model.DefaultResult;
 import org.qifu.base.model.ServiceAuthority;
 import org.qifu.base.model.ServiceMethodAuthority;
 import org.qifu.base.model.ServiceMethodType;
+import org.qifu.base.model.YesNo;
 import org.qifu.base.service.BaseLogicService;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
@@ -111,7 +112,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		form = mResult.getValueEmptyThrowMessage();
 		for (EzfMapGrd grid : form.getGrids()) {
 			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
-				logger.warn(grid.getGridId() + " no input detail table name.");
+				logger.warn(grid.getGridId() + " 沒有輸入 Sub table");
 				continue;
 			}
 			this.ezfMapGrdService.insert(grid);
@@ -121,13 +122,16 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 				this.ezfMapFieldService.insert(field);
 			}
 			for (EzfMapGrdTblMp tblMp : grid.getTblmps()) {
+				if (StringUtils.isBlank(tblMp.getMstFieldName()) || StringUtils.isBlank(tblMp.getDtlFieldName())) {
+					throw new ServiceException(grid.getGridId() + " 沒有輸入主表與明細表where條件欄位");
+				}
 				tblMp.setGridId(grid.getGridId());
 				tblMp.setCnfId(form.getCnfId());				
 				this.ezfMapGrdTblMpService.insert(tblMp);
 			}
 		}
-		for (EzfMapField field : form.getFields()) {
-			field.setGridId("");
+		for (EzfMapField field : form.getFields()) {			
+			field.setGridId(YesNo.NO);
 			field.setCnfId(form.getCnfId());			
 			this.ezfMapFieldService.insert(field);
 		}
