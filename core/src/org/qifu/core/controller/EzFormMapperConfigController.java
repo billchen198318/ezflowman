@@ -93,11 +93,13 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	// TEST manual connection pool
 	private void test() throws Exception {
 		Properties props = new Properties();
-		props.setProperty("dataSourceClassName", "org.mariadb.jdbc.Driver");
+		props.setProperty("dataSourceClassName", "com.zaxxer.hikari.HikariDataSource");
+		props.setProperty("datasource.driverClassName", "org.mariadb.jdbc.Driver");		
 		props.setProperty("dataSource.user", "root");
 		props.setProperty("dataSource.password", "password");
 		props.setProperty("dataSource.databaseName", "ezflowman");
 		props.setProperty("dataSource.serverName", "127.0.0.1");
+		props.setProperty("dataSource.poolName", "DS01");
 		props.put("dataSource.logWriter", new PrintWriter(System.out));
 
 		HikariConfig config = new HikariConfig(props);
@@ -135,6 +137,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		this.getDefaultModelMap(mm, this.currentMethodAuthority());
 		try {
 			this.init("createPage", mm);
+			//this.test(); // for TEST...
 		} catch (AuthorityException e) {
 			viewName = this.getAuthorityExceptionPage(e, mm);
 		} catch (ControllerException | ServiceException e) {
