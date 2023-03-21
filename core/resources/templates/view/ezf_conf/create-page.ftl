@@ -55,6 +55,12 @@ msgFields['cnfId'] 			= 'cnfId';
 msgFields['cnfName'] 		= 'cnfName';
 msgFields['dsId'] 			= 'dsId';
 msgFields['mainTbl'] 		= 'mainTbl';
+msgFields['efgpProcessStatusField']	= 'efgpProcessStatusField';
+msgFields['efgpProcessNoField'] 	= 'efgpProcessNoField';
+msgFields['efgpRequesterIdField'] 	= 'efgpRequesterIdField';
+msgFields['efgpOrgUnitIdField'] 	= 'efgpOrgUnitIdField';
+msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
+
 
 </script>
 

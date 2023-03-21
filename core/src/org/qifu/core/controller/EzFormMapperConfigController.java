@@ -32,12 +32,14 @@ import org.qifu.base.exception.ServiceException;
 import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
+import org.qifu.base.model.DefaultResult;
 import org.qifu.base.model.YesNo;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
 import org.qifu.core.entity.EzfMapField;
 import org.qifu.core.entity.EzfMapGrd;
 import org.qifu.core.entity.EzfMapGrdTblMp;
+import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
@@ -59,6 +61,9 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	@Autowired
 	IEzfDsService<EzfDs, String> ezfDsService;
 	
+	@Autowired
+	IEzfMapperLogicService ezfMapperLogicService;
+		
 	@Override
 	public String viewPageNamespace() {
 		return "ezf_conf";
@@ -209,13 +214,18 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		.testField("cnfName", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入配置名稱")
 		.testField("dsId", form, "@org.qifu.base.model.PleaseSelect@noSelect(dsId)", "請輸入資料來源")
 		.testField("mainTbl", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入映射資料表")
+		.testField("efgpProcessStatusField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpProcessStatusField)", "請輸入簽核狀態欄位名稱")
+		.testField("efgpProcessNoField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpProcessNoField)", "請輸入流程序號欄位名稱")
+		.testField("efgpRequesterIdField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpRequesterIdField)", "請輸入簽核發單人欄位名稱")
+		.testField("efgpOrgUnitIdField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpOrgUnitIdField)", "請輸入簽核發單單位欄位名稱")
+		.testField("efgpSubjectScript", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpSubjectScript)", "請輸入簽核發單Subject腳本")
 		.throwMessage();		
 	}
 	
 	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.checkForCreateOrUpdate(result, form);
-		
-		
+		DefaultResult<EzfMap> cResult = this.ezfMapperLogicService.create(form);
+		this.setDefaultResponseJsonResult(result, cResult);
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")

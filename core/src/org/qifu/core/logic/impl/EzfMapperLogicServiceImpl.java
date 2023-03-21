@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.qifu.base.exception.ServiceException;
@@ -109,15 +110,26 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
 		form = mResult.getValueEmptyThrowMessage();
 		for (EzfMapGrd grid : form.getGrids()) {
+			/*
+			if (StringUtils.isBlank(grid.getDtlTbl())) {
+				throw new ServiceException("請輸入");
+			}
+			*/
 			this.ezfMapGrdService.insert(grid);
 			for (EzfMapField field : grid.getItems()) {
+				field.setGridId(grid.getGridId());
+				field.setCnfId(form.getCnfId());
 				this.ezfMapFieldService.insert(field);
 			}
 			for (EzfMapGrdTblMp tblMp : grid.getTblmps()) {
+				tblMp.setGridId(grid.getGridId());
+				tblMp.setCnfId(form.getCnfId());				
 				this.ezfMapGrdTblMpService.insert(tblMp);
 			}
 		}
 		for (EzfMapField field : form.getFields()) {
+			field.setGridId("");
+			field.setCnfId(form.getCnfId());			
 			this.ezfMapFieldService.insert(field);
 		}
 		return mResult;
