@@ -110,12 +110,13 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		ds = this.ezfDsService.selectByUniqueKey(ds).getValueEmptyThrowMessage();
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
 		form = mResult.getValueEmptyThrowMessage();
-		for (EzfMapGrd grid : form.getGrids()) {
+		for (EzfMapGrd grid : form.getGrids()) {					
 			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
 				logger.warn(grid.getGridId() + " 沒有輸入 Sub table");
 				continue;
 			}
-			this.ezfMapGrdService.insert(grid);
+			grid.setCnfId( form.getCnfId() );
+			grid = this.ezfMapGrdService.insert(grid).getValueEmptyThrowMessage();
 			for (EzfMapField field : grid.getItems()) {
 				if (StringUtils.isBlank(field.getTblField())) {
 					continue;
