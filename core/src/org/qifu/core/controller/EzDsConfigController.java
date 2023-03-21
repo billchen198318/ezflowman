@@ -119,13 +119,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	}	
 	
 	private void handlerTestJdbcConnection(EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
-		if (DsDriverType.mariaDB.equals(ds.getDriverType())) { // 3
-			Class.forName("org.mariadb.jdbc.Driver");
-		} else if (DsDriverType.msSqlServer.equals(ds.getDriverType())) { // 1
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		} else { // 2 oracle
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		}
+		Class.forName(DsDriverType.getDriverClassName(ds.getDriverType()));
 		try (Connection conn = DriverManager.getConnection(ds.getDbAddr(), ds.getDbUser(), ds.getDbPasswd())) {
 			logger.info( this.getClass().getSimpleName() + " test " + conn.toString() );
 		}		
