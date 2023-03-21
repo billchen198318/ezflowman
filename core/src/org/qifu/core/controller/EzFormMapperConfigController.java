@@ -21,6 +21,9 @@
  */
 package org.qifu.core.controller;
 
+import java.io.PrintWriter;
+import java.util.Properties;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -55,6 +58,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+
 @Controller
 public class EzFormMapperConfigController extends BaseControllerSupport implements IPageNamespaceProvide {
 	
@@ -81,6 +87,27 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@SuppressWarnings("unused")
 	private void fetch(ModelMap mm, String oid) throws AuthorityException, ControllerException, ServiceException, Exception {
+		
+	}
+	
+	// TEST manual connection pool
+	private void test() throws Exception {
+		Properties props = new Properties();
+		props.setProperty("dataSourceClassName", "org.mariadb.jdbc.Driver");
+		props.setProperty("dataSource.user", "root");
+		props.setProperty("dataSource.password", "password");
+		props.setProperty("dataSource.databaseName", "ezflowman");
+		props.setProperty("dataSource.serverName", "127.0.0.1");
+		props.put("dataSource.logWriter", new PrintWriter(System.out));
+
+		HikariConfig config = new HikariConfig(props);
+		HikariDataSource ds = new HikariDataSource(config);
+		
+		try (java.sql.Connection conn = ds.getConnection()) {
+			System.out.println( conn.toString() );
+			conn.createStatement().executeQuery("select * from tb_sys_event_log");
+		}		
+		
 		
 	}	
 	
