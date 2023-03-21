@@ -93,16 +93,16 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	// TEST manual connection pool
 	private void test() throws Exception {
 		Properties props = new Properties();
-		props.setProperty("dataSourceClassName", "com.zaxxer.hikari.HikariDataSource");
-		props.setProperty("datasource.driverClassName", "org.mariadb.jdbc.Driver");		
 		props.setProperty("dataSource.user", "root");
 		props.setProperty("dataSource.password", "password");
 		props.setProperty("dataSource.databaseName", "ezflowman");
 		props.setProperty("dataSource.serverName", "127.0.0.1");
-		props.setProperty("dataSource.poolName", "DS01");
 		props.put("dataSource.logWriter", new PrintWriter(System.out));
 
 		HikariConfig config = new HikariConfig(props);
+		config.setDriverClassName("org.mariadb.jdbc.Driver");
+		config.setPoolName("DS01");
+		config.setJdbcUrl("jdbc:mariadb://127.0.0.1/ezflowman?useUnicode=true&characterEncoding=UTF-8");
 		HikariDataSource ds = new HikariDataSource(config);
 		
 		try (java.sql.Connection conn = ds.getConnection()) {
