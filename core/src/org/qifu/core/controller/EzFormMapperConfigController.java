@@ -201,8 +201,21 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}		
 	
+	private void checkForCreateOrUpdate(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
+		CheckControllerFieldHandler<EzfMap> chk = this.getCheckControllerFieldHandler(result);
+		chk
+		.testField("efgpPkgId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpPkgId)", "請輸入EFGP流程編號")
+		.testField("cnfId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpPkgId)", "請輸入配置編號")
+		.testField("cnfName", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入配置名稱")
+		.testField("dsId", form, "@org.qifu.base.model.PleaseSelect@noSelect(dsId)", "請輸入資料來源")
+		.testField("mainTbl", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入映射資料表")
+		.throwMessage();		
+	}
+	
 	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
-		throw new ControllerException("測試123");
+		this.checkForCreateOrUpdate(result, form);
+		
+		
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
