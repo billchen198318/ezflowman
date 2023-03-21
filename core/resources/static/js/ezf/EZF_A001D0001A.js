@@ -61,9 +61,13 @@ function _loadEfgpPkg() {
 
 function _saveEzfMap() {
 	var that = this;
-	clearWarningMessageField(msgFields);
+	var eventUrl = './ezfMapSaveJson';
+	if (null != this.inpForm && null != this.inpForm.oid && '' != this.inpForm.oid) {
+		eventUrl = './ezfMapUpdateJson';
+	} 
+	clearWarningMessageField(msgFields);	
 	xhrSendParameter2(
-		'./ezfMapSaveJson', 
+		eventUrl, 
 		JSON.stringify(that.inpForm), 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {

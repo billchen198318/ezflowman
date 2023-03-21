@@ -11,4 +11,6 @@ public interface IEzfMapperLogicService {
 	
 	public DefaultResult<EzfMap> create(EzfMap form) throws ServiceException, Exception;
 	
+	public DefaultResult<EzfMap> update(EzfMap form) throws ServiceException, Exception;
+	
 }

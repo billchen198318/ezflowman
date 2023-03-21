@@ -245,4 +245,27 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}	
 	
+	private void update(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
+		this.checkForCreateOrUpdate(result, form);
+		DefaultResult<EzfMap> uResult = this.ezfMapperLogicService.update(form);
+		this.setDefaultResponseJsonResult(result, uResult);
+	}	
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@RequestMapping(value = "/ezfMapUpdateJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doUpdateJson(HttpServletRequest request, @RequestBody EzfMap form) {
+		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {
+			this.update(result, form);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}		
+	
 }

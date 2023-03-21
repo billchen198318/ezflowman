@@ -148,5 +148,16 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		}
 		return mResult;
 	}
+
+	@ServiceMethodAuthority(type = ServiceMethodType.UPDATE)
+	@Transactional(
+			propagation=Propagation.REQUIRED, 
+			readOnly=false,
+			rollbackFor={RuntimeException.class, IOException.class, Exception.class} )	
+	@Override
+	public DefaultResult<EzfMap> update(EzfMap form) throws ServiceException, Exception {
+		
+		return null;
+	}
 	
 }
