@@ -13,9 +13,9 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class ManualDataSourceUtils {
 	
-	private static ThreadLocal<Map<String, HikariDataSource>> dsThreadLocal = new ThreadLocal<Map<String, HikariDataSource>>();
+	private static volatile ThreadLocal<Map<String, HikariDataSource>> dsThreadLocal = new ThreadLocal<Map<String, HikariDataSource>>();
 	
-	private static ThreadLocal<Map<String, NamedParameterJdbcTemplate>> jdbcTemplateThreadLocal = new ThreadLocal<Map<String, NamedParameterJdbcTemplate>>();
+	private static volatile ThreadLocal<Map<String, NamedParameterJdbcTemplate>> jdbcTemplateThreadLocal = new ThreadLocal<Map<String, NamedParameterJdbcTemplate>>();
 	
 	static {
 		dsThreadLocal.set( new HashMap<String, HikariDataSource>() );

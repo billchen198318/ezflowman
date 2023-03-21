@@ -48,6 +48,7 @@ import org.qifu.core.service.IEzfMapFieldService;
 import org.qifu.core.service.IEzfMapGrdService;
 import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
+import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -93,6 +94,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		if ( this.ezfMapService.count(paramMap) > 0 ) {
 			throw new ServiceException(ds.getDsId() + " 正在被使用,無法刪除!");
 		}		
+		ManualDataSourceUtils.remove(ds.getDsId());
 		return this.ezfDsService.delete(ds);
 	}
 	

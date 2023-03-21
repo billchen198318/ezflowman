@@ -48,6 +48,7 @@ import org.qifu.core.entity.EzfDs;
 import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
 import org.qifu.model.DsDriverType;
+import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -105,7 +106,6 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 	
 	private void checkForCreateOrUpdate(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, ServiceException, Exception {
 		CheckControllerFieldHandler<EzfDs> chk = this.getCheckControllerFieldHandler(result);
-		
 		chk
 		.testField("inp_dsId", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsId)", "請輸入編號!")
 		.testField("inp_dsName", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dsName)", "請輸入名稱!")
@@ -114,15 +114,15 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		.testField("inp_dbUser", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbUser)", "請輸入帳戶!")
 		.testField("inp_dbPasswd", ds, "@org.apache.commons.lang3.StringUtils@isBlank(dbPasswd)", "請輸入密碼!")
 		.throwMessage();
-		
-		chk.testField("imp_dsId", ds, "@org.qifu.util.SimpleUtils@checkBeTrueOf_azAZ09(dsId)", "編號必須為0-9,a-z,A-Z等字元!").throwMessage();
+		chk.testField("inp_dsId", ds, "!@org.qifu.util.SimpleUtils@checkBeTrueOf_azAZ09(dsId)", "編號必須為0-9,a-z,A-Z等字元!").throwMessage();
+		chk.testField("inp_dsId", ds, "@org.qifu.base.model.PleaseSelect@isAllOption(dsId)", "請更改編號代號!").throwMessage();
 	}	
 	
 	private void handlerTestJdbcConnection(EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
 		Class.forName(DsDriverType.getDriverClassName(ds.getDriverType()));
 		try (Connection conn = DriverManager.getConnection(ds.getDbAddr(), ds.getDbUser(), ds.getDbPasswd())) {
 			logger.info( this.getClass().getSimpleName() + " test " + conn.toString() );
-		}		
+		}
 	}
 	
 	private void save(DefaultControllerJsonResultObj<EzfDs> result, EzfDs ds) throws ControllerException, AuthorityException, ServiceException, Exception {
@@ -136,6 +136,9 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		this.checkForCreateOrUpdate(result, ds);
 		this.handlerTestJdbcConnection(ds);
 		DefaultResult<EzfDs> uResult = this.ezfDsService.update(ds);
+		if (YES.equals(uResult.getSuccess())) {
+			ManualDataSourceUtils.remove(ds.getDsId());
+		}
 		this.setDefaultResponseJsonResult(result, uResult);
 	}
 	
