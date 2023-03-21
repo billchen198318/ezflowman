@@ -110,11 +110,9 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
 		form = mResult.getValueEmptyThrowMessage();
 		for (EzfMapGrd grid : form.getGrids()) {
-			/*
-			if (StringUtils.isBlank(grid.getDtlTbl())) {
-				throw new ServiceException("請輸入");
+			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
+				continue;
 			}
-			*/
 			this.ezfMapGrdService.insert(grid);
 			for (EzfMapField field : grid.getItems()) {
 				field.setGridId(grid.getGridId());

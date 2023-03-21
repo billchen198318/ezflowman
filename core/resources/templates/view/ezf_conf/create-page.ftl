@@ -201,12 +201,21 @@ msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
 			
 			
 <!-- ###################################################################################### -->		
-<template v-for='(g, index) in inpForm.grids' >
+<template v-for='(g, gIndex) in inpForm.grids' >
 
 			<p style="margin-bottom: 10px"></p>
 		
 			<div class="card border-dark">
 				<div class="card-body" >
+				
+
+						<div class="col-xs-12 col-md-12 col-lg-12 ">
+							<label v-bind:for="'dtlTbl' + '_' + g.gridId">Sub table name</label>
+							<input type="text" v-bind:id="'dtlTbl' + '_' + g.gridId" class="form-control" placeholder="請輸入sub table映射資料表" v-model="g.dtlTbl" >							
+						</div>		
+				
+				
+					<br>
 				
 				
 					<h5 class="card-title">主表與明細表where條件欄位</h5>
