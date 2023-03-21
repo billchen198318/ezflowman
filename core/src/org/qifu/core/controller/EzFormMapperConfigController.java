@@ -210,10 +210,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		CheckControllerFieldHandler<EzfMap> chk = this.getCheckControllerFieldHandler(result);
 		chk
 		.testField("efgpPkgId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpPkgId)", "請輸入EFGP流程編號")
-		.testField("cnfId", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpPkgId)", "請輸入配置編號")
+		.testField("cnfId", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfId)", "請輸入配置編號")
 		.testField("cnfName", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入配置名稱")
 		.testField("dsId", form, "@org.qifu.base.model.PleaseSelect@noSelect(dsId)", "請輸入資料來源")
-		.testField("mainTbl", form, "@org.apache.commons.lang3.StringUtils@isBlank(cnfName)", "請輸入映射資料表")
+		.testField("mainTbl", form, "@org.apache.commons.lang3.StringUtils@isBlank(mainTbl)", "請輸入映射資料表")
 		.testField("efgpProcessStatusField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpProcessStatusField)", "請輸入簽核狀態欄位名稱")
 		.testField("efgpProcessNoField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpProcessNoField)", "請輸入流程序號欄位名稱")
 		.testField("efgpRequesterIdField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpRequesterIdField)", "請輸入簽核發單人欄位名稱")
