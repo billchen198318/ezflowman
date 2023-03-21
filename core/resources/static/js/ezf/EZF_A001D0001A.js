@@ -69,7 +69,7 @@ function _saveEzfMap() {
 			if ( _qifu_success_flag != data.success ) {
 				setWarningMessageField(msgFields, data.checkFields);
 				parent.notifyWarning( data.message );
-				that.clearPage();
+				//that.clearPage();
 				return;
 			}
 			that.inpForm = data.value;
