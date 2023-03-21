@@ -53,6 +53,7 @@ public class ManualDataSourceUtils {
 		config.setDriverClassName("org.mariadb.jdbc.Driver");
 		config.setPoolName(poolName);
 		config.setJdbcUrl(jdbcUrl);
+		config.setMaximumPoolSize(4);
 		HikariDataSource ds = new HikariDataSource(config);
 		dsThreadLocal.get().put(poolName, ds);
 		jdbcTemplateThreadLocal.get().put(poolName, DataUtils.getManualJdbcTemplate(ds));
