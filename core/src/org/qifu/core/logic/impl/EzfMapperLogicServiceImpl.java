@@ -111,6 +111,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		form = mResult.getValueEmptyThrowMessage();
 		for (EzfMapGrd grid : form.getGrids()) {
 			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
+				logger.warn(grid.getGridId() + " no input detail table name.");
 				continue;
 			}
 			this.ezfMapGrdService.insert(grid);
