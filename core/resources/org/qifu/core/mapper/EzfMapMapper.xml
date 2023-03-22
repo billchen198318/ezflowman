@@ -38,7 +38,14 @@
 	</if>				
 	<if test="efgpPkgId != null and efgpPkgId != ''.toString() ">
 		AND EFGP_PKG_ID = #{efgpPkgId,jdbcType=VARCHAR}
-	</if>				
+	</if>	
+	<if test="cnfIdLike != null and cnfIdLike != ''.toString() ">
+		AND CNF_ID like #{cnfIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="cnfNameLike != null and cnfNameLike != ''.toString() ">
+		AND CNF_NAME like #{cnfNameLike,jdbcType=VARCHAR}
+	</if>	
+					
 	<if test="orderBy != null and orderBy != ''.toString() and sortType != null and sortType != ''.toString() ">
 		ORDER BY  ${orderBy} ${sortType}
 	</if>	
@@ -59,7 +66,13 @@
 	<if test="efgpPkgId != null and efgpPkgId != ''.toString() ">
 		AND EFGP_PKG_ID = #{efgpPkgId,jdbcType=VARCHAR}
 	</if>	
-					
+	<if test="cnfIdLike != null and cnfIdLike != ''.toString() ">
+		AND CNF_ID like #{cnfIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="cnfNameLike != null and cnfNameLike != ''.toString() ">
+		AND CNF_NAME like #{cnfNameLike,jdbcType=VARCHAR}
+	</if>
+						
 	<include refid="org.qifu.core.mapper.DB1Config.sql2"/>
   </select>  
   
@@ -74,7 +87,13 @@
 	</if>			
 	<if test="efgpPkgId != null and efgpPkgId != ''.toString() ">
 		AND EFGP_PKG_ID = #{efgpPkgId,jdbcType=VARCHAR}
-	</if>		
+	</if>
+	<if test="cnfIdLike != null and cnfIdLike != ''.toString() ">
+		AND CNF_ID like #{cnfIdLike,jdbcType=VARCHAR}
+	</if>
+	<if test="cnfNameLike != null and cnfNameLike != ''.toString() ">
+		AND CNF_NAME like #{cnfNameLike,jdbcType=VARCHAR}
+	</if>			
   </select>  
   
   <insert id="insert" parameterType="org.qifu.core.entity.EzfMap"> 

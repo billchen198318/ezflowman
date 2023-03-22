@@ -41,12 +41,12 @@ $( document ).ready(function() {
 		<div class="col p-2 bg-secondary rounded">
 			<div class="row">
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
-					<label for="cnfId">編號</label>
-					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入編號" v-model="queryParam.cnfIdLike" @input="queryParam.cnfIdLike=$event.target.value.toUpperCase()" >					
+					<label for="cnfIdLike">編號</label>
+					<input type="text" name="cnfIdLike" id="cnfIdLike" class="form-control" placeholder="請輸入編號" v-model="queryParam.cnfIdLike" @input="queryParam.cnfIdLike=$event.target.value.toUpperCase()" >					
 				</div>
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
-					<label for="cnfName">名稱</label>
-					<input type="text" name="cnfName" id="cnfName" class="form-control" placeholder="請輸入名稱" v-model="queryParam.cnfNameLike" >					
+					<label for="cnfNameLike">名稱</label>
+					<input type="text" name="cnfNameLike" id="cnfNameLike" class="form-control" placeholder="請輸入名稱" v-model="queryParam.cnfNameLike" >					
 				</div>				
 			</div>
 			
@@ -65,6 +65,41 @@ $( document ).ready(function() {
 	
 	<br>		
 		
+		
+	<div class="row">
+			
+			<div class="card-columns col-xs-12 col-md-12 col-lg-12" v-if=" cnfList.length == 0 ">
+				<div class="alert alert-primary" role="alert"><h5>無配置資料!</h5></div>
+			</div>	
+			
+			
+			<div class="card-columns col-xs-12 col-md-12 col-lg-12" v-if=" cnfList.length > 0 ">
+			
+			  <div class="card border-dark" v-for="d in cnfList">
+			    <div class="card-body">
+			      <h5 class="card-title">編號:&nbsp;{{ d.cnfId }}      
+			      </h5>
+			      
+			      <h5>名稱:&nbsp;<span class="badge badge-info">{{ d.cnfName }}</span></h5>
+			      
+			      <h5><span class="badge badge-success">{{ d.efgpPkgId }}</span></h5>
+			      
+			      <br>
+			      
+			      <button type="button" class="btn btn-info" title="編輯表單" v-on:click="loadCnfItem(d.oid)" ><i class="icon fa fa-edit"></i>編輯配置</button>
+			    	&nbsp;
+			      <button type="button" class="btn btn-danger" title="刪除" v-on:click="deleteCnf(d.oid)" ><i class="icon fa fa-remove"></i>刪除</button>
+			      
+			    </div>
+			  </div>
+			  
+			</div>
+			
+	</div>		
+	
+	
+	
+	
 		
 		
 		</div>

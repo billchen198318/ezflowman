@@ -16,7 +16,9 @@ const PageEventHandling = {
 		initData			:	_initData,
 		clearPage			:	_clearPage,
 		queryDataList		:	_queryDataList,
-		setQueryDataList	:	_setQueryDataList
+		setQueryDataList	:	_setQueryDataList,
+		loadCnfItem			:	_loadCnfItem,
+		deleteCnf			:	_deleteCnf
 	},
 	mounted() {
 		this.initData();
@@ -37,10 +39,9 @@ function _clearPage() {
 }
 
 function _queryDataList() {
-	this.clearInputParam();
 	this.cnfList.splice(0);
 	xhrSendParameter2(
-		'./testQueryJson', 
+		'./ezfMapQueryJson', 
 		JSON.stringify(this.queryParam), 
 		this.setQueryDataList, 
 		this.clearPage,
@@ -58,3 +59,20 @@ function _setQueryDataList(data) {
 		}
 	}
 }
+
+function _loadCnfItem(oid) {
+	alert('load:' + oid);
+}
+
+function _deleteCnf(oid) {
+	alert('del:' + oid);
+}
+
+
+function appUnmount() {
+	app.unmount();
+	console.log('EZF_A001D0001Q appUnmount');
+}
+
+const app = Vue.createApp(PageEventHandling);
+var vm = app.mount('#main-content');

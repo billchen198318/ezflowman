@@ -21,8 +21,13 @@
  */
 package org.qifu.core.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.qifu.base.controller.BaseControllerSupport;
 import org.qifu.base.controller.IPageNamespaceProvide;
@@ -33,6 +38,9 @@ import org.qifu.base.model.CheckControllerFieldHandler;
 import org.qifu.base.model.ControllerMethodAuthority;
 import org.qifu.base.model.DefaultControllerJsonResultObj;
 import org.qifu.base.model.DefaultResult;
+import org.qifu.base.model.QueryParamBuilder;
+import org.qifu.base.model.SearchBody;
+import org.qifu.base.model.SortType;
 import org.qifu.base.model.YesNo;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
@@ -41,6 +49,7 @@ import org.qifu.core.entity.EzfMapGrd;
 import org.qifu.core.entity.EzfMapGrdTblMp;
 import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
+import org.qifu.core.service.IEzfMapService;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.vo.EzForm;
@@ -60,6 +69,9 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@Autowired
 	IEzfDsService<EzfDs, String> ezfDsService;
+	
+	@Autowired
+	IEzfMapService<EzfMap, String> ezfMapService;
 	
 	@Autowired
 	IEzfMapperLogicService ezfMapperLogicService;
@@ -83,6 +95,38 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void fetch(ModelMap mm, String oid) throws AuthorityException, ControllerException, ServiceException, Exception {
 		
 	}
+	
+	private void queryList(DefaultControllerJsonResultObj<List<EzfMap>> result, Map<String, String> param) throws ControllerException, AuthorityException, ServiceException, Exception {
+		SearchBody sb = new SearchBody(param);
+		Map<String, Object> qParam = QueryParamBuilder.build(sb).endingLike("cnfIdLike").fullLink("cnfNameLike").value();
+		if (MapUtils.isEmpty(qParam)) {
+			qParam.putAll(param);
+		}
+		DefaultResult<List<EzfMap>> queryResult = this.ezfMapService.selectListByParams(qParam, "CNF_ID", SortType.ASC);
+		this.setDefaultResponseJsonResult(result, queryResult);
+		result.setSuccess(YES);
+		result.setMessage("查詢完成");
+		if (CollectionUtils.isEmpty(result.getValue())) {
+			result.setMessage("無資配置筆數");
+		}
+	}	
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001Q")
+	@RequestMapping(value = "/ezfMapQueryJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<List<EzfMap>> doQueryJson(HttpServletRequest request, @RequestBody Map<String, String> param) {
+		DefaultControllerJsonResultObj<List<EzfMap>> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {			
+			this.queryList(result, param);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}	
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001Q")
 	@RequestMapping("/ezfConfigQueryPage")
@@ -275,6 +319,6 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			this.exceptionResult(result, e);
 		}
 		return result;		
-	}		
+	}
 	
 }
