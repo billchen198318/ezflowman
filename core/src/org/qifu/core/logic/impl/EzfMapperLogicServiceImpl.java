@@ -155,6 +155,9 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 				logger.warn(grid.getGridId() + " 沒有輸入 Sub table");
 				continue;
 			}
+			if (YesNo.NO.equals(grid.getGridId())) { // 因為 ezf_map_field.GRID_ID = 'N' 的代表為表單的欄位, 非grid的欄位, 所以不支持EasyFlowGP 表單設置grid的id為 "N" 的表單欄位
+				throw new ServiceException("EFGP流程序號 " + form.getEfgpPkgId() + " 有包含, Grid表格 編號為 N (Grid id is N), 系統無法支持配置");				
+			}
 			grid.setCnfId( form.getCnfId() );
 			grid = this.ezfMapGrdService.insert(grid).getValueEmptyThrowMessage();
 			for (EzfMapField field : grid.getItems()) {
