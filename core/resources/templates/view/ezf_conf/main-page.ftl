@@ -37,6 +37,34 @@ $( document ).ready(function() {
 	<div class="row">	
 		<div id="main-content" class="col-xs-12 col-md-12 col-lg-12">
 		
+	<div class="row">
+		<div class="col p-2 bg-secondary rounded">
+			<div class="row">
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="cnfId">編號</label>
+					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入編號" v-model="queryParam.cnfId" @input="queryParam.cnfId=$event.target.value.toUpperCase()" >					
+				</div>
+				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+					<label for="cnfName">名稱</label>
+					<input type="text" name="cnfName" id="cnfName" class="form-control" placeholder="請輸入名稱" v-model="queryParam.cnfNameLike" >					
+				</div>				
+			</div>
+			
+			<p style="margin-bottom: 10px"></p>
+			
+			<div class="row">
+				<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+					<button type="button" class="btn btn-primary" v-on:click="queryDataList"><i class="icon fa fa-search"></i>&nbsp;查詢</button>	
+					&nbsp;
+					<button type="button" class="btn btn-primary" v-on:click="clearPage"><i class="icon fa fa-eraser"></i>&nbsp;清除</button>	
+					
+				</div>
+			</div>			
+		</div>
+	</div>
+	
+	<br>		
+		
 		
 		
 		</div>
