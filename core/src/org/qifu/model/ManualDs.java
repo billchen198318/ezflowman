@@ -22,7 +22,8 @@ public class ManualDs {
 	
 	public ManualDs(HikariDataSource dataSource, NamedParameterJdbcTemplate jdbcTemplate) {
 		this.dataSource = dataSource;
-		if (null == jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+		if (null == this.jdbcTemplate) {
 			try {
 				this.jdbcTemplate = DataUtils.getManualJdbcTemplate(this.dataSource);
 			} catch (Exception e) {
