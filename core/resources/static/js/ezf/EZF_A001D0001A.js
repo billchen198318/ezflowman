@@ -55,6 +55,7 @@ function _loadEfgpPkg() {
 				return;
 			}
 			that.inpForm = data.value;
+			parent.notifyInfo( data.message );
 		}, 
 		this.clearPage,
 		_qifu_defaultSelfPleaseWaitShow
@@ -75,10 +76,10 @@ function _saveEzfMap() {
 			if ( _qifu_success_flag != data.success ) {
 				setWarningMessageField(msgFields, data.checkFields);
 				parent.notifyWarning( data.message );
-				//that.clearPage();
 				return;
 			}
 			that.inpForm = data.value;
+			parent.notifyInfo( data.message );
 		}, 
 		this.clearPage,
 		_qifu_defaultSelfPleaseWaitShow
