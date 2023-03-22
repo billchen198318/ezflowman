@@ -42,7 +42,7 @@ $( document ).ready(function() {
 			<div class="row">
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 					<label for="cnfId">編號</label>
-					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入編號" v-model="queryParam.cnfId" @input="queryParam.cnfId=$event.target.value.toUpperCase()" >					
+					<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入編號" v-model="queryParam.cnfIdLike" @input="queryParam.cnfIdLike=$event.target.value.toUpperCase()" >					
 				</div>
 				<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 					<label for="cnfName">名稱</label>

@@ -90,7 +90,7 @@ msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
 					<div class="row">
 						<div class="col-xs-6 col-md-6 col-lg-6 text-white">					
 							<label for="cnfId">配置編號</label>
-							<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入配置編號" v-model="inpForm.cnfId" >						
+							<input type="text" name="cnfId" id="cnfId" class="form-control" placeholder="請輸入配置編號" v-model="inpForm.cnfId" @input="inpForm.cnfId=$event.target.value.toUpperCase()">						
 						</div>
 						<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 							<label for="cnfName">配置名稱</label>

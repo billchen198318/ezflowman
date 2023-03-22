@@ -1,5 +1,5 @@
 var _queryParam = {
-	cnfId		:	'',
+	cnfIdLike	:	'',
 	cnfNameLike	:	''
 }
 
@@ -31,7 +31,7 @@ function _initData() {
 }
 
 function _clearPage() {
-	this.queryParam.cnfId = '';
+	this.queryParam.cnfIdLike = '';
 	this.queryParam.cnfNameLike = '';	
 	this.cnfList.splice(0);
 }
