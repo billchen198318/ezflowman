@@ -123,43 +123,8 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
 		form = mResult.getValueEmptyThrowMessage();
-		for (EzfMapGrd grid : form.getGrids()) {					
-			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
-				logger.warn(grid.getGridId() + " 沒有輸入 Sub table");
-				continue;
-			}
-			grid.setCnfId( form.getCnfId() );
-			grid = this.ezfMapGrdService.insert(grid).getValueEmptyThrowMessage();
-			for (EzfMapField field : grid.getItems()) {
-				if (StringUtils.isBlank(field.getTblField())) {
-					continue;
-				}
-				field.setGridId(grid.getGridId());
-				field.setCnfId(form.getCnfId());
-				this.ezfMapFieldService.insert(field);
-			}
-			for (EzfMapGrdTblMp tblMp : grid.getTblmps()) {
-				if (StringUtils.isBlank(tblMp.getMstFieldName()) || StringUtils.isBlank(tblMp.getDtlFieldName())) {
-					throw new ServiceException(grid.getGridId() + " 沒有輸入主表與明細表where條件欄位");
-				}
-				tblMp.setGridId(grid.getGridId());
-				tblMp.setCnfId(form.getCnfId());				
-				this.ezfMapGrdTblMpService.insert(tblMp);
-			}
-		}
-		int baseRecord = 0;
-		for (EzfMapField field : form.getFields()) {
-			if (StringUtils.isBlank(field.getTblField())) {
-				continue;
-			}
-			field.setGridId(YesNo.NO);
-			field.setCnfId(form.getCnfId());			
-			this.ezfMapFieldService.insert(field);
-			baseRecord++;
-		}
-		if (baseRecord < 1) {
-			throw new ServiceException( "最少需輸入一筆field對應配置" );
-		}
+		this.createDetail(form);		
+		
 		return mResult;
 	}
 
@@ -174,9 +139,17 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 			throw new ServiceException( BaseSystemMessage.objectNull() );
 		}
 		EzfMap beforeEzfMap = this.ezfMapService.selectByPrimaryKey(form.getOid()).getValueEmptyThrowMessage();
+		if (!beforeEzfMap.getEfgpPkgId().equals(form.getEfgpPkgId())) {
+			throw new ServiceException( "更新時EFGP流程序號 " + form.getEfgpPkgId() + " 與之前建立資料不匹配." );
+		}
 		this.deleteGridConfig(beforeEzfMap);
 		this.deleteGridMasterAndDetailTableMapperConfig(beforeEzfMap);
 		this.deleteFormFieldAndGridField(beforeEzfMap);
+		this.createDetail(form);			
+		return this.ezfMapService.update(form);
+	}
+	
+	private void createDetail(EzfMap form) throws ServiceException, Exception {
 		for (EzfMapGrd grid : form.getGrids()) {					
 			if (StringUtils.isBlank(grid.getDtlTbl())) { // 沒有detail 資料表, 不處理grid配置
 				logger.warn(grid.getGridId() + " 沒有輸入 Sub table");
@@ -213,8 +186,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		}
 		if (baseRecord < 1) {
 			throw new ServiceException( "最少需輸入一筆field對應配置" );
-		}				
-		return this.ezfMapService.update(form);
+		}		
 	}
 	
 	private void deleteFormFieldAndGridField(EzfMap form) throws ServiceException, Exception {
