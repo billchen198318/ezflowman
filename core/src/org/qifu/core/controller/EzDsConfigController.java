@@ -159,7 +159,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		return result;		
 	}		
 	
-	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009U")
 	@RequestMapping(value = "/ezfDsConfigUpdateJson", produces = MediaType.APPLICATION_JSON_VALUE)		
 	public @ResponseBody DefaultControllerJsonResultObj<EzfDs> doUpdate(HttpServletRequest request, EzfDs ds) {
 		DefaultControllerJsonResultObj<EzfDs> result = this.getDefaultJsonResult(this.currentMethodAuthority());
@@ -191,7 +191,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		}
 	}
 	
-	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009Q")
 	@RequestMapping(value = "/ezfDsConfigQueryJson", produces = MediaType.APPLICATION_JSON_VALUE)		
 	public @ResponseBody DefaultControllerJsonResultObj<List<EzfDs>> doQueryJson(HttpServletRequest request, @RequestBody Map<String, String> param) {
 		DefaultControllerJsonResultObj<List<EzfDs>> result = this.getDefaultJsonResult(this.currentMethodAuthority());
@@ -227,7 +227,7 @@ public class EzDsConfigController extends BaseControllerSupport implements IPage
 		return result;		
 	}	
 	
-	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009A")
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0009D")
 	@RequestMapping(value = "/ezfDsConfigDeleteJson", produces = MediaType.APPLICATION_JSON_VALUE)		
 	public @ResponseBody DefaultControllerJsonResultObj<Boolean> doDelete(HttpServletRequest request, EzfDs ds) {
 		DefaultControllerJsonResultObj<Boolean> result = this.getDefaultJsonResult(this.currentMethodAuthority());

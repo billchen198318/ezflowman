@@ -304,7 +304,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		this.setDefaultResponseJsonResult(result, uResult);
 	}	
 	
-	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001U")
 	@RequestMapping(value = "/ezfMapUpdateJson", produces = MediaType.APPLICATION_JSON_VALUE)		
 	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doUpdateJson(HttpServletRequest request, @RequestBody EzfMap form) {
 		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
@@ -321,7 +321,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}
 	
-	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001D")
 	@RequestMapping(value = "/ezfMapDeleteJson", produces = MediaType.APPLICATION_JSON_VALUE)		
 	public @ResponseBody DefaultControllerJsonResultObj<Boolean> doDelete(HttpServletRequest request, EzfMap form) {
 		DefaultControllerJsonResultObj<Boolean> result = this.getDefaultJsonResult(this.currentMethodAuthority());

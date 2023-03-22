@@ -61,7 +61,9 @@ function _setQueryDataList(data) {
 }
 
 function _loadCnfItem(oid) {
-	alert('load:' + oid);
+	var editPageTabId = 'EZF_A001D0001A';
+	var editPageUrl = parent.getProgUrlForOid(editPageTabId, oid);
+	parent.addTab( editPageTabId, editPageUrl );
 }
 
 function _deleteCnf(oid) {
