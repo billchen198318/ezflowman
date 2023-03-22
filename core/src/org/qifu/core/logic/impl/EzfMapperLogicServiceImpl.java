@@ -111,6 +111,16 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		EzfDs ds = new EzfDs();
 		ds.setDsId( form.getDsId() );
 		ds = this.ezfDsService.selectByUniqueKey(ds).getValueEmptyThrowMessage();
+		
+		if (this.isBlank(form.getEfgpPkgId())) {
+			throw new ServiceException(BaseSystemMessage.parameterBlank());
+		}
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("efgpPkgId", form.getEfgpPkgId());
+		if (this.ezfMapService.count(paramMap) > 0) {
+			throw new ServiceException("EFGP流程序號 " + form.getEfgpPkgId() + " 已存在,不可建立重複配置.");
+		}
+		
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
 		form = mResult.getValueEmptyThrowMessage();
 		for (EzfMapGrd grid : form.getGrids()) {					
