@@ -321,4 +321,22 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}
 	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@RequestMapping(value = "/ezfMapDeleteJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<Boolean> doDelete(HttpServletRequest request, EzfMap form) {
+		DefaultControllerJsonResultObj<Boolean> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {
+			DefaultResult<Boolean> dResult = this.ezfMapperLogicService.delete(form);
+			this.setDefaultResponseJsonResult(result, dResult);
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}			
+	
 }

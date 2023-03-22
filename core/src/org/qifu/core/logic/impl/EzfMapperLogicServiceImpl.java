@@ -235,4 +235,21 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		}
 	}
 	
+	@ServiceMethodAuthority(type = ServiceMethodType.DELETE)
+	@Transactional(
+			propagation=Propagation.REQUIRED, 
+			readOnly=false,
+			rollbackFor={RuntimeException.class, IOException.class, Exception.class} ) 	
+	@Override
+	public DefaultResult<Boolean> delete(EzfMap form) throws ServiceException, Exception {
+		if (null == form || this.isBlank(form.getOid())) {
+			throw new ServiceException(BaseSystemMessage.parameterBlank());
+		}
+		form = this.ezfMapService.selectByPrimaryKey(form.getOid()).getValueEmptyThrowMessage();
+		this.deleteGridConfig(form);
+		this.deleteGridMasterAndDetailTableMapperConfig(form);
+		this.deleteFormFieldAndGridField(form);
+		return this.ezfMapService.delete(form);
+	}
+	
 }

@@ -65,7 +65,27 @@ function _loadCnfItem(oid) {
 }
 
 function _deleteCnf(oid) {
-	alert('del:' + oid);
+	var that = this;	
+	parent.bootbox.confirm(
+		"確定刪除?", 
+		function(result) { 
+			if (!result) {
+				return;
+			}
+			xhrSendParameter(
+				'./ezfMapDeleteJson', 
+				{ 'oid' : oid }, 
+				function(data){
+					parent.notifyInfo( data.message );
+					that.queryDataList();		
+				}, 
+				function(){
+					parent.notifyError( '錯誤' );
+				},
+				_qifu_defaultSelfPleaseWaitShow
+			);	
+		}
+	);	
 }
 
 
