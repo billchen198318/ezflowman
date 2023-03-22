@@ -62,6 +62,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfMapperLogicService {
 	protected Logger logger = LogManager.getLogger(EzfMapperLogicServiceImpl.class);
 	
+	private final int MAX_EZF_MAP_RECORD = 16;
+	
 	@Autowired
 	IEzfDsService<EzfDs, String> ezfDsService;
 	
@@ -119,6 +121,11 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		paramMap.put("efgpPkgId", form.getEfgpPkgId());
 		if (this.ezfMapService.count(paramMap) > 0) {
 			throw new ServiceException("EFGP流程序號 " + form.getEfgpPkgId() + " 已存在,不可建立重複配置.");
+		}
+		
+		paramMap.clear();
+		if (this.ezfMapService.count(paramMap) >= MAX_EZF_MAP_RECORD) {
+			throw new ServiceException( "最多允許" + MAX_EZF_MAP_RECORD + "個配置" );
 		}
 		
 		DefaultResult<EzfMap> mResult = this.ezfMapService.insert(form);
