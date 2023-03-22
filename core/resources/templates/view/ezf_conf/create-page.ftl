@@ -118,14 +118,11 @@ msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
 					
 					<div class="row">
 						<div class="col-xs-12 col-md-12 col-lg-12 text-white">
-							<button type="button" class="btn btn-primary" v-on:click="loadEfgpPkg"><i class="icon fa fa-search"></i>&nbsp;載入流程</button>	
-							&nbsp;
-							<button type="button" class="btn btn-primary" ><i class="icon fa fa-eraser"></i>&nbsp;清除</button>	
+							<button type="button" class="btn btn-primary" v-on:click="loadEfgpPkg" :disabled="loadEfgpProcessBtnDisabled" ><i class="icon fa fa-search"></i>&nbsp;載入流程</button>	
 							
-							&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;
 							
-							<button type="button" class="btn btn-success" v-on:click="saveEzfMap" ><i class="icon fa fa-edit"></i>&nbsp;儲存/更新</button>	
-							
+							<button type="button" class="btn btn-success" v-on:click="saveEzfMap" ><i class="icon fa fa-floppy-o"></i>&nbsp;儲存/更新</button>	
 							
 						</div>
 					</div>			

@@ -31,7 +31,9 @@ const PageEventHandling = {
 		this.initData();
 	},
 	computed: {
-		
+		loadEfgpProcessBtnDisabled() {
+			return ( null != this.inpForm && null != this.inpForm.oid && '' != this.inpForm.oid );
+		}		
 	}
 }
 
