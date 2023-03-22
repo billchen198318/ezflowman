@@ -152,6 +152,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		this.getDefaultModelMap(mm, this.currentMethodAuthority());
 		try {
 			this.init("createPage", mm);
+			String editOid = StringUtils.defaultString( request.getParameter("oid") ).trim();
+			if (!StringUtils.isBlank(editOid)) {
+				mm.put("editOid", editOid);
+			}
 		} catch (AuthorityException e) {
 			viewName = this.getAuthorityExceptionPage(e, mm);
 		} catch (ControllerException | ServiceException e) {

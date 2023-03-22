@@ -36,6 +36,11 @@
 
 <script type="text/javascript">
 
+var _editOid = '';
+<@qifu.if test=" null != editOid && editOid.length() > 0 ">
+_editOid = '${editOid}';
+</@qifu.if>
+
 $( document ).ready(function() {
 	
 	

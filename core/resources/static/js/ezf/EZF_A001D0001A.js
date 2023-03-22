@@ -25,7 +25,8 @@ const PageEventHandling = {
 		initData	:	_initData,
 		clearPage	:	_clearPage,
 		loadEfgpPkg	:	_loadEfgpPkg,
-		saveEzfMap	:	_saveEzfMap
+		saveEzfMap	:	_saveEzfMap,
+		loadEzfMap	:	_loadEzfMap
 	},
 	mounted() {
 		this.initData();
@@ -38,7 +39,14 @@ const PageEventHandling = {
 }
 
 function _initData() {
-	
+	if (null != _editOid && '' != _editOid) {
+		this.inpForm.oid = _editOid;
+		this.loadEzfMap();
+	}
+}
+
+function _loadEzfMap() {
+	alert(this.inpForm.oid);
 }
 
 function _loadEfgpPkg() {
