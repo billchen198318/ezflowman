@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -370,7 +371,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, paramForm);
 		} else {
 			// 配置 findFormOIDsOfProcess 取出的 form 內容
-			this.prepareLoadDataByFindFormOIDsOfProcess(result, inpForm, paramForm);
+			this.prepareLoadDataWithFindFormOIDsOfProcess(result, inpForm, paramForm);
 		}	
 	}
 	
@@ -381,14 +382,14 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		result.setSuccess( YES );
 	}
 	
-	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+	private void prepareLoadDataWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.fillEzfMapDataForm(dataForm);
 		result.setValue(inpForm);
 		result.setMessage("載入完成");
 		result.setSuccess( YES );
 		
 		// 處理 dataForm 有的value 放到 inpForm
-		
+		// BeanUtils.copyProperties(inpForm, dataForm);
 		
 	}
 	
