@@ -47,7 +47,7 @@ function _initData() {
 
 function _loadEzfMap() {
 	var that = this;
-	xhrSendParameter2(
+	xhrSendParameter(
 		'./ezfMapLoadJson', 
 		{ "oid" : this.inpForm.oid }, 
 		function(data) {

@@ -28,7 +28,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -389,7 +388,19 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		result.setSuccess( YES );
 		
 		// 處理 dataForm 有的value 放到 inpForm
-		BeanUtils.copyProperties(inpForm, dataForm);
+		//BeanUtils.copyProperties(inpForm, dataForm);
+		inpForm.setOid( dataForm.getOid() );
+		inpForm.setCnfId( dataForm.getCnfId() );
+		inpForm.setCnfName( dataForm.getCnfName() );
+		inpForm.setDsId( dataForm.getDsId() );
+		inpForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
+		inpForm.setMainTbl( dataForm.getMainTbl() );
+		inpForm.setEfgpProcessStatusField( dataForm.getEfgpProcessStatusField() );
+		inpForm.setEfgpProcessNoField( dataForm.getEfgpProcessNoField() );
+		inpForm.setEfgpRequesterIdField( dataForm.getEfgpRequesterIdField() );
+		inpForm.setEfgpOrgUnitIdField( dataForm.getEfgpOrgUnitIdField() );
+		inpForm.setEfgpSubjectScript( dataForm.getEfgpSubjectScript() );
+		
 		if (inpForm.getFields() == null) {
 			inpForm.setFields( new ArrayList<EzfMapField>() );
 		}
@@ -413,7 +424,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			for (int j = 0; dataForm.getGrids() != null && j < dataForm.getGrids().size(); j++) {
 				EzfMapGrd jGrid = dataForm.getGrids().get(j);
 				if (gGrid.getGridId().equals(jGrid.getGridId())) {
-					BeanUtils.copyProperties(gGrid, jGrid);
+					//BeanUtils.copyProperties(gGrid, jGrid);
+					gGrid.setOid( jGrid.getOid() );
+					gGrid.setDtlTbl( jGrid.getDtlTbl() );
+					
 					if (gGrid.getItems() == null) {
 						gGrid.setItems( new ArrayList<EzfMapField>() );
 					}
@@ -447,8 +461,9 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 					}
 					
 				}
-			}			
-		}		
+			}
+		}
+		
 	}
 	
 	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
