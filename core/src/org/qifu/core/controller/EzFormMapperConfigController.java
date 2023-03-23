@@ -348,9 +348,20 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		this.loadProcessPackageIdFromEFGP(result, paramForm);
 		EzfMap inpForm = result.getValue();
 		if (inpForm == null || StringUtils.isBlank(inpForm.getEfgpPkgId())) {
-			throw new ControllerException("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
-		}
+			// 無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)			
+			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, inpForm);
+		} else {
+			// 配置 findFormOIDsOfProcess 取出的 form 內容
+			this.prepareLoadDataByFindFormOIDsOfProcess(result, inpForm);
+		}	
+	}
+	
+	private void prepareLoadDataNoWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+		result.setMessage("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
 		
+	}
+	
+	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		
 	}
 	
