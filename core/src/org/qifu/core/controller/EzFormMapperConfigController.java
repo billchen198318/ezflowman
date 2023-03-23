@@ -377,10 +377,18 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void prepareLoadDataNoWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		result.setMessage("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
 		this.fillEzfMapDataForm(dataForm);		
+		result.setValue(dataForm);
+		result.setSuccess( YES );
 	}
 	
 	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.fillEzfMapDataForm(dataForm);
+		result.setValue(inpForm);
+		result.setMessage("載入完成");
+		result.setSuccess( YES );
+		
+		// 處理 dataForm 有的value 放到 inpForm
+		
 		
 	}
 	
