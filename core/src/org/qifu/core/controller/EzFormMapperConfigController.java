@@ -389,7 +389,20 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		result.setSuccess( YES );
 		
 		// 處理 dataForm 有的value 放到 inpForm
-		// BeanUtils.copyProperties(inpForm, dataForm);
+		BeanUtils.copyProperties(inpForm, dataForm);
+		if (inpForm.getFields() == null) {
+			inpForm.setFields( new ArrayList<EzfMapField>() );
+		}
+		for (int i = 0; inpForm.getFields() != null && i < inpForm.getFields().size(); i++) {
+			EzfMapField iField = inpForm.getFields().get(i);
+			for (int j = 0; dataForm.getFields() != null && j < dataForm.getFields().size(); j++) {
+				EzfMapField jField = dataForm.getFields().get(j);
+				if (iField.getGridId().equals(jField.getGridId()) && iField.getFormField().equals(jField.getFormField())) {
+					iField.setTblField( jField.getTblField() );
+				}
+			}
+		}
+		
 		
 	}
 	
