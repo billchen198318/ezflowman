@@ -397,13 +397,20 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 			EzfMapField iField = inpForm.getFields().get(i);
 			for (int j = 0; dataForm.getFields() != null && j < dataForm.getFields().size(); j++) {
 				EzfMapField jField = dataForm.getFields().get(j);
-				if (iField.getGridId().equals(jField.getGridId()) && iField.getFormField().equals(jField.getFormField())) {
+				if (iField.getGridId().equals(NO) && jField.getGridId().equals(NO) && iField.getFormField().equals(jField.getFormField())) {
 					iField.setTblField( jField.getTblField() );
 				}
 			}
 		}
-		
-		
+		for (int g = 0; inpForm.getGrids() != null && g < inpForm.getGrids().size(); g++) {
+			EzfMapGrd gGrid = inpForm.getGrids().get(g);
+			for (int j = 0; dataForm.getGrids() != null && j < dataForm.getGrids().size(); j++) {
+				EzfMapGrd jGrid = dataForm.getGrids().get(j);
+				if (gGrid.getGridId().equals(jGrid.getGridId())) {
+					
+				}
+			}			
+		}		
 	}
 	
 	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
