@@ -353,19 +353,25 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		EzfMap inpForm = result.getValue();
 		if (inpForm == null || StringUtils.isBlank(inpForm.getEfgpPkgId())) {
 			// 無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)			
-			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, inpForm);
+			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, paramForm);
 		} else {
 			// 配置 findFormOIDsOfProcess 取出的 form 內容
-			this.prepareLoadDataByFindFormOIDsOfProcess(result, inpForm);
+			this.prepareLoadDataByFindFormOIDsOfProcess(result, inpForm, paramForm);
 		}	
 	}
 	
-	private void prepareLoadDataNoWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+	private void prepareLoadDataNoWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		result.setMessage("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
+		this.fillEzfMapDataForm(dataForm);
 		
 	}
 	
-	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+		this.fillEzfMapDataForm(dataForm);
+		
+	}
+	
+	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		
 	}
 	
