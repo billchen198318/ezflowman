@@ -393,6 +393,8 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		if (inpForm.getFields() == null) {
 			inpForm.setFields( new ArrayList<EzfMapField>() );
 		}
+		
+		// 處理 Field
 		for (int i = 0; inpForm.getFields() != null && i < inpForm.getFields().size(); i++) {
 			EzfMapField iField = inpForm.getFields().get(i);
 			for (int j = 0; dataForm.getFields() != null && j < dataForm.getFields().size(); j++) {
@@ -402,11 +404,24 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 				}
 			}
 		}
+		
+		// 處理Grid
 		for (int g = 0; inpForm.getGrids() != null && g < inpForm.getGrids().size(); g++) {
 			EzfMapGrd gGrid = inpForm.getGrids().get(g);
 			for (int j = 0; dataForm.getGrids() != null && j < dataForm.getGrids().size(); j++) {
 				EzfMapGrd jGrid = dataForm.getGrids().get(j);
 				if (gGrid.getGridId().equals(jGrid.getGridId())) {
+					BeanUtils.copyProperties(gGrid, jGrid);
+					if (gGrid.getItems() == null) {
+						gGrid.setItems( new ArrayList<EzfMapField>() );
+					}
+					if (gGrid.getTblmps() == null) {
+						gGrid.setTblmps( new ArrayList<EzfMapGrdTblMp>() );
+					}
+					// 處理Grid的Field
+					
+					
+					// 處理 Tblmps / EzfMapGrdTblMp
 					
 				}
 			}			
