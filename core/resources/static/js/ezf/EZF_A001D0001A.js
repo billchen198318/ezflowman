@@ -46,7 +46,25 @@ function _initData() {
 }
 
 function _loadEzfMap() {
-	alert(this.inpForm.oid);
+	xhrSendParameter(
+		'./ezfMapLoadJson', 
+		JSON.stringify(that.inpForm), 
+		function(data) {
+			if ( _qifu_success_flag != data.success ) {
+				setWarningMessageField(msgFields, data.checkFields);
+				parent.notifyWarning( data.message );
+				parent.closeTab('EZF_A001D0001A');
+				return;
+			}
+			that.inpForm = data.value;
+			parent.notifyInfo( data.message );
+		}, 
+		function() {
+			alert('Error');
+			parent.closeTab('EZF_A001D0001A');
+		},
+		_qifu_defaultSelfPleaseWaitShow
+	);			
 }
 
 function _loadEfgpPkg() {

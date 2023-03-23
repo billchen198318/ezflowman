@@ -343,4 +343,32 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		return result;		
 	}			
 	
+	private void handlerLoadData(DefaultControllerJsonResultObj<EzfMap> result, EzfMap paramForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+		paramForm = this.ezfMapService.selectByPrimaryKey(paramForm.getOid()).getValueEmptyThrowMessage();
+		this.loadProcessPackageIdFromEFGP(result, paramForm);
+		EzfMap inpForm = result.getValue();
+		if (inpForm == null || StringUtils.isBlank(inpForm.getEfgpPkgId())) {
+			throw new ControllerException("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
+		}
+		
+		
+	}
+	
+	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
+	@RequestMapping(value = "/ezfMapLoadJson", produces = MediaType.APPLICATION_JSON_VALUE)		
+	public @ResponseBody DefaultControllerJsonResultObj<EzfMap> doLoad(HttpServletRequest request, EzfMap form) {
+		DefaultControllerJsonResultObj<EzfMap> result = this.getDefaultJsonResult(this.currentMethodAuthority());
+		if (!this.isAuthorizeAndLoginFromControllerJsonResult(result)) {
+			return result;
+		}
+		try {
+			this.handlerLoadData(result, form);			
+		} catch (AuthorityException | ServiceException | ControllerException e) {
+			this.baseExceptionResult(result, e);	
+		} catch (Exception e) {
+			this.exceptionResult(result, e);
+		}
+		return result;		
+	}	
+	
 }
