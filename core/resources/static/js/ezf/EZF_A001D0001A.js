@@ -46,9 +46,10 @@ function _initData() {
 }
 
 function _loadEzfMap() {
-	xhrSendParameter(
+	var that = this;
+	xhrSendParameter2(
 		'./ezfMapLoadJson', 
-		JSON.stringify(that.inpForm), 
+		{ "oid" : this.inpForm.oid }, 
 		function(data) {
 			if ( _qifu_success_flag != data.success ) {
 				setWarningMessageField(msgFields, data.checkFields);
