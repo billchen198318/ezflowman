@@ -21,6 +21,8 @@
  */
 package org.qifu.core.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +51,9 @@ import org.qifu.core.entity.EzfMapGrd;
 import org.qifu.core.entity.EzfMapGrdTblMp;
 import org.qifu.core.logic.IEzfMapperLogicService;
 import org.qifu.core.service.IEzfDsService;
+import org.qifu.core.service.IEzfMapFieldService;
+import org.qifu.core.service.IEzfMapGrdService;
+import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
@@ -72,6 +77,15 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@Autowired
 	IEzfMapService<EzfMap, String> ezfMapService;
+	
+	@Autowired
+	IEzfMapFieldService<EzfMapField, String> ezfMapFieldService;	
+	
+	@Autowired
+	IEzfMapGrdService<EzfMapGrd, String> ezfMapGrdService;
+	
+	@Autowired
+	IEzfMapGrdTblMpService<EzfMapGrdTblMp, String> ezfMapGrdTblMpService;	
 	
 	@Autowired
 	IEzfMapperLogicService ezfMapperLogicService;
@@ -362,8 +376,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	private void prepareLoadDataNoWithFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
 		result.setMessage("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
-		this.fillEzfMapDataForm(dataForm);
-		
+		this.fillEzfMapDataForm(dataForm);		
 	}
 	
 	private void prepareLoadDataByFindFormOIDsOfProcess(DefaultControllerJsonResultObj<EzfMap> result, EzfMap inpForm, EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
@@ -372,6 +385,28 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	}
 	
 	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		
+		// 填入 List<EzfMapField> fields , gridId = 'N'
+		paramMap.put("cnfId", dataForm.getCnfId());
+		paramMap.put("gridId", NO);
+		dataForm.setFields( this.ezfMapFieldService.selectListByParams(paramMap).getValue() );
+		
+		// 填入 List<EzfMapGrd> grids
+		paramMap.clear();
+		paramMap.put("cnfId", dataForm.getCnfId());
+		dataForm.setGrids( this.ezfMapGrdService.selectListByParams(paramMap).getValue() );
+				
+		// 填入 grids -> List<EzfMapField> items , gridId = EzfMapGrd.gridId		
+		// 填入 grids -> List<EzfMapGrdTblMp> tblmps 
+		for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
+			EzfMapGrd grid = dataForm.getGrids().get(g);
+			paramMap.clear();
+			paramMap.put("cnfId", dataForm.getCnfId());
+			paramMap.put("gridId", grid.getGridId());
+			grid.setItems( this.ezfMapFieldService.selectListByParams(paramMap).getValue() );
+			grid.setTblmps( this.ezfMapGrdTblMpService.selectListByParams(paramMap).getValue() );			
+		}
 		
 	}
 	
