@@ -397,6 +397,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		// 處理 Field
 		for (int i = 0; inpForm.getFields() != null && i < inpForm.getFields().size(); i++) {
 			EzfMapField iField = inpForm.getFields().get(i);
+			iField.setCnfId( dataForm.getCnfId() );
 			for (int j = 0; dataForm.getFields() != null && j < dataForm.getFields().size(); j++) {
 				EzfMapField jField = dataForm.getFields().get(j);
 				if (iField.getGridId().equals(NO) && jField.getGridId().equals(NO) && iField.getFormField().equals(jField.getFormField())) {
@@ -408,6 +409,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		// 處理Grid
 		for (int g = 0; inpForm.getGrids() != null && g < inpForm.getGrids().size(); g++) {
 			EzfMapGrd gGrid = inpForm.getGrids().get(g);
+			gGrid.setCnfId( dataForm.getCnfId() );
 			for (int j = 0; dataForm.getGrids() != null && j < dataForm.getGrids().size(); j++) {
 				EzfMapGrd jGrid = dataForm.getGrids().get(j);
 				if (gGrid.getGridId().equals(jGrid.getGridId())) {
@@ -418,10 +420,31 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 					if (gGrid.getTblmps() == null) {
 						gGrid.setTblmps( new ArrayList<EzfMapGrdTblMp>() );
 					}
-					// 處理Grid的Field
 					
+					// 處理Grid的Field
+					for (int gf = 0; gGrid.getItems() != null && gf > gGrid.getItems().size(); gf++) {
+						EzfMapField gfField = gGrid.getItems().get(gf);
+						gfField.setCnfId( dataForm.getCnfId() );
+						for (int jf = 0; jGrid.getItems() != null && jf < jGrid.getItems().size(); jf++) {
+							EzfMapField jfField = jGrid.getItems().get(jf);
+							if (gfField.getGridId().equals(jfField.getGridId()) && gfField.getFormField().equals(jfField.getFormField())) {
+								gfField.setTblField( jfField.getTblField() );
+							}
+						}
+					}
 					
 					// 處理 Tblmps / EzfMapGrdTblMp
+					for (int gp = 0; gGrid.getTblmps() != null && gp < gGrid.getTblmps().size(); gp++) {
+						EzfMapGrdTblMp gpTblMp = gGrid.getTblmps().get(gp);
+						gpTblMp.setCnfId( dataForm.getCnfId() );
+						for (int jp = 0; jGrid.getTblmps() != null && jp < jGrid.getTblmps().size(); jp++) {
+							EzfMapGrdTblMp jpTblMp = jGrid.getTblmps().get(jp);
+							if (gpTblMp.getGridId().equals(jpTblMp.getGridId())) {
+								gpTblMp.setMstFieldName( jpTblMp.getMstFieldName() );
+								gpTblMp.setDtlFieldName( jpTblMp.getDtlFieldName() );
+							}
+						}
+					}
 					
 				}
 			}			
