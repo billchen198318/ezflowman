@@ -358,19 +358,21 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	}			
 	
 	private void handlerLoadData(DefaultControllerJsonResultObj<EzfMap> result, EzfMap paramForm) throws ControllerException, AuthorityException, ServiceException, Exception {
-		paramForm = this.ezfMapService.selectByPrimaryKey(paramForm.getOid()).getValueEmptyThrowMessage();
+		EzfMap dataForm = this.ezfMapService.selectByPrimaryKey(paramForm.getOid()).getValueEmptyThrowMessage();
+		paramForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
+		boolean successLoadFormOfEasyFlowGP = false;
 		try {
 			this.loadProcessPackageIdFromEFGP(result, paramForm);
+			successLoadFormOfEasyFlowGP = true;
 		} catch (Exception le) {
 			le.printStackTrace();
 		}
-		EzfMap inpForm = result.getValue();
-		if (inpForm == null || StringUtils.isBlank(inpForm.getEfgpPkgId())) {
+		if (successLoadFormOfEasyFlowGP) {
 			// 無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)			
-			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, paramForm);
+			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, dataForm);
 		} else {
 			// 配置 findFormOIDsOfProcess 取出的 form 內容
-			this.prepareLoadDataWithFindFormOIDsOfProcess(result, inpForm, paramForm);
+			this.prepareLoadDataWithFindFormOIDsOfProcess(result, paramForm, dataForm);
 		}	
 	}
 	
