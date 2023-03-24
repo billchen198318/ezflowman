@@ -367,7 +367,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		} catch (Exception le) {
 			le.printStackTrace();
 		}
-		if (successLoadFormOfEasyFlowGP) {
+		if (!successLoadFormOfEasyFlowGP) {
 			// 無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)			
 			this.prepareLoadDataNoWithFindFormOIDsOfProcess(result, dataForm);
 		} else {
