@@ -160,7 +160,11 @@ function _deleteDs(oid) {
 				'./ezfDsConfigDeleteJson', 
 				{ 'oid' : oid }, 
 				function(data){
-					parent.notifyInfo( data.message );
+					if ( _qifu_success_flag != data.success ) {
+						parent.notifyWarning( data.message );
+					} else {
+						parent.notifyInfo( data.message );
+					}
 					that.queryDataList();		
 				}, 
 				function(){

@@ -438,7 +438,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 					}
 					
 					// 處理Grid的Field
-					for (int gf = 0; gGrid.getItems() != null && gf > gGrid.getItems().size(); gf++) {
+					for (int gf = 0; gGrid.getItems() != null && gf < gGrid.getItems().size(); gf++) {
 						EzfMapField gfField = gGrid.getItems().get(gf);
 						gfField.setCnfId( dataForm.getCnfId() );
 						for (int jf = 0; jGrid.getItems() != null && jf < jGrid.getItems().size(); jf++) {
