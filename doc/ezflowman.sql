@@ -46,7 +46,7 @@ CREATE TABLE `ezf_ds` (
 
 LOCK TABLES `ezf_ds` WRITE;
 /*!40000 ALTER TABLE `ezf_ds` DISABLE KEYS */;
-INSERT INTO `ezf_ds` VALUES ('0f6e5d3c-b8f6-11ed-89a2-6dba9949b0b7','TEST01','test','3','jdbc:mariadb://127.0.0.1/ezflowman?useUnicode=true','root','password','admin','2023-03-02 20:30:47',NULL,NULL);
+INSERT INTO `ezf_ds` VALUES ('0f6e5d3c-b8f6-11ed-89a2-6dba9949b0b7','TEST01','test','3','jdbc:mariadb://127.0.0.1/ezflowman?useUnicode=true','root','password','admin','2023-03-02 20:30:47','admin','2023-03-21 21:24:22');
 /*!40000 ALTER TABLE `ezf_ds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,6 +69,7 @@ CREATE TABLE `ezf_map` (
   `EFGP_REQUESTER_ID_FIELD` varchar(50) NOT NULL,
   `EFGP_ORG_UNIT_ID_FIELD` varchar(50) NOT NULL,
   `EFGP_SUBJECT_SCRIPT` varchar(1000) NOT NULL,
+  `CRON_EXPR` varchar(20) NOT NULL,
   `CUSERID` varchar(24) NOT NULL,
   `CDATE` datetime NOT NULL,
   `UUSERID` varchar(24) DEFAULT NULL,
@@ -87,6 +88,7 @@ CREATE TABLE `ezf_map` (
 
 LOCK TABLES `ezf_map` WRITE;
 /*!40000 ALTER TABLE `ezf_map` DISABLE KEYS */;
+INSERT INTO `ezf_map` VALUES ('7975dc4b-ca43-11ed-9300-f305c9c983dc','AXMT700','銷退單','TEST01','TIPTOPPROCESSPKG_axmt700_XA','test','A01','A02','A03','A04','A01+A02','0 0/1 * * * ?','admin','2023-03-24 20:57:46',NULL,NULL);
 /*!40000 ALTER TABLE `ezf_map` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,6 +121,7 @@ CREATE TABLE `ezf_map_field` (
 
 LOCK TABLES `ezf_map_field` WRITE;
 /*!40000 ALTER TABLE `ezf_map_field` DISABLE KEYS */;
+INSERT INTO `ezf_map_field` VALUES ('797762ed-ca43-11ed-9300-cd31d0228a0a','AXMT700','s_ohb','ohb03','B01','admin','2023-03-24 20:57:46',NULL,NULL),('7977ff2e-ca43-11ed-9300-8d057ff01bb9','AXMT700','s_ohb','ohb33','B02','admin','2023-03-24 20:57:46',NULL,NULL),('79784d4f-ca43-11ed-9300-6561591593f9','AXMT700','s_ohb','ohb34','B03','admin','2023-03-24 20:57:46',NULL,NULL),('7979fb01-ca43-11ed-9300-8bbf2cf7f7e1','AXMT700','N','oaydesc','F01','admin','2023-03-24 20:57:46',NULL,NULL),('797a7032-ca43-11ed-9300-b1a2bf497a7b','AXMT700','N','oha032','F02','admin','2023-03-24 20:57:46',NULL,NULL),('797abe53-ca43-11ed-9300-a749b23670e9','AXMT700','N','occ02','F03','admin','2023-03-24 20:57:46',NULL,NULL);
 /*!40000 ALTER TABLE `ezf_map_field` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,6 +153,7 @@ CREATE TABLE `ezf_map_grd` (
 
 LOCK TABLES `ezf_map_grd` WRITE;
 /*!40000 ALTER TABLE `ezf_map_grd` DISABLE KEYS */;
+INSERT INTO `ezf_map_grd` VALUES ('7976edbc-ca43-11ed-9300-811aff5121a3','AXMT700','s_ohb','','test_sub','admin','2023-03-24 20:57:46',NULL,NULL);
 /*!40000 ALTER TABLE `ezf_map_grd` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,6 +186,7 @@ CREATE TABLE `ezf_map_grd_tbl_mp` (
 
 LOCK TABLES `ezf_map_grd_tbl_mp` WRITE;
 /*!40000 ALTER TABLE `ezf_map_grd_tbl_mp` DISABLE KEYS */;
+INSERT INTO `ezf_map_grd_tbl_mp` VALUES ('7978e990-ca43-11ed-9300-f10104cd64be','AXMT700','s_ohb','OID','MST_OID','admin','2023-03-24 20:57:46',NULL,NULL);
 /*!40000 ALTER TABLE `ezf_map_grd_tbl_mp` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -700,6 +705,7 @@ CREATE TABLE `tb_sys_login_log` (
 
 LOCK TABLES `tb_sys_login_log` WRITE;
 /*!40000 ALTER TABLE `tb_sys_login_log` DISABLE KEYS */;
+INSERT INTO `tb_sys_login_log` VALUES ('064ede1d-c8ae-11ed-aafe-d7fa9cbb1653','admin','admin','2023-03-22 20:35:27',NULL,NULL),('24bcc896-c972-11ed-93c0-1be37bc00e01','admin','admin','2023-03-23 19:59:19',NULL,NULL),('25accb35-c265-11ed-bca8-dbdf14e6db62','admin','admin','2023-03-14 20:38:39',NULL,NULL),('2705dc06-ca3b-11ed-bf6f-19d30cc89b78','admin','admin','2023-03-24 19:58:12',NULL,NULL),('3039b1c8-c26b-11ed-9ef0-d3e867b09158','admin','admin','2023-03-14 21:21:54',NULL,NULL),('37d09c8c-c8a9-11ed-bda5-432cdc2a6a4d','admin','admin','2023-03-22 20:01:03',NULL,NULL),('3db8609c-ca3e-11ed-b288-b779e18adf6d','admin','admin','2023-03-24 20:20:19',NULL,NULL),('4028db23-c8ad-11ed-9d12-87449872ec9a','admin','admin','2023-03-22 20:29:55',NULL,NULL),('5903e420-ca43-11ed-9300-61a9d1211cc0','admin','admin','2023-03-24 20:56:52',NULL,NULL),('5ab31435-ca3b-11ed-bda5-3bb3e0e4378b','admin','admin','2023-03-24 19:59:39',NULL,NULL),('5c1cef87-c975-11ed-ada9-7ba388dfac2e','admin','admin','2023-03-23 20:22:21',NULL,NULL),('649064bd-c8ba-11ed-bdff-b5d62a06a04a','admin','admin','2023-03-22 22:03:59',NULL,NULL),('773f41fc-ca42-11ed-a4b5-593d06aa3a4f','admin','admin','2023-03-24 20:50:33',NULL,NULL),('7da55a49-c96d-11ed-a998-cf263ac60456','admin','admin','2023-03-23 19:26:01',NULL,NULL),('84811ff1-c7eb-11ed-aae4-7d56288fda83','admin','admin','2023-03-21 21:23:07',NULL,NULL),('8820190c-c25f-11ed-bd83-d7a4f44148a7','admin','admin','2023-03-14 19:58:28',NULL,NULL),('88b264d8-c8bd-11ed-8851-bb207ffa0567','admin','admin','2023-03-22 22:26:28',NULL,NULL),('9ec04a88-c972-11ed-a09b-957bd3d87ec4','admin','admin','2023-03-23 20:02:44',NULL,NULL),('ab0a1549-c7eb-11ed-872c-6b9df5b3653e','admin','admin','2023-03-21 21:24:11',NULL,NULL),('ad64b0a4-ca43-11ed-b9a8-4f832405465e','admin','admin','2023-03-24 20:59:13',NULL,NULL),('bc0b6970-ca42-11ed-a233-d55d5bff870a','admin','admin','2023-03-24 20:52:29',NULL,NULL),('be0d5bfb-c8ac-11ed-b082-3712ba506c27','admin','admin','2023-03-22 20:26:16',NULL,NULL),('d91884c9-ca3a-11ed-8ec4-ed6f817ed837','admin','admin','2023-03-24 19:56:01',NULL,NULL),('dbea48e4-ca42-11ed-bc2a-316b990a4728','admin','admin','2023-03-24 20:53:22',NULL,NULL),('e7dc1022-c8b8-11ed-8cfe-59c745ac33d7','admin','admin','2023-03-22 21:53:20',NULL,NULL),('f0713090-c8bc-11ed-b456-d9ac4675ec82','admin','admin','2023-03-22 22:22:13',NULL,NULL);
 /*!40000 ALTER TABLE `tb_sys_login_log` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1043,4 +1049,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-14 19:44:29
+-- Dump completed on 2023-03-28 20:51:26

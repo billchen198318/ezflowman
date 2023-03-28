@@ -14,6 +14,7 @@
     <result column="EFGP_REQUESTER_ID_FIELD" jdbcType="VARCHAR" property="efgpRequesterIdField" />
     <result column="EFGP_ORG_UNIT_ID_FIELD" jdbcType="VARCHAR" property="efgpOrgUnitIdField" />
     <result column="EFGP_SUBJECT_SCRIPT" jdbcType="VARCHAR" property="efgpSubjectScript" />    
+    <result column="CRON_EXPR" jdbcType="VARCHAR" property="cronExpr" />
     <result column="CUSERID" jdbcType="VARCHAR" property="cuserid" />
     <result column="CDATE" jdbcType="TIMESTAMP" property="cdate" />
     <result column="UUSERID" jdbcType="VARCHAR" property="uuserid" />
@@ -132,6 +133,9 @@
       <if test="efgpSubjectScript != null">
         EFGP_SUBJECT_SCRIPT,
       </if>      
+      <if test="cronExpr != null">
+        CRON_EXPR,
+      </if>      
       <if test="cuserid != null">
         CUSERID,
       </if>
@@ -178,6 +182,9 @@
       </if>
       <if test="efgpSubjectScript != null">
         #{efgpSubjectScript,jdbcType=VARCHAR},
+      </if>      
+      <if test="cronExpr != null">
+        #{cronExpr,jdbcType=VARCHAR},
       </if>      
       <if test="cuserid != null">
         #{cuserid,jdbcType=VARCHAR},
@@ -226,7 +233,10 @@
       </if>
       <if test="efgpSubjectScript != null">
         EFGP_SUBJECT_SCRIPT = #{efgpSubjectScript,jdbcType=VARCHAR},
-      </if>      
+      </if>   
+      <if test="cronExpr != null">
+        CRON_EXPR = #{cronExpr,jdbcType=VARCHAR},
+      </if>         
       <!--  
       <if test="cuserid != null">
         CUSERID = #{cuserid,jdbcType=VARCHAR},

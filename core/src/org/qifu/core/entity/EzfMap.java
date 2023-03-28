@@ -24,7 +24,8 @@ public class EzfMap implements java.io.Serializable {
     private String efgpProcessNoField;    
     private String efgpRequesterIdField;
     private String efgpOrgUnitIdField;
-    private String efgpSubjectScript;    
+    private String efgpSubjectScript;   
+    private String cronExpr;
     private String cuserid;
     private Date cdate;
     private String uuserid;
@@ -123,7 +124,15 @@ public class EzfMap implements java.io.Serializable {
 	public void setEfgpSubjectScript(String efgpSubjectScript) {
 		this.efgpSubjectScript = efgpSubjectScript;
 	}
-
+	
+	public String getCronExpr() {
+		return cronExpr;
+	}
+	
+	public void setCronExpr(String cronExpr) {
+		this.cronExpr = cronExpr;
+	}
+	
 	@CreateUserField(name = "cuserid")
     public String getCuserid() {
         return cuserid;

@@ -33,7 +33,7 @@ public class InitEzfConfigEvent {
 							IEzfTaskSchedService ezfTaskSchedService = (IEzfTaskSchedService) AppContext.getBean(IEzfTaskSchedService.class);
 							List<EzfMap> ezfMapList = ezfMapService.selectList().getValue();
 							for (EzfMap ezfMap : ezfMapList) {
-								ezfTaskSchedService.scheduleTask(ezfMap.getCnfId(), new EzfTaskRunnable(ezfMap.getCnfId()), "0 0/1 * * * ?");
+								ezfTaskSchedService.scheduleTask(ezfMap.getCnfId(), new EzfTaskRunnable(ezfMap.getCnfId()), ezfMap.getCronExpr());
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
