@@ -1,8 +1,5 @@
 package org.qifu.core.event;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class EzfTaskRunnable implements Runnable {
 	
 	private String cnfId;
@@ -15,7 +12,7 @@ public class EzfTaskRunnable implements Runnable {
 		super();
 		this.cnfId = cnfId;
 	}
-
+	
 	@Override
 	public void run() {
 		System.out.println("cnfId>>>" + this.cnfId);
