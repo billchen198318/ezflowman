@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.qifu.base.AppContext;
 import org.qifu.core.entity.EzfMap;
 import org.qifu.core.logic.IEzfTaskSchedService;
+import org.qifu.core.runnable.EzfTaskRunnable;
 import org.qifu.core.service.IEzfMapService;
 import org.qifu.core.util.UserUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
