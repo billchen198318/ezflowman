@@ -7,7 +7,12 @@ public class EzfTaskRunnable implements Runnable {
 	
 	private String cnfId;
 	
+	public EzfTaskRunnable() {
+		super();
+	}
+	
 	public EzfTaskRunnable(String cnfId) {
+		super();
 		this.cnfId = cnfId;
 	}
 
