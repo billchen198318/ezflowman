@@ -1,6 +1,6 @@
 package org.qifu.core.logic;
 
-public interface IEzfTaskSchedulingService {
+public interface IEzfTaskSchedService {
 	
 	public void scheduleTask(String jobId, Runnable tasklet, String cronExpression);
 	

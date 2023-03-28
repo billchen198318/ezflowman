@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.qifu.base.model.ServiceAuthority;
 import org.qifu.base.service.BaseLogicService;
-import org.qifu.core.logic.IEzfTaskSchedulingService;
+import org.qifu.core.logic.IEzfTaskSchedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Service
 @Transactional(propagation=Propagation.REQUIRED, timeout=300, readOnly=true)
-public class EzfTaskSchedulingServiceImpl extends BaseLogicService implements IEzfTaskSchedulingService {
-	protected Logger logger = LogManager.getLogger(EzfTaskSchedulingServiceImpl.class);
+public class EzfTaskSchedServiceImpl extends BaseLogicService implements IEzfTaskSchedService {
+	protected Logger logger = LogManager.getLogger(EzfTaskSchedServiceImpl.class);
 	
     @Autowired
     private TaskScheduler taskScheduler;
