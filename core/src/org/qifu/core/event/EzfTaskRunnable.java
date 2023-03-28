@@ -1,5 +1,28 @@
+/* 
+ * Copyright 2019-2023 qifu of copyright Chen Xin Nien
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * -----------------------------------------------------------------------
+ * 
+ * author: 	Chen Xin Nien
+ * contact: chen.xin.nien@gmail.com
+ * 
+ */
 package org.qifu.core.event;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.qifu.base.AppContext;
 import org.qifu.base.exception.ServiceException;
 import org.qifu.core.entity.EzfDs;
@@ -16,6 +39,7 @@ import org.qifu.core.service.IEzfMapService;
 import org.springframework.beans.BeansException;
 
 public class EzfTaskRunnable implements Runnable {
+	protected Logger logger = LogManager.getLogger(EzfTaskRunnable.class);
 	
 	private String cnfId;
 	
@@ -76,7 +100,9 @@ public class EzfTaskRunnable implements Runnable {
 	}
 	
 	private void process() throws ServiceException, Exception {
-		System.out.println("cnfId>>>" + this.cnfId);
+		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process start...");
+		
+		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
 	}
 	
 }

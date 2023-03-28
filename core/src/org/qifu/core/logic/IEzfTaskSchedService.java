@@ -6,4 +6,6 @@ public interface IEzfTaskSchedService {
 	
 	public void removeScheduledTask(String jobId);
 	
+	public boolean isCancelled(String jobId);
+	
 }

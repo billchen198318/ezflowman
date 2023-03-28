@@ -44,4 +44,13 @@ public class EzfTaskSchedServiceImpl extends BaseLogicService implements IEzfTas
         }
     }
     
+	@Override
+	public boolean isCancelled(String jobId) {
+		ScheduledFuture<?> scheduledTask = jobsMap.get(jobId);
+		if (null == scheduledTask) {
+			return false;
+		}
+		return scheduledTask.isCancelled();
+	}
+    
 }
