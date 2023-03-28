@@ -65,6 +65,7 @@ msgFields['efgpProcessNoField'] 	= 'efgpProcessNoField';
 msgFields['efgpRequesterIdField'] 	= 'efgpRequesterIdField';
 msgFields['efgpOrgUnitIdField'] 	= 'efgpOrgUnitIdField';
 msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
+msgFields['cronExpr'] 		= 'cronExpr';
 
 
 </script>
@@ -118,6 +119,15 @@ msgFields['efgpSubjectScript'] 		= 'efgpSubjectScript';
 						</div>				
 					</div>
 								
+					
+					<p style="margin-bottom: 10px"></p>
+					
+					<div class="row">
+						<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+							<label for="cronExpr">排程腳本</label>
+							<input type="text" name="cronExpr" id="cronExpr" class="form-control" placeholder="請輸入排程腳本" v-model="inpForm.cronExpr" >							
+						</div>			
+					</div>					
 					
 					<p style="margin-bottom: 10px"></p>
 					

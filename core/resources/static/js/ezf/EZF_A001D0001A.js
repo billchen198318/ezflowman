@@ -10,6 +10,7 @@ var _inpForm = {
     'efgpRequesterIdField'		:	'',
     'efgpOrgUnitIdField'		:	'',
     'efgpSubjectScript'			:	'',
+    'cronExpr'	:	'',
     'fields'	:	[],
     'grids'		:	[]
 }

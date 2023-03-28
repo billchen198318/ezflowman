@@ -201,6 +201,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		
 		// 處理頁面要顯示用的欄位
 		form.setMainTbl("");
+		form.setCronExpr( "0 0/3 * * * ?" );
 		if (form.getFields() != null) {
 			form.getFields().clear();
 		}
@@ -281,6 +282,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		.testField("efgpRequesterIdField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpRequesterIdField)", "請輸入簽核發單人欄位名稱")
 		.testField("efgpOrgUnitIdField", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpOrgUnitIdField)", "請輸入簽核發單單位欄位名稱")
 		.testField("efgpSubjectScript", form, "@org.apache.commons.lang3.StringUtils@isBlank(efgpSubjectScript)", "請輸入簽核發單Subject腳本")
+		.testField("cronExpr", form, "@org.apache.commons.lang3.StringUtils@isBlank(cronExpr)", "請輸入排程腳本")
 		.throwMessage();		
 		
 		if (form.getGrids() != null) {
@@ -402,6 +404,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		inpForm.setEfgpRequesterIdField( dataForm.getEfgpRequesterIdField() );
 		inpForm.setEfgpOrgUnitIdField( dataForm.getEfgpOrgUnitIdField() );
 		inpForm.setEfgpSubjectScript( dataForm.getEfgpSubjectScript() );
+		inpForm.setCronExpr( dataForm.getCronExpr() );
 		
 		if (inpForm.getFields() == null) {
 			inpForm.setFields( new ArrayList<EzfMapField>() );
