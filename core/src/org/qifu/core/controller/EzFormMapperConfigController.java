@@ -50,6 +50,8 @@ import org.qifu.core.entity.EzfMapField;
 import org.qifu.core.entity.EzfMapGrd;
 import org.qifu.core.entity.EzfMapGrdTblMp;
 import org.qifu.core.logic.IEzfMapperLogicService;
+import org.qifu.core.logic.IEzfTaskSchedService;
+import org.qifu.core.runnable.EzfTaskRunnable;
 import org.qifu.core.service.IEzfDsService;
 import org.qifu.core.service.IEzfMapFieldService;
 import org.qifu.core.service.IEzfMapGrdService;
@@ -89,7 +91,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	
 	@Autowired
 	IEzfMapperLogicService ezfMapperLogicService;
-		
+	
+	@Autowired
+	IEzfTaskSchedService ezfTaskSchedService;
+	
 	@Override
 	public String viewPageNamespace() {
 		return "ezf_conf";
@@ -298,6 +303,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.checkForCreateOrUpdate(result, form);
 		DefaultResult<EzfMap> cResult = this.ezfMapperLogicService.create(form);
+		if (YES.equals(cResult.getSuccess())) {
+			this.ezfTaskSchedService.removeScheduledTask(form.getCnfId());
+			this.ezfTaskSchedService.scheduleTask(form.getCnfId(), new EzfTaskRunnable(form.getCnfId()), form.getCronExpr());			
+		}
 		this.setDefaultResponseJsonResult(result, cResult);
 	}
 	
@@ -321,6 +330,10 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void update(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.checkForCreateOrUpdate(result, form);
 		DefaultResult<EzfMap> uResult = this.ezfMapperLogicService.update(form);
+		if (YES.equals(uResult.getSuccess())) {
+			this.ezfTaskSchedService.removeScheduledTask(form.getCnfId());
+			this.ezfTaskSchedService.scheduleTask(form.getCnfId(), new EzfTaskRunnable(form.getCnfId()), form.getCronExpr());
+		}		
 		this.setDefaultResponseJsonResult(result, uResult);
 	}	
 	
@@ -350,6 +363,7 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		}
 		try {
 			DefaultResult<Boolean> dResult = this.ezfMapperLogicService.delete(form);
+			this.ezfTaskSchedService.removeScheduledTask( form.getCnfId() );
 			this.setDefaultResponseJsonResult(result, dResult);
 		} catch (AuthorityException | ServiceException | ControllerException e) {
 			this.baseExceptionResult(result, e);	
