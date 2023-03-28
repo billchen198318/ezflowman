@@ -66,7 +66,7 @@ public class EzfTaskRunnable implements Runnable {
 	
 	private void initBeans() throws BeansException, Exception {
 		if (null == this.ezfDsService) {
-			this.ezfDsService = (IEzfDsService<EzfDs, String>) AppContext.getBean(IEzfMapService.class);
+			this.ezfDsService = (IEzfDsService<EzfDs, String>) AppContext.getBean(IEzfDsService.class);
 		}
 		if (null == this.ezfMapService) {
 			this.ezfMapService = (IEzfMapService<EzfMap, String>) AppContext.getBean(IEzfMapService.class);
