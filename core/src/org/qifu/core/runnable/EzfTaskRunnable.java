@@ -21,6 +21,9 @@
  */
 package org.qifu.core.runnable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,7 +40,9 @@ import org.qifu.core.service.IEzfMapFieldService;
 import org.qifu.core.service.IEzfMapGrdService;
 import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
+import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
+import org.qifu.util.LoadResources;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -114,12 +119,17 @@ public class EzfTaskRunnable implements Runnable {
 		EzfMap dataForm = new EzfMap();
 		dataForm.setCnfId( this.cnfId );
 		dataForm = this.ezfMapService.selectByUniqueKey(dataForm).getValueEmptyThrowMessage();
+		
+		EzfDs ezfDs = new EzfDs();
+		ezfDs.setDsId(dataForm.getDsId());
+		ezfDs = this.ezfDsService.selectByUniqueKey(ezfDs).getValueEmptyThrowMessage();		
+		
 		this.ezfMapperLogicService.fillEzfMapDataForm(dataForm);
 		
 		/*
 		 * 取得資料來源
 		 */		
-		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(dataForm.getDsId());
+		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(ezfDs);
 		if (null == jdbcTemplate) {
 			throw new ServiceException("無法取得取得資料來源");
 		}
@@ -128,8 +138,11 @@ public class EzfTaskRunnable implements Runnable {
 		/*
 		 * 查詢看有沒有需要處理的資料
 		 */
+		String selectMasterTableSql = this.getSelectMasterCommand(dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField(), ezfDs.getDriverType());
 		
-		
+		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
+		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
+		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
 		
 		
 		/*
@@ -148,6 +161,13 @@ public class EzfTaskRunnable implements Runnable {
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
 	}
 	
+	private NamedParameterJdbcTemplate getJdbcTemplate(EzfDs ezfDs) throws Exception {
+		if (!ManualDataSourceUtils.isRunning(ezfDs.getDsId())) {
+			ManualDataSourceUtils.create(ezfDs.getDsId(), DsDriverType.getDriverClassName(ezfDs.getDriverType()), ezfDs.getDbUser(), ezfDs.getDbPasswd(), ezfDs.getDbAddr());
+		}
+		return ManualDataSourceUtils.getJdbcTemplate(ezfDs.getDsId());
+	}	
+	
 	private NamedParameterJdbcTemplate getJdbcTemplate(String dsId) throws Exception {
 		if (!ManualDataSourceUtils.isRunning(dsId)) {
 			EzfDs ezfDs = new EzfDs();
@@ -156,6 +176,14 @@ public class EzfTaskRunnable implements Runnable {
 			ManualDataSourceUtils.create(ezfDs.getDsId(), DsDriverType.getDriverClassName(ezfDs.getDriverType()), ezfDs.getDbUser(), ezfDs.getDbPasswd(), ezfDs.getDbAddr());
 		}
 		return ManualDataSourceUtils.getJdbcTemplate(dsId);
+	}
+	
+	private String getSelectMasterCommand(String tableName, String efgpProcessStatusField, String dsDriverType) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("driverType", dsDriverType);
+		paramMap.put("mainTbl", tableName);
+		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
+		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_master.ftl", paramMap);
 	}
 	
 }
