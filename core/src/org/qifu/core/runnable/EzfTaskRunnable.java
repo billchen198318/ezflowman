@@ -37,7 +37,10 @@ import org.qifu.core.service.IEzfMapFieldService;
 import org.qifu.core.service.IEzfMapGrdService;
 import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
+import org.qifu.model.DsDriverType;
+import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.BeansException;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class EzfTaskRunnable implements Runnable {
 	protected Logger logger = LogManager.getLogger(EzfTaskRunnable.class);
@@ -108,8 +111,51 @@ public class EzfTaskRunnable implements Runnable {
 		if (StringUtils.isBlank(this.cnfId)) {
 			return;
 		}
+		EzfMap dataForm = new EzfMap();
+		dataForm.setCnfId( this.cnfId );
+		dataForm = this.ezfMapService.selectByUniqueKey(dataForm).getValueEmptyThrowMessage();
+		this.ezfMapperLogicService.fillEzfMapDataForm(dataForm);
+		
+		/*
+		 * 取得資料來源
+		 */		
+		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(dataForm.getDsId());
+		if (null == jdbcTemplate) {
+			throw new ServiceException("無法取得取得資料來源");
+		}
+		
+		
+		/*
+		 * 查詢看有沒有需要處理的資料
+		 */
+		
+		
+		
+		
+		/*
+		EzfMap inpForm = new EzfMap();
+		inpForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
+		this.ezfMapperLogicService.getFormFieldTemplateConvert2EzfMap(inpForm);
+		this.ezfMapperLogicService.prepareLoadDataWithFindFormOIDsOfProcess(inpForm, dataForm);
+		*/
+		
+		/*
+		 * 將 inpForm 內容處理轉為 EzForm, EzFormField, EzFormRecord, EzFormRecordItem
+		 */
+		
+		
 		
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
+	}
+	
+	private NamedParameterJdbcTemplate getJdbcTemplate(String dsId) throws Exception {
+		if (!ManualDataSourceUtils.isRunning(dsId)) {
+			EzfDs ezfDs = new EzfDs();
+			ezfDs.setDsId(dsId);
+			ezfDs = this.ezfDsService.selectByUniqueKey(ezfDs).getValueEmptyThrowMessage();
+			ManualDataSourceUtils.create(ezfDs.getDsId(), DsDriverType.getDriverClassName(ezfDs.getDriverType()), ezfDs.getDbUser(), ezfDs.getDbPasswd(), ezfDs.getDbAddr());
+		}
+		return ManualDataSourceUtils.getJdbcTemplate(dsId);
 	}
 	
 }

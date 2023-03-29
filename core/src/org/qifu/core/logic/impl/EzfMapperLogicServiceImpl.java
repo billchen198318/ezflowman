@@ -30,8 +30,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.qifu.base.exception.AuthorityException;
-import org.qifu.base.exception.ControllerException;
 import org.qifu.base.exception.ServiceException;
 import org.qifu.base.message.BaseSystemMessage;
 import org.qifu.base.model.DefaultResult;
@@ -359,7 +357,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		return result;
 	}
 	
-	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+	public void fillEzfMapDataForm(EzfMap dataForm) throws ServiceException, Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		
 		// 填入 List<EzfMapField> fields , gridId = 'N'
