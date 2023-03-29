@@ -51,7 +51,13 @@ import org.qifu.core.service.IEzfMapFieldService;
 import org.qifu.core.service.IEzfMapGrdService;
 import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
+import org.qifu.utils.EZFlowWebServiceUtils;
+import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.utils.ManualDataSourceUtils;
+import org.qifu.vo.EzForm;
+import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormRecord;
+import org.qifu.vo.EzFormRecordItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -375,6 +381,76 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 			paramMap.put("gridId", grid.getGridId());
 			grid.setItems( this.ezfMapFieldService.selectListByParams(paramMap).getValue() );
 			grid.setTblmps( this.ezfMapGrdTblMpService.selectListByParams(paramMap).getValue() );			
+		}		
+	}
+
+	@Override
+	public void getFormFieldTemplateConvert2EzfMap(EzfMap form) throws ServiceException, Exception {
+		if (null == form || this.isBlank(form.getEfgpPkgId())) {
+			throw new ServiceException(BaseSystemMessage.parameterBlank());
+		}
+		String pProcessPackageId = form.getEfgpPkgId();
+		String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess(pProcessPackageId);
+		if (StringUtils.isBlank(formOid)) {
+			throw new ServiceException("無法取得暫存流程表單OID");
+		}
+		if (formOid.indexOf(",")>-1) { // findFormOIDsOfProcess 有可能帶回多筆 oid 所以取最後一筆
+			String arr[] = formOid.split(",");
+			formOid = arr[arr.length-1];
+		}
+		String formXml = EZFlowWebServiceUtils.getFormFieldTemplate(formOid);
+		if (StringUtils.isBlank(formXml)) {
+			throw new ServiceException("無法取得流程表單樣板xml");
+		}
+		
+		EzForm ezform = EZFormSupportUtils.loadFromXml(formXml);
+		
+		// 處理頁面要顯示用的欄位
+		form.setMainTbl("");
+		form.setCronExpr( "0 0/3 * * * ?" );
+		if (form.getFields() != null) {
+			form.getFields().clear();
+		}
+		if (form.getGrids() != null) {
+			form.getGrids().clear();
+		}
+		if (ezform != null && ezform.getFields() != null && ezform.getFields().size() > 0) {
+			for (EzFormField ezfield : ezform.getFields()) {
+				EzfMapField field = new EzfMapField();
+				field.setFormField( ezfield.getId() );
+				field.setTblField("");
+				field.setGridId(YesNo.NO);
+				form.getFields().add(field);
+			}
+		}
+		if (ezform != null && ezform.getRecords() != null && ezform.getRecords().size() > 0) {
+			for (EzFormRecord ezRecord : ezform.getRecords()) {
+				if (ezRecord.getItems() == null) {
+					continue;
+				}
+				EzfMapGrd grid = new EzfMapGrd();
+				grid.setDtlTbl("");
+				grid.setGridId(ezRecord.getGridId());
+				grid.setRecordId(ezRecord.getRecordId());
+				form.getGrids().add(grid);
+				for (EzFormRecordItem ezRecordItem : ezRecord.getItems()) {
+					EzfMapField gridItem = new EzfMapField();
+					gridItem.setGridId(grid.getGridId());
+					gridItem.setTblField("");
+					gridItem.setFormField(ezRecordItem.getId());
+					grid.getItems().add(gridItem);
+				}
+				
+				if (grid.getTblmps().size() == 0) { // 最少補一筆 EzfMapGrdTblMp
+					EzfMapGrdTblMp tblMp = new EzfMapGrdTblMp();
+					tblMp.setCnfId("");
+					tblMp.setGridId(grid.getGridId());
+					tblMp.setMstFieldName("");
+					tblMp.setDtlFieldName("");
+					grid.getTblmps().add(tblMp);
+				}
+				
+			}
 		}		
 	}
 	

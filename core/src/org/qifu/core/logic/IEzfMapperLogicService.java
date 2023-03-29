@@ -15,6 +15,8 @@ public interface IEzfMapperLogicService {
 	
 	public DefaultResult<Boolean> delete(EzfMap form) throws ServiceException, Exception;
 	
+	public void getFormFieldTemplateConvert2EzfMap(EzfMap form) throws ServiceException, Exception;
+	
 	public DefaultResult<EzfMap> prepareLoadDataNoWithFindFormOIDsOfProcess(EzfMap dataForm) throws ServiceException, Exception;
 	
 	public DefaultResult<EzfMap> prepareLoadDataWithFindFormOIDsOfProcess(EzfMap inpForm, EzfMap dataForm) throws ServiceException, Exception;

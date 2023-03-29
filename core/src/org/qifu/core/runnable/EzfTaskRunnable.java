@@ -21,6 +21,7 @@
  */
 package org.qifu.core.runnable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.qifu.base.AppContext;
@@ -92,15 +93,21 @@ public class EzfTaskRunnable implements Runnable {
 			this.process();			
 		} catch (BeansException e) {
 			e.printStackTrace();
+			logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
 		} catch (ServiceException e) {
 			e.printStackTrace();
+			logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
 		}
 	}
 	
 	private void process() throws ServiceException, Exception {
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process start...");
+		if (StringUtils.isBlank(this.cnfId)) {
+			return;
+		}
 		
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
 	}
