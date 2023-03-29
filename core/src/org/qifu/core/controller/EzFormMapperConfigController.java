@@ -363,7 +363,9 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 		}
 		try {
 			DefaultResult<Boolean> dResult = this.ezfMapperLogicService.delete(form);
-			this.ezfTaskSchedService.removeScheduledTask( form.getCnfId() );
+			if (dResult.getValue()) {
+				this.ezfTaskSchedService.removeScheduledTask( form.getCnfId() );
+			}			
 			this.setDefaultResponseJsonResult(result, dResult);
 		} catch (AuthorityException | ServiceException | ControllerException e) {
 			this.baseExceptionResult(result, e);	
