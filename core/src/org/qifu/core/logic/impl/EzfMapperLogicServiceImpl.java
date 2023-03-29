@@ -22,6 +22,7 @@
 package org.qifu.core.logic.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.qifu.base.exception.AuthorityException;
+import org.qifu.base.exception.ControllerException;
 import org.qifu.base.exception.ServiceException;
 import org.qifu.base.message.BaseSystemMessage;
 import org.qifu.base.model.DefaultResult;
@@ -250,6 +253,129 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		this.deleteGridMasterAndDetailTableMapperConfig(form);
 		this.deleteFormFieldAndGridField(form);
 		return this.ezfMapService.delete(form);
+	}
+	
+	public DefaultResult<EzfMap> prepareLoadDataNoWithFindFormOIDsOfProcess(EzfMap dataForm) throws ServiceException, Exception {
+		DefaultResult<EzfMap> result = new DefaultResult<EzfMap>(); 
+		result.setMessage( BaseSystemMessage.searchNoData() );
+		this.fillEzfMapDataForm(dataForm);
+		result.setMessage("無法讀取 EasyFlowGP 流程內容 (findFormOIDsOfProcess)");
+		result.setValue(dataForm);
+		result.setSuccess( YesNo.YES );
+		return result;
+	}
+	
+	public DefaultResult<EzfMap> prepareLoadDataWithFindFormOIDsOfProcess(EzfMap inpForm, EzfMap dataForm) throws ServiceException, Exception {
+		DefaultResult<EzfMap> result = new DefaultResult<EzfMap>(); 
+		result.setMessage( BaseSystemMessage.searchNoData() );
+		this.fillEzfMapDataForm(dataForm);
+		result.setValue(inpForm);
+		result.setMessage("載入完成");
+		result.setSuccess( YesNo.YES );
+		
+		// 處理 dataForm 有的value 放到 inpForm
+		//BeanUtils.copyProperties(inpForm, dataForm);
+		inpForm.setOid( dataForm.getOid() );
+		inpForm.setCnfId( dataForm.getCnfId() );
+		inpForm.setCnfName( dataForm.getCnfName() );
+		inpForm.setDsId( dataForm.getDsId() );
+		inpForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
+		inpForm.setMainTbl( dataForm.getMainTbl() );
+		inpForm.setEfgpProcessStatusField( dataForm.getEfgpProcessStatusField() );
+		inpForm.setEfgpProcessNoField( dataForm.getEfgpProcessNoField() );
+		inpForm.setEfgpRequesterIdField( dataForm.getEfgpRequesterIdField() );
+		inpForm.setEfgpOrgUnitIdField( dataForm.getEfgpOrgUnitIdField() );
+		inpForm.setEfgpSubjectScript( dataForm.getEfgpSubjectScript() );
+		inpForm.setCronExpr( dataForm.getCronExpr() );
+		
+		if (inpForm.getFields() == null) {
+			inpForm.setFields( new ArrayList<EzfMapField>() );
+		}
+		
+		// 處理 Field
+		for (int i = 0; inpForm.getFields() != null && i < inpForm.getFields().size(); i++) {
+			EzfMapField iField = inpForm.getFields().get(i);
+			iField.setCnfId( dataForm.getCnfId() );
+			for (int j = 0; dataForm.getFields() != null && j < dataForm.getFields().size(); j++) {
+				EzfMapField jField = dataForm.getFields().get(j);
+				if (iField.getGridId().equals(YesNo.NO) && jField.getGridId().equals(YesNo.NO) && iField.getFormField().equals(jField.getFormField())) {
+					iField.setTblField( jField.getTblField() );
+				}
+			}
+		}
+		
+		// 處理Grid
+		for (int g = 0; inpForm.getGrids() != null && g < inpForm.getGrids().size(); g++) {
+			EzfMapGrd gGrid = inpForm.getGrids().get(g);
+			gGrid.setCnfId( dataForm.getCnfId() );
+			for (int j = 0; dataForm.getGrids() != null && j < dataForm.getGrids().size(); j++) {
+				EzfMapGrd jGrid = dataForm.getGrids().get(j);
+				if (gGrid.getGridId().equals(jGrid.getGridId())) {
+					//BeanUtils.copyProperties(gGrid, jGrid);
+					gGrid.setOid( jGrid.getOid() );
+					gGrid.setDtlTbl( jGrid.getDtlTbl() );
+					
+					if (gGrid.getItems() == null) {
+						gGrid.setItems( new ArrayList<EzfMapField>() );
+					}
+					if (gGrid.getTblmps() == null) {
+						gGrid.setTblmps( new ArrayList<EzfMapGrdTblMp>() );
+					}
+					
+					// 處理Grid的Field
+					for (int gf = 0; gGrid.getItems() != null && gf < gGrid.getItems().size(); gf++) {
+						EzfMapField gfField = gGrid.getItems().get(gf);
+						gfField.setCnfId( dataForm.getCnfId() );
+						for (int jf = 0; jGrid.getItems() != null && jf < jGrid.getItems().size(); jf++) {
+							EzfMapField jfField = jGrid.getItems().get(jf);
+							if (gfField.getGridId().equals(jfField.getGridId()) && gfField.getFormField().equals(jfField.getFormField())) {
+								gfField.setTblField( jfField.getTblField() );
+							}
+						}
+					}
+					
+					// 處理 Tblmps / EzfMapGrdTblMp
+					for (int gp = 0; gGrid.getTblmps() != null && gp < gGrid.getTblmps().size(); gp++) {
+						EzfMapGrdTblMp gpTblMp = gGrid.getTblmps().get(gp);
+						gpTblMp.setCnfId( dataForm.getCnfId() );
+						for (int jp = 0; jGrid.getTblmps() != null && jp < jGrid.getTblmps().size(); jp++) {
+							EzfMapGrdTblMp jpTblMp = jGrid.getTblmps().get(jp);
+							if (gpTblMp.getGridId().equals(jpTblMp.getGridId())) {
+								gpTblMp.setMstFieldName( jpTblMp.getMstFieldName() );
+								gpTblMp.setDtlFieldName( jpTblMp.getDtlFieldName() );
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		return result;
+	}
+	
+	private void fillEzfMapDataForm(EzfMap dataForm) throws ControllerException, AuthorityException, ServiceException, Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		
+		// 填入 List<EzfMapField> fields , gridId = 'N'
+		paramMap.put("cnfId", dataForm.getCnfId());
+		paramMap.put("gridId", YesNo.NO);
+		dataForm.setFields( this.ezfMapFieldService.selectListByParams(paramMap).getValue() );
+		
+		// 填入 List<EzfMapGrd> grids
+		paramMap.clear();
+		paramMap.put("cnfId", dataForm.getCnfId());
+		dataForm.setGrids( this.ezfMapGrdService.selectListByParams(paramMap).getValue() );
+				
+		// 填入 grids -> List<EzfMapField> items , gridId = EzfMapGrd.gridId		
+		// 填入 grids -> List<EzfMapGrdTblMp> tblmps 
+		for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
+			EzfMapGrd grid = dataForm.getGrids().get(g);
+			paramMap.clear();
+			paramMap.put("cnfId", dataForm.getCnfId());
+			paramMap.put("gridId", grid.getGridId());
+			grid.setItems( this.ezfMapFieldService.selectListByParams(paramMap).getValue() );
+			grid.setTblmps( this.ezfMapGrdTblMpService.selectListByParams(paramMap).getValue() );			
+		}		
 	}
 	
 }
