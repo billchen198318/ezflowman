@@ -42,7 +42,6 @@ import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
 import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
-import org.qifu.util.LoadResources;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -138,7 +137,7 @@ public class EzfTaskRunnable implements Runnable {
 		/*
 		 * 查詢看有沒有需要處理的資料
 		 */
-		String selectMasterTableSql = this.getSelectMasterCommand(dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField(), ezfDs.getDriverType());
+		String selectMasterTableSql = this.getSelectMasterCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField());
 		
 		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
 		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
@@ -178,12 +177,20 @@ public class EzfTaskRunnable implements Runnable {
 		return ManualDataSourceUtils.getJdbcTemplate(dsId);
 	}
 	
-	private String getSelectMasterCommand(String tableName, String efgpProcessStatusField, String dsDriverType) throws Exception {
+	private String getSelectMasterCommand(String dsDriverType, String tableName, String efgpProcessStatusField) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("driverType", dsDriverType);
 		paramMap.put("mainTbl", tableName);
 		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
 		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_master.ftl", paramMap);
+	}
+	
+	private String getSelectDetailCommand(String dsDriverType, String tableName, String detailTableFieldName) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("driverType", dsDriverType);
+		paramMap.put("dtlTbl", tableName);
+		paramMap.put("dtlFieldName", detailTableFieldName);
+		return TemplateUtils.processTemplate("getSelectDetailCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_detail.ftl", paramMap);
 	}
 	
 }
