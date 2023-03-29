@@ -303,11 +303,11 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void save(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.checkForCreateOrUpdate(result, form);
 		DefaultResult<EzfMap> cResult = this.ezfMapperLogicService.create(form);
-		if (YES.equals(cResult.getSuccess())) {
+		this.setDefaultResponseJsonResult(result, cResult);
+		if (YES.equals(result.getSuccess())) {
 			this.ezfTaskSchedService.removeScheduledTask(form.getCnfId());
 			this.ezfTaskSchedService.scheduleTask(form.getCnfId(), new EzfTaskRunnable(form.getCnfId()), form.getCronExpr());			
-		}
-		this.setDefaultResponseJsonResult(result, cResult);
+		}		
 	}
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001A")
@@ -330,11 +330,11 @@ public class EzFormMapperConfigController extends BaseControllerSupport implemen
 	private void update(DefaultControllerJsonResultObj<EzfMap> result, EzfMap form) throws ControllerException, AuthorityException, ServiceException, Exception {
 		this.checkForCreateOrUpdate(result, form);
 		DefaultResult<EzfMap> uResult = this.ezfMapperLogicService.update(form);
-		if (YES.equals(uResult.getSuccess())) {
+		this.setDefaultResponseJsonResult(result, uResult);
+		if (YES.equals(result.getSuccess())) {
 			this.ezfTaskSchedService.removeScheduledTask(form.getCnfId());
 			this.ezfTaskSchedService.scheduleTask(form.getCnfId(), new EzfTaskRunnable(form.getCnfId()), form.getCronExpr());
-		}		
-		this.setDefaultResponseJsonResult(result, uResult);
+		}
 	}	
 	
 	@ControllerMethodAuthority(check = true, programId = "EZF_A001D0001U")
