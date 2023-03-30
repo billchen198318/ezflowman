@@ -22,8 +22,10 @@
 package org.qifu.core.runnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -45,6 +47,8 @@ import org.qifu.model.DsDriverType;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import ognl.Ognl;
 
 public class EzfTaskRunnable implements Runnable {
 	protected Logger logger = LogManager.getLogger(EzfTaskRunnable.class);
@@ -133,23 +137,41 @@ public class EzfTaskRunnable implements Runnable {
 			throw new ServiceException("無法取得取得資料來源");
 		}
 		
+		Map<String, Object> paramMap = new HashMap<String, Object>();
 		
 		/*
 		 * 查詢看有沒有需要處理的資料
 		 */
+		Map<String, String> gridSqlTempMap = new HashMap<String, String>();
 		String selectMasterTableSql = this.getSelectMasterCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField());
+		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);
 		
-		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
-		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
-		System.out.println("selectMasterTableSql>>>" + selectMasterTableSql);
+		//System.out.println("-----------------------------------------------------------------");
+		//System.out.println("selectMasterTableSql>>>" +selectMasterTableSql);
+		//System.out.println(queryMasterList);
 		
+		for (Map<String, Object> mData : queryMasterList) {
+			for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
+				EzfMapGrd dGrid = dataForm.getGrids().get(g);
+				if ( dGrid.getTblmps() == null || CollectionUtils.isEmpty(dGrid.getTblmps()) ) {
+					throw new ServiceException("無配置EzfMapGrdTblMp,無法處理明細資料");
+				}
+				EzfMapGrdTblMp tblMp = dGrid.getTblmps().get(0); // 目前只會有一筆 EzfMapGrdTblMp 配置
+				if (gridSqlTempMap.get(dGrid.getGridId()) == null) {
+					gridSqlTempMap.put(dGrid.getGridId(), this.getSelectDetailCommand(ezfDs.getDriverType(), dGrid.getDtlTbl(), tblMp.getDtlFieldName(), tblMp.getMstFieldName()));
+				}
+				String selectDetailTableSql = gridSqlTempMap.get(dGrid.getGridId());
+				paramMap.clear();
+				paramMap.put(tblMp.getDtlFieldName(), Ognl.getValue(tblMp.getMstFieldName(), mData));
+				List<Map<String, Object>> queryDetailList = jdbcTemplate.queryForList(selectDetailTableSql, paramMap);
+				
+				//System.out.println("-----------------------------------------------------------------");
+				//System.out.println("selectDetailTableSql>>>" +selectDetailTableSql);
+				//System.out.println(queryDetailList);
+				
+			}			
+		}		
 		
-		/*
-		EzfMap inpForm = new EzfMap();
-		inpForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
-		this.ezfMapperLogicService.getFormFieldTemplateConvert2EzfMap(inpForm);
-		this.ezfMapperLogicService.prepareLoadDataWithFindFormOIDsOfProcess(inpForm, dataForm);
-		*/
 		
 		/*
 		 * 將 inpForm 內容處理轉為 EzForm, EzFormField, EzFormRecord, EzFormRecordItem
@@ -185,11 +207,12 @@ public class EzfTaskRunnable implements Runnable {
 		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_master.ftl", paramMap);
 	}
 	
-	private String getSelectDetailCommand(String dsDriverType, String tableName, String detailTableFieldName) throws Exception {
+	private String getSelectDetailCommand(String dsDriverType, String tableName, String detailTableFieldName, String masterTableFieldName) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("driverType", dsDriverType);
 		paramMap.put("dtlTbl", tableName);
 		paramMap.put("dtlFieldName", detailTableFieldName);
+		paramMap.put("mstFieldName", masterTableFieldName);
 		return TemplateUtils.processTemplate("getSelectDetailCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_detail.ftl", paramMap);
 	}
 	
