@@ -149,6 +149,13 @@ public class EZFlowWebServiceUtils {
 		return getWorkflowService().getFormFieldTemplate(formOid);
 	}
 	
+	public static String fetchProcInstanceWithSerialNo(String pProcessInstanceSerialNo) throws ServiceException, Exception {
+		if (StringUtils.isBlank(pProcessInstanceSerialNo)) {
+			throw new ServiceException( BaseSystemMessage.parameterBlank() );
+		}
+		return getWorkflowService().fetchProcInstanceWithSerialNo(pProcessInstanceSerialNo);
+	}
+	
 	private static <T> T fillFormElement(T obj, Object value) throws Exception {
 		String fieldVal = null;		
 		if (null != value) {

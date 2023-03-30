@@ -44,9 +44,13 @@ import org.qifu.core.service.IEzfMapGrdTblMpService;
 import org.qifu.core.service.IEzfMapService;
 import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
+import org.qifu.model.EFGPSimpleProcessInfoState;
+import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+
+import com.github.underscore.U;
 
 import ognl.Ognl;
 
@@ -100,25 +104,8 @@ public class EzfTaskRunnable implements Runnable {
 	@Override
 	public void run() {
 		try {
-			this.initBeans();
-			try {
-				this.processSignStatus();
-			} catch (ServiceException e) {
-				e.printStackTrace();
-				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
-			}			
-			try {
-				this.processInvokeForm();
-			} catch (ServiceException e) {
-				e.printStackTrace();
-				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
-			}
+			this.initBeans();	
+			this.process();
 		} catch (BeansException e) {
 			e.printStackTrace();
 			logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
@@ -131,11 +118,38 @@ public class EzfTaskRunnable implements Runnable {
 		}
 	}
 	
-	private void processSignStatus() throws ServiceException, Exception {
-		
+	private void processState(EzfDs ezfDs, EzfMap dataForm) throws ServiceException, Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(ezfDs);
+		String queryStateSql = this.getSelectMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField(), dataForm.getEfgpProcessNoField());
+		List<Map<String, Object>> checkStateList = jdbcTemplate.queryForList(queryStateSql, paramMap);	
+		for (Map<String, Object> m : checkStateList) {
+			Object efgpProcessNoVal = Ognl.getValue(dataForm.getEfgpProcessNoField(), m);
+			if (!StringUtils.isBlank((String)efgpProcessNoVal)) {
+				String efgpSimpleProcessInfoXml = StringUtils.defaultString(EZFlowWebServiceUtils.fetchProcInstanceWithSerialNo((String)efgpProcessNoVal));
+				if (efgpSimpleProcessInfoXml.indexOf("com.dsc.nana.services.webservice.SimpleProcessInfo") == -1) {
+					logger.warn("無可處理回復(fetchProcInstanceWithSerialNo): " + efgpSimpleProcessInfoXml);
+					continue;
+				}
+				Map<String, Object> simpleProcessInfoMap = U.fromXmlMap(efgpSimpleProcessInfoXml);
+				Map<String, Object> processInfoMap = (Map<String, Object>) simpleProcessInfoMap.get("com.dsc.nana.services.webservice.SimpleProcessInfo");
+				if (!EFGPSimpleProcessInfoState.isState((String)processInfoMap.get("state"))) {
+					logger.warn("無可處理回復(fetchProcInstanceWithSerialNo/state): " + efgpSimpleProcessInfoXml);
+					continue;
+				}
+				String stateVal = EFGPSimpleProcessInfoState.getValue((String)processInfoMap.get("state"));
+				if (!"1".equals(stateVal) && !StringUtils.isBlank(stateVal)) {
+					String updateStateSql = this.getUpdateMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField(), dataForm.getEfgpProcessNoField());
+					paramMap.clear();
+					paramMap.put("stateVal", stateVal);
+					paramMap.put("pProcessInstanceSerialNo", efgpProcessNoVal);
+					jdbcTemplate.update(updateStateSql, paramMap);
+				}
+			}
+		}
 	}
 	
-	private void processInvokeForm() throws ServiceException, Exception {
+	private void process() throws ServiceException, Exception {
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process start...");
 		if (StringUtils.isBlank(this.cnfId)) {
 			return;
@@ -148,17 +162,32 @@ public class EzfTaskRunnable implements Runnable {
 		ezfDs.setDsId(dataForm.getDsId());
 		ezfDs = this.ezfDsService.selectByUniqueKey(ezfDs).getValueEmptyThrowMessage();		
 		
-		this.ezfMapperLogicService.fillEzfMapDataForm(dataForm);
-		
 		/*
 		 * 取得資料來源
 		 */		
 		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(ezfDs);
 		if (null == jdbcTemplate) {
 			throw new ServiceException("無法取得取得資料來源");
-		}
+		}		
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
+		
+		
+		// --------------------------------------------------------------------------------------------------------------
+		/*
+		 * 處理更新 fetchProcInstanceWithSerialNo
+		 */
+		try {
+			this.processState(ezfDs, dataForm);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		// --------------------------------------------------------------------------------------------------------------
+		
+		
+		this.ezfMapperLogicService.fillEzfMapDataForm(dataForm);
 		
 		/*
 		 * 查詢看有沒有需要處理的資料
@@ -215,6 +244,24 @@ public class EzfTaskRunnable implements Runnable {
 		}
 		return ManualDataSourceUtils.getJdbcTemplate(dsId);
 	}
+	
+	private String getUpdateMasterStateCommand(String dsDriverType, String tableName, String efgpProcessStatusField, String efgpProcessNoField) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("driverType", dsDriverType);
+		paramMap.put("mainTbl", tableName);
+		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
+		paramMap.put("efgpProcessNoField", efgpProcessNoField);
+		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/update_master.ftl", paramMap);		
+	}
+	
+	private String getSelectMasterStateCommand(String dsDriverType, String tableName, String efgpProcessStatusField, String efgpProcessNoField) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("driverType", dsDriverType);
+		paramMap.put("mainTbl", tableName);
+		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
+		paramMap.put("efgpProcessNoField", efgpProcessNoField);
+		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/select_master_sign_state.ftl", paramMap);
+	}	
 	
 	private String getSelectMasterCommand(String dsDriverType, String tableName, String efgpProcessStatusField) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
