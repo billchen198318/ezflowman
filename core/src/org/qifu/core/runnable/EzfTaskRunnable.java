@@ -101,7 +101,24 @@ public class EzfTaskRunnable implements Runnable {
 	public void run() {
 		try {
 			this.initBeans();
-			this.process();			
+			try {
+				this.processSignStatus();
+			} catch (ServiceException e) {
+				e.printStackTrace();
+				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
+			}			
+			try {
+				this.processInvokeForm();
+			} catch (ServiceException e) {
+				e.printStackTrace();
+				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
+			}
 		} catch (BeansException e) {
 			e.printStackTrace();
 			logger.error( e != null && e.getMessage() != null ? e.getMessage() : "null" );
@@ -114,7 +131,11 @@ public class EzfTaskRunnable implements Runnable {
 		}
 	}
 	
-	private void process() throws ServiceException, Exception {
+	private void processSignStatus() throws ServiceException, Exception {
+		
+	}
+	
+	private void processInvokeForm() throws ServiceException, Exception {
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process start...");
 		if (StringUtils.isBlank(this.cnfId)) {
 			return;
@@ -145,10 +166,6 @@ public class EzfTaskRunnable implements Runnable {
 		Map<String, String> gridSqlTempMap = new HashMap<String, String>();
 		String selectMasterTableSql = this.getSelectMasterCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField());
 		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);
-		
-		//System.out.println("-----------------------------------------------------------------");
-		//System.out.println("selectMasterTableSql>>>" +selectMasterTableSql);
-		//System.out.println(queryMasterList);
 		
 		for (Map<String, Object> mData : queryMasterList) {
 			for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
