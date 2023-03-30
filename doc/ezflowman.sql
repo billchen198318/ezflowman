@@ -46,7 +46,7 @@ CREATE TABLE `ezf_ds` (
 
 LOCK TABLES `ezf_ds` WRITE;
 /*!40000 ALTER TABLE `ezf_ds` DISABLE KEYS */;
-INSERT INTO `ezf_ds` VALUES ('0f6e5d3c-b8f6-11ed-89a2-6dba9949b0b7','TEST01','test','3','jdbc:mariadb://127.0.0.1/ezflowman?useUnicode=true','root','password','admin','2023-03-02 20:30:47','admin','2023-03-21 21:24:22');
+INSERT INTO `ezf_ds` VALUES ('0f6e5d3c-b8f6-11ed-89a2-6dba9949b0b7','TEST01','test','3','jdbc:mariadb://127.0.0.1/classicmodels?useUnicode=true','root','password','admin','2023-03-02 20:30:47','admin','2023-03-21 21:24:22');
 /*!40000 ALTER TABLE `ezf_ds` ENABLE KEYS */;
 UNLOCK TABLES;
 
