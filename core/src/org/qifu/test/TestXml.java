@@ -20,7 +20,9 @@ public class TestXml {
 				+ "  <abortComment></abortComment>\r\n"
 				+ "</com.dsc.nana.services.webservice.SimpleProcessInfo>";
 		Map<String, Object> xmlData = U.fromXmlMap(xml);
-		System.out.println( xmlData.get("com.dsc.nana.services.webservice.SimpleProcessInfo") );
+		Map<String, Object> spiMap = (Map<String, Object>) xmlData.get("com.dsc.nana.services.webservice.SimpleProcessInfo");
+		System.out.println( spiMap.get("serialNo") );
+		System.out.println( spiMap.get("state") );		
 	}
 
 }
