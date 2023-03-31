@@ -318,9 +318,9 @@ public class EzfTaskRunnable implements Runnable {
 							logger.warn("EzFormRecord沒有items,無法處理: " + cnfGrid.getGridId() + " , recordId: " + cRecord.getRecordId());
 							continue;
 						}
-						EzFormRecord dRecord = new EzFormRecord();
-						dRecord.setRecordId( cRecord.getRecordId() );
-						for (Map<String, Object> dtlDataMap : queryDetailList) {							
+						for (Map<String, Object> dtlDataMap : queryDetailList) {	
+							EzFormRecord dRecord = new EzFormRecord();
+							dRecord.setRecordId( cRecord.getRecordId() );							
 							for (EzFormRecordItem oriItem : cRecord.getItems()) {
 								for (EzfMapField ezfMapGridField : dGridItemList) {
 									if (ezfMapGridField.getFormField().equals(oriItem.getId())) {
@@ -331,9 +331,9 @@ public class EzfTaskRunnable implements Runnable {
 									}
 								}									
 							}
-						}
-						if (dRecord.getItems().size() > 0) {
-							ezGrid.getRecords().add(dRecord);
+							if (dRecord.getItems().size() > 0) {
+								ezGrid.getRecords().add(dRecord);
+							}							
 						}
 					}	
 					
