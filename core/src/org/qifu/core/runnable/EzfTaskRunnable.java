@@ -21,6 +21,8 @@
  */
 package org.qifu.core.runnable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -246,12 +248,17 @@ public class EzfTaskRunnable implements Runnable {
 			}
 			
 			// --------------------------------------------------------------------------------------
+
 			List<EzFormGrid> cnfGridList = new LinkedList<EzFormGrid>();// 保留配置需要用的
+			//Collections.copy(cnfGridList, ezform.getGrids());
 			for (EzFormGrid fgGrid : ezform.getGrids()) {
 				EzFormGrid cnfGrid = new EzFormGrid();
 				BeanUtils.copyProperties(cnfGrid, fgGrid);
 				cnfGridList.add(cnfGrid);
 			}
+			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
+			System.out.println( cnfGridList );
+			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
 			for (int gx = 0; ezform.getGrids() != null && gx < ezform.getGrids().size(); gx++) { // 請除grid 的 items
 				EzFormGrid ezGrid = ezform.getGrids().get(gx);
 				for (int rx = 0; ezGrid.getRecords() != null && rx < ezGrid.getRecords().size(); rx++) {
@@ -259,6 +266,9 @@ public class EzfTaskRunnable implements Runnable {
 					ezGrid.getRecords().clear();
 				}
 			}
+			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
+			System.out.println( cnfGridList );
+			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");			
 			// --------------------------------------------------------------------------------------
 			
 			for (int x = 0; cnfGridList != null && x < cnfGridList.size(); x++) {
