@@ -21,8 +21,7 @@
  */
 package org.qifu.core.runnable;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +48,7 @@ import org.qifu.core.service.IEzfMapService;
 import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
 import org.qifu.model.EFGPSimpleProcessInfoState;
+import org.qifu.util.SimpleUtils;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.utils.ManualDataSourceUtils;
@@ -237,7 +237,8 @@ public class EzfTaskRunnable implements Runnable {
 			for (EzFormField fField : ezform.getFields() ) {
 				for (EzfMapField dField : dataForm.getFields()) {
 					if ( fField.getId().equals(dField.getFormField()) ) {
-						fField.setText( StringUtils.defaultString((String)Ognl.getValue(dField.getTblField(), mData)).trim() );
+						//fField.setText( StringUtils.defaultString((String)Ognl.getValue(dField.getTblField(), mData)).trim() );
+						fField.setText( this.fieldValue(Ognl.getValue(dField.getTblField(), mData) ) );
 					}
 				}
 			}
@@ -250,25 +251,31 @@ public class EzfTaskRunnable implements Runnable {
 			// --------------------------------------------------------------------------------------
 
 			List<EzFormGrid> cnfGridList = new LinkedList<EzFormGrid>();// 保留配置需要用的
-			//Collections.copy(cnfGridList, ezform.getGrids());
 			for (EzFormGrid fgGrid : ezform.getGrids()) {
 				EzFormGrid cnfGrid = new EzFormGrid();
-				BeanUtils.copyProperties(cnfGrid, fgGrid);
+				cnfGrid.setGridId(fgGrid.getGridId());
+				for (EzFormRecord gRecord : fgGrid.getRecords()) {
+					EzFormRecord cnfRecord = new EzFormRecord();
+					cnfRecord.setRecordId(gRecord.getRecordId());
+					cnfGrid.getRecords().add(cnfRecord);
+					for (EzFormRecordItem gItem : gRecord.getItems()) {
+						EzFormRecordItem cnfItem = new EzFormRecordItem();
+						cnfItem.setId(gItem.getId());
+						cnfItem.setDataType(gItem.getDataType());
+						cnfItem.setPerDataProId(gItem.getPerDataProId());
+						cnfItem.setText(gItem.getText());
+						cnfRecord.getItems().add(cnfItem);
+					}
+				}
 				cnfGridList.add(cnfGrid);
 			}
-			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
-			System.out.println( cnfGridList );
-			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
 			for (int gx = 0; ezform.getGrids() != null && gx < ezform.getGrids().size(); gx++) { // 請除grid 的 items
 				EzFormGrid ezGrid = ezform.getGrids().get(gx);
 				for (int rx = 0; ezGrid.getRecords() != null && rx < ezGrid.getRecords().size(); rx++) {
 					ezGrid.getRecords().get(rx).getItems().clear();
 					ezGrid.getRecords().clear();
 				}
-			}
-			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");
-			System.out.println( cnfGridList );
-			System.out.println("-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----[test]-----");			
+			}	
 			// --------------------------------------------------------------------------------------
 			
 			for (int x = 0; cnfGridList != null && x < cnfGridList.size(); x++) {
@@ -319,7 +326,7 @@ public class EzfTaskRunnable implements Runnable {
 									if (ezfMapGridField.getFormField().equals(oriItem.getId())) {
 										EzFormRecordItem rItem = new EzFormRecordItem();
 										BeanUtils.copyProperties(rItem, oriItem);										
-										rItem.setText( StringUtils.defaultString( (String) Ognl.getValue(ezfMapGridField.getTblField(), dtlDataMap) ) );
+										rItem.setText( StringUtils.defaultString( this.fieldValue(Ognl.getValue(ezfMapGridField.getTblField(), dtlDataMap), rItem.getDataType()) ) );
 										dRecord.getItems().add(rItem);
 									}
 								}									
@@ -347,6 +354,28 @@ public class EzfTaskRunnable implements Runnable {
 		}
 		
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
+	}
+	
+	private String fieldValue(Object valueObj) throws Exception {
+		if (null == valueObj) {
+			return "";
+		}
+		if (valueObj instanceof Date) {
+			return SimpleUtils.getStrYMD((Date)valueObj, "/");
+		}
+		return String.valueOf(valueObj);
+	}
+	
+	private String fieldValue(Object valueObj, String dataType) throws Exception {
+		if (null == valueObj) {
+			return "";
+		}
+		if ("java.util.Date".equals(dataType)) {
+			if (valueObj instanceof Date) {
+				return SimpleUtils.getStrYMD((Date)valueObj, "/");
+			}
+		}
+		return String.valueOf(valueObj);
 	}
 	
 	private void processInvokeForm(EzfMap dataForm, EzfDs ds, EzForm form) throws ServiceException, Exception {
