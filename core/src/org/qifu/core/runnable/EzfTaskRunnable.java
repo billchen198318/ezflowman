@@ -21,10 +21,13 @@
  */
 package org.qifu.core.runnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +49,12 @@ import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
 import org.qifu.model.EFGPSimpleProcessInfoState;
 import org.qifu.utils.EZFlowWebServiceUtils;
+import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.utils.ManualDataSourceUtils;
+import org.qifu.vo.EzForm;
+import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormRecord;
+import org.qifu.vo.EzFormRecordItem;
 import org.springframework.beans.BeansException;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -194,38 +202,114 @@ public class EzfTaskRunnable implements Runnable {
 		/*
 		 * 查詢看有沒有需要處理的資料
 		 */
+		Map<String, String> formFieldTemplateMap = new HashMap<String, String>();
 		Map<String, String> gridSqlTempMap = new HashMap<String, String>();
 		String selectMasterTableSql = this.getSelectMasterCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField());
-		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);
-		
-		for (Map<String, Object> mData : queryMasterList) {
-			for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
-				EzfMapGrd dGrid = dataForm.getGrids().get(g);
-				if ( dGrid.getTblmps() == null || CollectionUtils.isEmpty(dGrid.getTblmps()) ) {
-					throw new ServiceException("無配置EzfMapGrdTblMp,無法處理明細資料");
+		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);		
+		for (Map<String, Object> mData : queryMasterList) {		
+			String formXml = formFieldTemplateMap.get(dataForm.getEfgpPkgId());
+			if (StringUtils.isBlank(formXml)) {
+				String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess( dataForm.getEfgpPkgId() );
+				if (StringUtils.isBlank(formOid)) {
+					throw new ServiceException("無法取得暫存流程表單OID");
 				}
-				EzfMapGrdTblMp tblMp = dGrid.getTblmps().get(0); // 目前只會有一筆 EzfMapGrdTblMp 配置
-				if (gridSqlTempMap.get(dGrid.getGridId()) == null) {
-					gridSqlTempMap.put(dGrid.getGridId(), this.getSelectDetailCommand(ezfDs.getDriverType(), dGrid.getDtlTbl(), tblMp.getDtlFieldName(), tblMp.getMstFieldName()));
+				if (formOid.indexOf(",")>-1) { // findFormOIDsOfProcess 有可能帶回多筆 oid 所以取最後一筆
+					String arr[] = formOid.split(",");
+					formOid = arr[arr.length-1];
+				}			
+				formXml = EZFlowWebServiceUtils.getFormFieldTemplate(formOid);
+				if (StringUtils.isBlank(formXml)) {
+					throw new ServiceException("無法取得流程表單樣板xml");
+				}		
+				formFieldTemplateMap.put(dataForm.getEfgpPkgId(), formXml);
+			}
+			
+			/*
+			 * 將內容處理轉為 EzForm, EzFormField, EzFormRecord, EzFormRecordItem
+			 */			
+			EzForm ezform = EZFormSupportUtils.loadFromXml(formXml);
+			if ( CollectionUtils.isEmpty(ezform.getFields()) ) {
+				logger.warn("無可處理填入的表單,流程: " + dataForm.getEfgpPkgId());
+				continue;
+			}
+			for (EzFormField fField : ezform.getFields() ) {
+				for (EzfMapField dField : dataForm.getFields()) {
+					if ( fField.getId().equals(dField.getFormField()) ) {
+						fField.setText( StringUtils.defaultString((String)Ognl.getValue(dField.getTblField(), mData)).trim() );
+					}
 				}
-				String selectDetailTableSql = gridSqlTempMap.get(dGrid.getGridId());
-				paramMap.clear();
-				paramMap.put(tblMp.getDtlFieldName(), Ognl.getValue(tblMp.getMstFieldName(), mData));
-				List<Map<String, Object>> queryDetailList = jdbcTemplate.queryForList(selectDetailTableSql, paramMap);
+			}
+			// 填入表單Grid資料
+			if (CollectionUtils.isEmpty(ezform.getRecords())) {
+				logger.warn("EzFormRecord沒有可處理之Records: " + ezform.getFormId());
+				continue;
+			}
+			
+			// --------------------------------------------------------------------------------------
+			List<EzFormRecord> cnfRecordList = new LinkedList<EzFormRecord>(); // 保留配置需要用的
+			for (EzFormRecord fRecord : ezform.getRecords()) {
+				EzFormRecord cr = new EzFormRecord();
+				BeanUtils.copyProperties(cr, fRecord);
+				if (CollectionUtils.isEmpty(cr.getItems()) && !CollectionUtils.isEmpty(fRecord.getItems())) {					
+					for (EzFormRecordItem fri : fRecord.getItems()) {
+						EzFormRecordItem ci = new EzFormRecordItem();
+						BeanUtils.copyProperties(ci, fri);
+						cr.getItems().add(ci);
+					}
+				}
+				cnfRecordList.add(cr);				
+			}
+			// --------------------------------------------------------------------------------------
+			
+			for (int c = 0; c < cnfRecordList.size(); c++) {
+				final EzFormRecord cRecord = cnfRecordList.get(c); // 配置設定程式判斷用的EzFormRecord
+				if (CollectionUtils.isEmpty(cRecord.getItems())) {
+					logger.warn("EzFormRecord沒有item,無法處理: " + cRecord.getGridId());
+					continue;
+				}
+				EzFormRecord fRecord = ezform.getRecords().get(c); // 要被修改內容的EzFormRecord
 				
-				//System.out.println("-----------------------------------------------------------------");
-				//System.out.println("selectDetailTableSql>>>" +selectDetailTableSql);
-				//System.out.println(queryDetailList);
+				for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
+					EzfMapGrd dGrid = dataForm.getGrids().get(g);
+					if (!fRecord.getGridId().equals(dGrid.getGridId())) {
+						continue;
+					}
+					if (CollectionUtils.isEmpty(dGrid.getItems())) {
+						logger.warn("EzfMapGrd.field沒有配置,無法處理GridId: " + dGrid.getGridId());
+						fRecord.getItems().clear();
+						continue;
+					}
+					if ( dGrid.getTblmps() == null || CollectionUtils.isEmpty(dGrid.getTblmps()) ) {
+						throw new ServiceException("無配置EzfMapGrdTblMp,無法處理明細資料");
+					}
+					EzfMapGrdTblMp tblMp = dGrid.getTblmps().get(0); // 目前只會有一筆 EzfMapGrdTblMp 配置
+					if (gridSqlTempMap.get(dGrid.getGridId()) == null) {
+						gridSqlTempMap.put(dGrid.getGridId(), this.getSelectDetailCommand(ezfDs.getDriverType(), dGrid.getDtlTbl(), tblMp.getDtlFieldName(), tblMp.getMstFieldName()));
+					}
+					String selectDetailTableSql = gridSqlTempMap.get(dGrid.getGridId());
+					paramMap.clear();
+					paramMap.put(tblMp.getDtlFieldName(), Ognl.getValue(tblMp.getMstFieldName(), mData));
+					List<Map<String, Object>> queryDetailList = jdbcTemplate.queryForList(selectDetailTableSql, paramMap);
+					if (CollectionUtils.isEmpty(queryDetailList)) {
+						logger.warn( "沒有明細資料, 明細表: " + dGrid.getDtlTbl() + " , 條件欄位: " + tblMp.getDtlFieldName() + " , 值: " + paramMap.get(tblMp.getDtlFieldName()) );
+						fRecord.getItems().clear();
+						continue;
+					}
+					// 填寫Grid items
+					fRecord.getItems().clear(); // 清掉 getFormFieldTemplate 取回的配置 items
+					for (final EzFormRecordItem cItem : cRecord.getItems()) { // 表單xml要配置的grid item配置用
+						//EzFormRecordItem dItem = new EzFormRecordItem(); // 表單xml要配置的grid item填入資料用
+						//BeanUtils.copyProperties(dItem, cItem);
+						//dItem.setText( Ognl.getValue(tblMp.getMstFieldName(), mData) );
+						//fRecord.getItems().add(dItem);
+					}
+					
+					
+				}
 				
-			}			
-		}		
-		
-		
-		/*
-		 * 將 inpForm 內容處理轉為 EzForm, EzFormField, EzFormRecord, EzFormRecordItem
-		 */
-		
-		
+			}
+			
+		}
 		
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
 	}
