@@ -57,6 +57,8 @@ import ognl.Ognl;
 public class EzfTaskRunnable implements Runnable {
 	protected Logger logger = LogManager.getLogger(EzfTaskRunnable.class);
 	
+	private static final String _EFGP_SPI_Xml_PackageElemTagName = "com.dsc.nana.services.webservice.SimpleProcessInfo"; 
+	
 	private String cnfId;
 	
 	private IEzfDsService<EzfDs, String> ezfDsService;
@@ -127,12 +129,12 @@ public class EzfTaskRunnable implements Runnable {
 			Object efgpProcessNoVal = Ognl.getValue(dataForm.getEfgpProcessNoField(), m);
 			if (!StringUtils.isBlank((String)efgpProcessNoVal)) {
 				String efgpSimpleProcessInfoXml = StringUtils.defaultString(EZFlowWebServiceUtils.fetchProcInstanceWithSerialNo((String)efgpProcessNoVal));
-				if (efgpSimpleProcessInfoXml.indexOf("com.dsc.nana.services.webservice.SimpleProcessInfo") == -1) {
+				if (efgpSimpleProcessInfoXml.indexOf(_EFGP_SPI_Xml_PackageElemTagName) == -1) {
 					logger.warn("無可處理回復(fetchProcInstanceWithSerialNo): " + efgpSimpleProcessInfoXml);
 					continue;
 				}
 				Map<String, Object> simpleProcessInfoMap = U.fromXmlMap(efgpSimpleProcessInfoXml);
-				Map<String, Object> processInfoMap = (Map<String, Object>) simpleProcessInfoMap.get("com.dsc.nana.services.webservice.SimpleProcessInfo");
+				Map<String, Object> processInfoMap = (Map<String, Object>) simpleProcessInfoMap.get(_EFGP_SPI_Xml_PackageElemTagName);
 				if (!EFGPSimpleProcessInfoState.isState((String)processInfoMap.get("state"))) {
 					logger.warn("無可處理回復(fetchProcInstanceWithSerialNo/state): " + efgpSimpleProcessInfoXml);
 					continue;
