@@ -54,6 +54,7 @@ import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.qifu.vo.EzForm;
 import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormGrid;
 import org.qifu.vo.EzFormRecord;
 import org.qifu.vo.EzFormRecordItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -421,6 +422,8 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 				form.getFields().add(field);
 			}
 		}
+		
+		/*
 		if (ezform != null && ezform.getRecords() != null && ezform.getRecords().size() > 0) {
 			for (EzFormRecord ezRecord : ezform.getRecords()) {
 				if (ezRecord.getItems() == null) {
@@ -449,7 +452,40 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 				}
 				
 			}
-		}		
+		}
+		*/
+		if (ezform != null && ezform.getGrids() != null && ezform.getGrids().size() > 0) {
+			for (EzFormGrid ezGrid : ezform.getGrids()) {
+				for (EzFormRecord ezRecord : ezGrid.getRecords()) {
+					if (ezRecord.getItems() == null) {
+						continue;
+					}
+					EzfMapGrd grid = new EzfMapGrd();
+					grid.setDtlTbl("");
+					grid.setGridId(ezGrid.getGridId());
+					grid.setRecordId(ezRecord.getRecordId());
+					form.getGrids().add(grid);
+					for (EzFormRecordItem ezRecordItem : ezRecord.getItems()) {
+						EzfMapField gridItem = new EzfMapField();
+						gridItem.setGridId(grid.getGridId());
+						gridItem.setTblField("");
+						gridItem.setFormField(ezRecordItem.getId());
+						grid.getItems().add(gridItem);
+					}
+					
+					if (grid.getTblmps().size() == 0) { // 最少補一筆 EzfMapGrdTblMp
+						EzfMapGrdTblMp tblMp = new EzfMapGrdTblMp();
+						tblMp.setCnfId("");
+						tblMp.setGridId(grid.getGridId());
+						tblMp.setMstFieldName("");
+						tblMp.setDtlFieldName("");
+						grid.getTblmps().add(tblMp);
+					}
+					
+				}				
+			}
+		}
+		
 	}
 	
 }

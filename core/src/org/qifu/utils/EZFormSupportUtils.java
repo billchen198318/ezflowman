@@ -32,6 +32,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.qifu.base.message.BaseSystemMessage;
 import org.qifu.vo.EzForm;
 import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormGrid;
 import org.qifu.vo.EzFormRecord;
 import org.qifu.vo.EzFormRecordItem;
 
@@ -79,15 +80,15 @@ public class EZFormSupportUtils implements java.io.Serializable {
         			// 處理grid
         			boolean isGrid = false;
         			if (l1Map.get(_element_records) != null && l1Map.get(_element_records) instanceof Map) {
-        				Map<String, Object> l2Map = (Map<String, Object>) l1Map.get(_element_records);
+        				Map<String, Object> l2Map = (Map<String, Object>) l1Map.get(_element_records);        				
         				if ( l2Map.get(_element_record) != null && l2Map.get(_element_record) instanceof Map ) {
+    						EzFormGrid eGrid = new EzFormGrid();
+    						eGrid.setGridId( l1Entry.getKey() );        					
         					Map<String, Object> recordMap = (Map<String, Object>) l2Map.get(_element_record);
-        					if (recordMap.get(_element_item) != null && recordMap.get(_element_item) instanceof List) {        						
+        					if (recordMap.get(_element_item) != null && recordMap.get(_element_item) instanceof List) { 						
         						List< Map<String, Object> > itemList = (List<Map<String, Object>>) recordMap.get(_element_item);
         						if (!CollectionUtils.isEmpty(itemList)) {
-        							//System.out.println("is grid ===>" + l1Entry.getKey() );
-        							EzFormRecord fr = new EzFormRecord();
-        							fr.setGridId( l1Entry.getKey() );
+        							EzFormRecord fr = new EzFormRecord();        							
         							fr.setRecordId( StringUtils.defaultString((String)recordMap.get(_attribute_id)) );        							
         							for (Map<String, Object> itemMap : itemList) {
         								EzFormRecordItem ri = new EzFormRecordItem();
@@ -97,11 +98,43 @@ public class EZFormSupportUtils implements java.io.Serializable {
         								ri.setText( StringUtils.defaultString((String)itemMap.get(_attribute_text)) );
         								fr.getItems().add(ri);
         							}
-        							ezform.getRecords().add(fr);
+        							eGrid.getRecords().add(fr);
         							isGrid = true;
-        						}            					
+        						}
         					}
-        				}        				
+    						if (isGrid) {
+    							ezform.getGrids().add(eGrid);
+    						}        					
+        				}   
+        				
+        				if ( l2Map.get(_element_record) != null && l2Map.get(_element_record) instanceof List ) { // 轉資料成拋送時, 會是多筆 List
+        					List<Map<String, Object>> recordMapList = (List<Map<String, Object>>) l2Map.get(_element_record);
+    						EzFormGrid eGrid = new EzFormGrid();
+    						eGrid.setGridId( l1Entry.getKey() );        					
+        					for (Map<String, Object> recordMap : recordMapList) {        						
+            					if (recordMap.get(_element_item) != null && recordMap.get(_element_item) instanceof List) {
+            						List< Map<String, Object> > itemList = (List<Map<String, Object>>) recordMap.get(_element_item);
+            						if (!CollectionUtils.isEmpty(itemList)) {
+            							EzFormRecord fr = new EzFormRecord();        							
+            							fr.setRecordId( StringUtils.defaultString((String)recordMap.get(_attribute_id)) );        							
+            							for (Map<String, Object> itemMap : itemList) {
+            								EzFormRecordItem ri = new EzFormRecordItem();
+            								ri.setId( StringUtils.defaultString((String)itemMap.get(_attribute_id)) );
+            								ri.setDataType( StringUtils.defaultString((String)itemMap.get(_attribute_dataType)) );
+            								ri.setPerDataProId( StringUtils.defaultString((String)itemMap.get(_attribute_perDataProId)) );
+            								ri.setText( StringUtils.defaultString((String)itemMap.get(_attribute_text)) );
+            								fr.getItems().add(ri);
+            							}
+            							eGrid.getRecords().add(fr);
+            							isGrid = true;
+            						}  
+            					}
+        					}
+           					if (isGrid) {
+        						ezform.getGrids().add(eGrid);
+        					}        					
+        				}
+        				
         			}
         			// -------------------------------------------------------------------------------------
         			
@@ -161,43 +194,53 @@ public class EZFormSupportUtils implements java.io.Serializable {
 				fieldMap.put(_attribute_text, field.getText());
 			}
 		}
-		for (int r = 0; formObj.getRecords() != null && r < formObj.getRecords().size(); r++) {			
-			EzFormRecord record = formObj.getRecords().get(r);
-			if ( StringUtils.isBlank(record.getGridId()) ) {
+		for (int g = 0; formObj.getGrids() != null && g < formObj.getGrids().size(); g++) {
+			EzFormGrid eGrid = formObj.getGrids().get(g);
+			if ( StringUtils.isBlank(eGrid.getGridId()) ) {
 				throw new Exception("form grid no id.");
 			}
-			if (CollectionUtils.isEmpty(record.getItems())) {
-				throw new Exception("form grid-" + record.getGridId() + " no item list.");
+			if (CollectionUtils.isEmpty(eGrid.getRecords())) {
+				throw new Exception("form grid-" + eGrid.getGridId() + " no record list.");
 			}
 			Map<String, Object> gridMap = new HashMap<String, Object>();
-			gridMap.put(_attribute_id, record.getGridId());
-			formMap.put(record.getGridId(), gridMap);
+			gridMap.put(_attribute_id, eGrid.getGridId());
+			formMap.put(eGrid.getGridId(), gridMap);
 			Map<String, Object> recordsMap = new HashMap<String, Object>();
 			gridMap.put(_element_records, recordsMap);
-			Map<String, Object> recordMap = new HashMap<String, Object>();
-			recordsMap.put(_element_record, recordMap);
-			recordMap.put(_attribute_id, StringUtils.defaultString(record.getRecordId()));
-			List< Map<String, Object> > itemList = new ArrayList< Map<String, Object> >();
-			recordMap.put(_element_item, itemList);
-			for (int i = 0; i < record.getItems().size(); i++) {
-				EzFormRecordItem itemObj = record.getItems().get(i);
-				if (StringUtils.isBlank(itemObj.getId())) {
-					throw new Exception("form grid-" + record.getGridId() + " , item index " + i + " no id.");
+			List<Map<String, Object>> recordList = new ArrayList<Map<String, Object>>();
+			recordsMap.put(_element_record, recordList);
+			for (int r = 0; r < eGrid.getRecords().size(); r++) {
+				EzFormRecord record = eGrid.getRecords().get(r);
+				Map<String, Object> recordMap = new HashMap<String, Object>();
+				recordMap.put(_attribute_id, record.getRecordId());				
+				List< Map<String, Object> > itemList = new ArrayList< Map<String, Object> >();
+				for (int i = 0; i < record.getItems().size(); i++) {					
+					EzFormRecordItem itemObj = record.getItems().get(i);
+					if (StringUtils.isBlank(itemObj.getId())) {
+						throw new Exception("form grid-" + eGrid.getGridId() + " , item index " + i + " no id.");
+					}				
+					Map<String, Object> itemMap = new HashMap<String, Object>();
+					itemMap.put(_attribute_id, itemObj.getId());
+					if (!StringUtils.isBlank(itemObj.getDataType())) {
+						itemMap.put(_attribute_dataType, itemObj.getDataType());
+					}				
+					if (!StringUtils.isBlank(itemObj.getPerDataProId())) {
+						itemMap.put(_attribute_perDataProId, itemObj.getPerDataProId());
+					}
+					if (!StringUtils.isBlank(itemObj.getText())) {
+						itemMap.put(_attribute_text, itemObj.getText());
+					}
+					itemList.add(itemMap);
 				}				
-				Map<String, Object> itemMap = new HashMap<String, Object>();
-				itemMap.put(_attribute_id, itemObj.getId());
-				if (!StringUtils.isBlank(itemObj.getDataType())) {
-					itemMap.put(_attribute_dataType, itemObj.getDataType());
-				}				
-				if (!StringUtils.isBlank(itemObj.getPerDataProId())) {
-					itemMap.put(_attribute_perDataProId, itemObj.getPerDataProId());
-				}
-				if (!StringUtils.isBlank(itemObj.getText())) {
-					itemMap.put(_attribute_text, itemObj.getText());
-				}
-				itemList.add(itemMap);
-			}
+				recordMap.put(_element_item, itemList);
+				recordList.add(recordMap);
+			}			
 		}
+		/*
+		System.out.println("##############################################################################");
+		System.out.println( dataMap );
+		System.out.println("##############################################################################");
+		*/
 		return dataMap;
 	}
 	

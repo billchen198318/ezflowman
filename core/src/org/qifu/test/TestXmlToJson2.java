@@ -11,8 +11,8 @@ public class TestXmlToJson2 {
 	
 	public static void main(String args[]) throws Exception {
 		//String testXml = "aimi150.xml";
-		String testXml = "apmt540.xml";
-		//String testXml = "sign_form.xml";
+		//String testXml = "apmt540.xml";
+		String testXml = "sign_form.xml";
 		//String testXml = "Car_form.xml";
 		//String testXml = "Car_form-TEST.xml";
 		

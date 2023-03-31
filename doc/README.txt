@@ -16,6 +16,73 @@ PKG16777252197981
 
 ---------------------------------------------------------------------------------------------------------------------
 
+-- 單筆
+    "asignGrid": {
+      "-id": "asignGrid",
+      "records": {
+        "record": {
+          "-id": "",
+          "item": [
+            {
+              "-id": "empId",
+              "-dataType": "java.lang.String",
+              "-perDataProId": ""
+            },
+            {
+              "-id": "empName",
+              "-dataType": "java.lang.String",
+              "-perDataProId": ""
+            }
+          ]
+        }
+      }
+    },
+	
+
+--多筆
+    "asignGrid": {
+      "-id": "asignGrid",
+      "records": {
+        "record": [
+          {
+            "-id": "",
+            "item": [
+              {
+                "-id": "empId",
+                "-dataType": "java.lang.String",
+                "-perDataProId": ""
+              },
+              {
+                "-id": "empName",
+                "-dataType": "java.lang.String",
+                "-perDataProId": ""
+              }
+            ]
+          },
+          {
+            "-id": "",
+            "item": [
+              {
+                "-id": "empId",
+                "-dataType": "java.lang.String",
+                "-perDataProId": ""
+              },
+              {
+                "-id": "empName",
+                "-dataType": "java.lang.String",
+                "-perDataProId": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+	
+	
+---------------------------------------------------------------------------------------------------------------------	
+	
+	
+
 
 <soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webservice.nana.dsc.com/">
    <soapenv:Header/>

@@ -53,6 +53,7 @@ import org.qifu.utils.EZFormSupportUtils;
 import org.qifu.utils.ManualDataSourceUtils;
 import org.qifu.vo.EzForm;
 import org.qifu.vo.EzFormField;
+import org.qifu.vo.EzFormGrid;
 import org.qifu.vo.EzFormRecord;
 import org.qifu.vo.EzFormRecordItem;
 import org.springframework.beans.BeansException;
@@ -240,27 +241,23 @@ public class EzfTaskRunnable implements Runnable {
 				}
 			}
 			// 填入表單Grid資料
-			if (CollectionUtils.isEmpty(ezform.getRecords())) {
-				logger.warn("EzFormRecord沒有可處理之Records: " + ezform.getFormId());
+			if (CollectionUtils.isEmpty(ezform.getGrids())) {
+				logger.warn("EzFormGrid沒有可處理之Grid: " + ezform.getFormId());
 				continue;
 			}
 			
 			// --------------------------------------------------------------------------------------
-			List<EzFormRecord> cnfRecordList = new LinkedList<EzFormRecord>(); // 保留配置需要用的
-			for (EzFormRecord fRecord : ezform.getRecords()) {
-				EzFormRecord cr = new EzFormRecord();
-				BeanUtils.copyProperties(cr, fRecord);
-				if (CollectionUtils.isEmpty(cr.getItems()) && !CollectionUtils.isEmpty(fRecord.getItems())) {					
-					for (EzFormRecordItem fri : fRecord.getItems()) {
-						EzFormRecordItem ci = new EzFormRecordItem();
-						BeanUtils.copyProperties(ci, fri);
-						cr.getItems().add(ci);
-					}
-				}
-				cnfRecordList.add(cr);				
-			}
+			List<EzFormGrid> cnfGridList = new LinkedList<EzFormGrid>();// 保留配置需要用的
+			for (EzFormGrid fgGrid : ezform.getGrids()) {
+				EzFormGrid cnfGrid = new EzFormGrid();
+				BeanUtils.copyProperties(cnfGrid, fgGrid);
+				cnfGridList.add(cnfGrid);
+			}			
 			// --------------------------------------------------------------------------------------
 			
+			
+			
+			/*
 			for (int c = 0; c < cnfRecordList.size(); c++) {
 				final EzFormRecord cRecord = cnfRecordList.get(c); // 配置設定程式判斷用的EzFormRecord
 				if (CollectionUtils.isEmpty(cRecord.getItems())) {
@@ -298,16 +295,14 @@ public class EzfTaskRunnable implements Runnable {
 					// 填寫Grid items
 					fRecord.getItems().clear(); // 清掉 getFormFieldTemplate 取回的配置 items
 					for (final EzFormRecordItem cItem : cRecord.getItems()) { // 表單xml要配置的grid item配置用
-						//EzFormRecordItem dItem = new EzFormRecordItem(); // 表單xml要配置的grid item填入資料用
-						//BeanUtils.copyProperties(dItem, cItem);
-						//dItem.setText( Ognl.getValue(tblMp.getMstFieldName(), mData) );
-						//fRecord.getItems().add(dItem);
+						
 					}
 					
 					
 				}
 				
 			}
+			*/
 			
 		}
 		

@@ -31,7 +31,7 @@ public class EzForm implements java.io.Serializable {
 	
 	private List<EzFormField> fields = new ArrayList<EzFormField>();
 	
-	private List<EzFormRecord> records = new ArrayList<EzFormRecord>();
+	private List<EzFormGrid> grids = new ArrayList<EzFormGrid>();
 
 	public String getFormId() {
 		return formId;
@@ -49,17 +49,17 @@ public class EzForm implements java.io.Serializable {
 		this.fields = fields;
 	}
 
-	public List<EzFormRecord> getRecords() {
-		return records;
+	public List<EzFormGrid> getGrids() {
+		return grids;
 	}
 
-	public void setRecords(List<EzFormRecord> records) {
-		this.records = records;
+	public void setGrids(List<EzFormGrid> grids) {
+		this.grids = grids;
 	}
 
 	@Override
 	public String toString() {
-		return "EzForm [formId=" + formId + ", fields=" + fields + ", records=" + records + "]";
+		return "EzForm [formId=" + formId + ", fields=" + fields + ", grids=" + grids + "]";
 	}
-	
+		
 }
