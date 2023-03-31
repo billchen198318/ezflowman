@@ -21,7 +21,6 @@
  */
 package org.qifu.core.runnable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -252,28 +251,30 @@ public class EzfTaskRunnable implements Runnable {
 				EzFormGrid cnfGrid = new EzFormGrid();
 				BeanUtils.copyProperties(cnfGrid, fgGrid);
 				cnfGridList.add(cnfGrid);
-			}			
+			}
+			for (int gx = 0; ezform.getGrids() != null && gx < ezform.getGrids().size(); gx++) { // 請除grid 的 items
+				EzFormGrid ezGrid = ezform.getGrids().get(gx);
+				for (int rx = 0; ezGrid.getRecords() != null && rx < ezGrid.getRecords().size(); rx++) {
+					ezGrid.getRecords().get(rx).getItems().clear();
+					ezGrid.getRecords().clear();
+				}
+			}
 			// --------------------------------------------------------------------------------------
 			
-			
-			
-			/*
-			for (int c = 0; c < cnfRecordList.size(); c++) {
-				final EzFormRecord cRecord = cnfRecordList.get(c); // 配置設定程式判斷用的EzFormRecord
-				if (CollectionUtils.isEmpty(cRecord.getItems())) {
-					logger.warn("EzFormRecord沒有item,無法處理: " + cRecord.getGridId());
+			for (int x = 0; cnfGridList != null && x < cnfGridList.size(); x++) {
+				EzFormGrid ezGrid = ezform.getGrids().get(x);
+				final EzFormGrid cnfGrid = cnfGridList.get(x);
+				if (CollectionUtils.isEmpty(cnfGrid.getRecords())) {
+					logger.warn("EzFormGrid沒有Records,無法處理: " + cnfGrid.getGridId());
 					continue;
 				}
-				EzFormRecord fRecord = ezform.getRecords().get(c); // 要被修改內容的EzFormRecord
-				
 				for (int g = 0; dataForm.getGrids() != null && g < dataForm.getGrids().size(); g++) {
 					EzfMapGrd dGrid = dataForm.getGrids().get(g);
-					if (!fRecord.getGridId().equals(dGrid.getGridId())) {
+					if (!cnfGrid.getGridId().equals(dGrid.getGridId())) {
 						continue;
 					}
 					if (CollectionUtils.isEmpty(dGrid.getItems())) {
 						logger.warn("EzfMapGrd.field沒有配置,無法處理GridId: " + dGrid.getGridId());
-						fRecord.getItems().clear();
 						continue;
 					}
 					if ( dGrid.getTblmps() == null || CollectionUtils.isEmpty(dGrid.getTblmps()) ) {
@@ -289,24 +290,60 @@ public class EzfTaskRunnable implements Runnable {
 					List<Map<String, Object>> queryDetailList = jdbcTemplate.queryForList(selectDetailTableSql, paramMap);
 					if (CollectionUtils.isEmpty(queryDetailList)) {
 						logger.warn( "沒有明細資料, 明細表: " + dGrid.getDtlTbl() + " , 條件欄位: " + tblMp.getDtlFieldName() + " , 值: " + paramMap.get(tblMp.getDtlFieldName()) );
-						fRecord.getItems().clear();
 						continue;
-					}
-					// 填寫Grid items
-					fRecord.getItems().clear(); // 清掉 getFormFieldTemplate 取回的配置 items
-					for (final EzFormRecordItem cItem : cRecord.getItems()) { // 表單xml要配置的grid item配置用
-						
-					}
+					}					
 					
+					List<EzfMapField> dGridItemList = dGrid.getItems();
+					
+					// 填寫Grid items
+					for (EzFormRecord cRecord : cnfGrid.getRecords()) {						 
+						if (CollectionUtils.isEmpty(cRecord.getItems())) {
+							logger.warn("EzFormRecord沒有items,無法處理: " + cnfGrid.getGridId() + " , recordId: " + cRecord.getRecordId());
+							continue;
+						}
+						EzFormRecord dRecord = new EzFormRecord();
+						dRecord.setRecordId( cRecord.getRecordId() );
+						for (Map<String, Object> dtlDataMap : queryDetailList) {							
+							for (EzFormRecordItem oriItem : cRecord.getItems()) {
+								for (EzfMapField ezfMapGridField : dGridItemList) {
+									if (ezfMapGridField.getFormField().equals(oriItem.getId())) {
+										EzFormRecordItem rItem = new EzFormRecordItem();
+										BeanUtils.copyProperties(rItem, oriItem);										
+										rItem.setText( StringUtils.defaultString( (String) Ognl.getValue(ezfMapGridField.getTblField(), dtlDataMap) ) );
+										dRecord.getItems().add(rItem);
+									}
+								}									
+							}
+						}
+						if (dRecord.getItems().size() > 0) {
+							ezGrid.getRecords().add(dRecord);
+						}
+					}	
 					
 				}
 				
 			}
-			*/
+			
+			try {
+				this.processInvokeForm(dataForm, ezfDs, ezform);
+			} catch (ServiceException e) {
+				e.printStackTrace();
+				// insert error log
+			} catch (Exception e) {
+				e.printStackTrace();
+				// insert error log
+			}
 			
 		}
 		
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
+	}
+	
+	private void processInvokeForm(EzfMap dataForm, EzfDs ds, EzForm form) throws ServiceException, Exception {
+		String formXml = EZFormSupportUtils.loadXmlFromObject(form);
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println(formXml);
+		System.out.println("-----------------------------------------------------------------");
 	}
 	
 	private NamedParameterJdbcTemplate getJdbcTemplate(EzfDs ezfDs) throws Exception {
