@@ -380,9 +380,12 @@ public class EzfTaskRunnable implements Runnable {
 	
 	private void processInvokeForm(EzfMap dataForm, EzfDs ds, EzForm form) throws ServiceException, Exception {
 		String formXml = EZFormSupportUtils.loadXmlFromObject(form);
+		/*
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println(formXml);
 		System.out.println("-----------------------------------------------------------------");
+		*/
+		
 	}
 	
 	private NamedParameterJdbcTemplate getJdbcTemplate(EzfDs ezfDs) throws Exception {
