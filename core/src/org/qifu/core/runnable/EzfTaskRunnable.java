@@ -34,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.qifu.base.AppContext;
 import org.qifu.base.exception.ServiceException;
+import org.qifu.base.model.ScriptTypeCode;
 import org.qifu.core.entity.EzfDs;
 import org.qifu.core.entity.EzfMap;
 import org.qifu.core.entity.EzfMapField;
@@ -48,6 +49,7 @@ import org.qifu.core.service.IEzfMapService;
 import org.qifu.core.util.TemplateUtils;
 import org.qifu.model.DsDriverType;
 import org.qifu.model.EFGPSimpleProcessInfoState;
+import org.qifu.util.ScriptExpressionUtils;
 import org.qifu.util.SimpleUtils;
 import org.qifu.utils.EZFlowWebServiceUtils;
 import org.qifu.utils.EZFormSupportUtils;
@@ -210,15 +212,15 @@ public class EzfTaskRunnable implements Runnable {
 		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);		
 		for (Map<String, Object> mData : queryMasterList) {		
 			String formXml = formFieldTemplateMap.get(dataForm.getEfgpPkgId());
-			if (StringUtils.isBlank(formXml)) {
-				String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess( dataForm.getEfgpPkgId() );
-				if (StringUtils.isBlank(formOid)) {
-					throw new ServiceException("無法取得暫存流程表單OID");
-				}
-				if (formOid.indexOf(",")>-1) { // findFormOIDsOfProcess 有可能帶回多筆 oid 所以取最後一筆
-					String arr[] = formOid.split(",");
-					formOid = arr[arr.length-1];
-				}			
+			String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess( dataForm.getEfgpPkgId() );
+			if (StringUtils.isBlank(formOid)) {
+				throw new ServiceException("無法取得暫存流程表單OID");
+			}
+			if (formOid.indexOf(",")>-1) { // findFormOIDsOfProcess 有可能帶回多筆 oid 所以取最後一筆
+				String arr[] = formOid.split(",");
+				formOid = arr[arr.length-1];
+			}			
+			if (StringUtils.isBlank(formXml)) {	// 不需要每次都重新取getFormFieldTemplate
 				formXml = EZFlowWebServiceUtils.getFormFieldTemplate(formOid);
 				if (StringUtils.isBlank(formXml)) {
 					throw new ServiceException("無法取得流程表單樣板xml");
@@ -342,7 +344,7 @@ public class EzfTaskRunnable implements Runnable {
 			}
 			
 			try {
-				this.processInvokeForm(dataForm, ezfDs, ezform);
+				this.processInvokeForm(formOid, dataForm, ezfDs, ezform, mData);
 			} catch (ServiceException e) {
 				e.printStackTrace();
 				// insert error log
@@ -378,13 +380,32 @@ public class EzfTaskRunnable implements Runnable {
 		return String.valueOf(valueObj);
 	}
 	
-	private void processInvokeForm(EzfMap dataForm, EzfDs ds, EzForm form) throws ServiceException, Exception {
+	private void processInvokeForm(String formOIDsOfProcess, EzfMap dataForm, EzfDs ds, EzForm form, Map<String, Object> masterTableDataMap) throws ServiceException, Exception {
+		String subjectParamVar = "_subject_val_" + SimpleUtils.createRandomString(7);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		String formXml = EZFormSupportUtils.loadXmlFromObject(form);
+		String scriptText = subjectParamVar + "=" + dataForm.getEfgpSubjectScript();
+		resultMap.put(subjectParamVar, "");
 		/*
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println(formXml);
 		System.out.println("-----------------------------------------------------------------");
-		*/
+		*/		
+		ScriptExpressionUtils.execute(ScriptTypeCode.GROOVY, scriptText, resultMap, masterTableDataMap);
+		String subjectText = String.valueOf( resultMap.get(subjectParamVar) );
+		String processSerialNumber = EZFlowWebServiceUtils.invokeProcess(
+				dataForm.getEfgpPkgId(), 
+				String.valueOf(masterTableDataMap.get(dataForm.getEfgpRequesterIdField())), 
+				String.valueOf(masterTableDataMap.get(dataForm.getEfgpOrgUnitIdField())), 
+				formOIDsOfProcess,
+				formXml, 
+				subjectText);
+		processSerialNumber = StringUtils.defaultString(processSerialNumber).trim();
+		if (!processSerialNumber.startsWith(dataForm.getEfgpPkgId())) {
+			throw new ServiceException("processInvokeForm 錯誤的流程序號");
+		}
+		logger.info("processInvokeForm 流程序號: " + processSerialNumber);
+		// 更新 MAIN_TBL 紀錄的table的 EFGP_PROCESS_STATUS_FIELD / EFGP_PROCESS_NO_FIELD 對印的欄位
 		
 	}
 	

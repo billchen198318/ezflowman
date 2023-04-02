@@ -182,29 +182,6 @@ public class EZFlowWebServiceUtils {
 		return StringUtils.defaultString(value);
 	}
 	
-	/*
-	private static String getCarFormMemo(AfForm form, AfBuBase bub) throws Exception {
-		StringBuilder m = new StringBuilder();
-		m.append( "1".equals(form.getType()) ? "◎時碩工業/科技" : "◎外包廠商" ).append("\n");
-		m.append( "1".equals(form.getWorkType()) ? "◎外出洽公" : "◎請假" ).append("\n");
-		m.append( "1".equals(form.getCarType()) ? "◎公務車（" + bub.getBuName() + "）"  : "◎私車" ).append("\n");
-		m.append("【車牌號碼】：").append(form.getCarNumber()).append("\n");
-		m.append("【使用日期】：").append(form.getStartDate()).append(" ～ ").append(form.getEndDate()).append("\n");
-		m.append("【使用時間】：").append(form.getUseTime1()).append(" ～ ").append(form.getUseTime2()).append("\n");
-		m.append("【申請原因說明】：").append("\n");
-		m.append(getMemoOrDescription(form.getReason())).append("\n");
-		m.append("\n");		
-		m.append( YesNo.YES.equals(form.getBagItem()) ? "◎攜帶公物資產外出" : "◎[沒有]攜帶公物資產外出" ).append("\n");
-		if (YesNo.YES.equals(form.getBagItem())) {
-			m.append("【拜訪廠商名稱】：").append(form.getBagVisit()).append("\n");
-			m.append("【公物資產描敘】：").append("\n");
-			m.append(getMemoOrDescription(form.getBagDescription())).append("\n");
-			m.append("\n");
-		}
-		return m.toString();
-	}
-	*/
-	
 	private static String getMemoOrDescription(String srcTxt) {
 		if (StringUtils.isBlank(srcTxt)) {
 			return "";
@@ -215,56 +192,12 @@ public class EZFlowWebServiceUtils {
 		return srcTxt;
 	}
 	
-	/**
-	 * buCar.bu 進入這裡, bu變數已經被取代為中文, 為了要送簽表單顯示用資料. 
-	 * 
-	 * @param form
-	 * @param buCar
-	 * @param ezflowMainOrgId
-	 * @return
-	 * @throws ServiceException
-	 * @throws Exception
-	 */
-	/*
-	public static String createCarFlow(AfForm form, AfBuBase bub, AfBuCar buCar, String buCarEmployeeName, String ezflowMainOrgId, String managerUserIdAndAgentUserId, String noticeUsers) throws ServiceException, Exception {
-		if (StringUtils.isBlank(managerUserIdAndAgentUserId)) {
-			throw new ServiceException(form.getEmployeeId()+"無法取得副理級或以上之簽核人員配置,請洽IT.");
-		}
-		if (StringUtils.isBlank(noticeUsers)) {
-			throw new ServiceException(form.getEmployeeId()+"無法取得簽核通知人員,請洽IT.");
-		}		
-		String formXml = carFormXml;
-		if (StringUtils.isBlank(formXml)) {
-			throw new Exception("無表單樣板xml資料,請聯絡IT單位");
-		}
-		
-		formXml = StringUtils.replaceOnce(formXml, "${formId}", n2b(form.getFormId()));
-		formXml = StringUtils.replaceOnce(formXml, "${applyDate}", n2b(form.getApplyDate()));
-		formXml = StringUtils.replaceOnce(formXml, "${departmentName}", n2b(form.getDepartmentId()) + "-" + n2b(form.getDepartmentName()));
-		formXml = StringUtils.replaceOnce(formXml, "${employeeName}", n2b(form.getEmployeeName()));
-		formXml = StringUtils.replaceOnce(formXml, "${memo}", getCarFormMemo(form, bub));
-		formXml = StringUtils.replaceOnce(formXml, "${employeeId}", n2b(form.getEmployeeId()));
-		formXml = StringUtils.replaceOnce(formXml, "${carNumber}", n2b(form.getCarNumber()));				
-		formXml = StringUtils.replaceOnce(formXml, "${carEmployeeId}", n2b(buCar.getCarEmployeeId()));
-		formXml = StringUtils.replaceOnce(formXml, "${carEmployeeName}", n2b(buCarEmployeeName));
-		formXml = StringUtils.replaceOnce(formXml, "${managerUserId}", n2b(managerUserIdAndAgentUserId));
-		formXml = StringUtils.replaceOnce(formXml, "${noticeUsers}", n2b(noticeUsers));
-		
-		//String flowId = "CARFLOW";
-		String flowId = "OCFLOW"; // 2022-12-05 , user不想看到CAR開頭
-		
-		String formOIDsOfProcess = findFormOIDsOfProcess(flowId);
-		String subject = "公務車申請簽核單 - " + n2b(form.getFormId()) + " , 申請人: " + n2b(form.getEmployeeId()) + " - " + n2b(form.getEmployeeName());
-		
-		String processSerialNumber = getWorkflowService().invokeProcess(flowId, n2b(form.getEmployeeId()), ezflowMainOrgId, formOIDsOfProcess, formXml, subject);
+	public static String invokeProcess(String efgpPkgId, String efgpRequesterId, String efgpOrgUnitId, String formOIDsOfProcess, String formXml, String subject) throws Exception {
+		String processSerialNumber = getWorkflowService().invokeProcess(efgpPkgId, efgpRequesterId, efgpOrgUnitId, formOIDsOfProcess, formXml, subject);
 		if (StringUtils.isBlank(processSerialNumber)) {
-			throw new ServiceException("EasyFlowGP 簽核發單失敗1,請聯絡IT單位");
-		}
-		if (!processSerialNumber.startsWith("OCFLOW")) {
-			throw new ServiceException("EasyFlowGP 簽核發單失敗2,請聯絡IT單位");
+			throw new ServiceException("EasyFlowGP invokeProcess 失敗");
 		}
 		return processSerialNumber;
 	}
-	*/
 	
 }
