@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.qifu.base.AppContext;
@@ -240,7 +241,7 @@ public class EzfTaskRunnable implements Runnable {
 				for (EzfMapField dField : dataForm.getFields()) {
 					if ( fField.getId().equals(dField.getFormField()) ) {
 						//fField.setText( StringUtils.defaultString((String)Ognl.getValue(dField.getTblField(), mData)).trim() );
-						fField.setText( this.fieldValue(Ognl.getValue(dField.getTblField(), mData) ) );
+						fField.setText( this.fieldValue(Ognl.getValue(dField.getTblField(), mData), false) );
 					}
 				}
 			}
@@ -320,22 +321,25 @@ public class EzfTaskRunnable implements Runnable {
 							logger.warn("EzFormRecord沒有items,無法處理: " + cnfGrid.getGridId() + " , recordId: " + cRecord.getRecordId());
 							continue;
 						}
+						int recordCount = 0;
 						for (Map<String, Object> dtlDataMap : queryDetailList) {	
 							EzFormRecord dRecord = new EzFormRecord();
-							dRecord.setRecordId( cRecord.getRecordId() );							
+							//dRecord.setRecordId( cRecord.getRecordId() );	
+							dRecord.setRecordId( cnfGrid.getGridId() + "_" + recordCount);
 							for (EzFormRecordItem oriItem : cRecord.getItems()) {
 								for (EzfMapField ezfMapGridField : dGridItemList) {
 									if (ezfMapGridField.getFormField().equals(oriItem.getId())) {
 										EzFormRecordItem rItem = new EzFormRecordItem();
 										BeanUtils.copyProperties(rItem, oriItem);										
-										rItem.setText( StringUtils.defaultString( this.fieldValue(Ognl.getValue(ezfMapGridField.getTblField(), dtlDataMap), rItem.getDataType()) ) );
+										rItem.setText( StringUtils.defaultString( this.fieldValue(Ognl.getValue(ezfMapGridField.getTblField(), dtlDataMap), rItem.getDataType(), true) ) );
 										dRecord.getItems().add(rItem);
 									}
 								}									
 							}
 							if (dRecord.getItems().size() > 0) {
 								ezGrid.getRecords().add(dRecord);
-							}							
+								recordCount++;
+							}
 						}
 					}	
 					
@@ -358,17 +362,11 @@ public class EzfTaskRunnable implements Runnable {
 		logger.info(this.getClass().getSimpleName() + " >>> CNF_ID: " + this.cnfId + " - process end...");
 	}
 	
-	private String fieldValue(Object valueObj) throws Exception {
-		if (null == valueObj) {
-			return "";
-		}
-		if (valueObj instanceof Date) {
-			return SimpleUtils.getStrYMD((Date)valueObj, "/");
-		}
-		return String.valueOf(valueObj);
+	private String fieldValue(Object valueObj, boolean normalizeSpace) throws Exception {
+		return this.fieldValue(valueObj, "", normalizeSpace);
 	}
 	
-	private String fieldValue(Object valueObj, String dataType) throws Exception {
+	private String fieldValue(Object valueObj, String dataType, boolean normalizeSpace) throws Exception {
 		if (null == valueObj) {
 			return "";
 		}
@@ -377,7 +375,11 @@ public class EzfTaskRunnable implements Runnable {
 				return SimpleUtils.getStrYMD((Date)valueObj, "/");
 			}
 		}
-		return String.valueOf(valueObj);
+		String str = StringEscapeUtils.escapeHtml4( StringEscapeUtils.escapeXml11( String.valueOf(valueObj) ) );
+		if (normalizeSpace) {
+			str = StringUtils.normalizeSpace(str);
+		}
+		return str;
 	}
 	
 	private void processInvokeForm(String formOIDsOfProcess, EzfMap dataForm, EzfDs ds, EzForm form, Map<String, Object> masterTableDataMap) throws ServiceException, Exception {
@@ -389,8 +391,10 @@ public class EzfTaskRunnable implements Runnable {
 		/*
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println(formXml);
-		System.out.println("-----------------------------------------------------------------");
-		*/		
+		System.out.println("-----------------------------------------------------------------");	
+		*/
+		logger.info("轉出xml>>>");
+		logger.info(formXml);
 		ScriptExpressionUtils.execute(ScriptTypeCode.GROOVY, scriptText, resultMap, masterTableDataMap);
 		String subjectText = String.valueOf( resultMap.get(subjectParamVar) );
 		String processSerialNumber = EZFlowWebServiceUtils.invokeProcess(
@@ -405,6 +409,7 @@ public class EzfTaskRunnable implements Runnable {
 			throw new ServiceException("processInvokeForm 錯誤的流程序號");
 		}
 		logger.info("processInvokeForm 流程序號: " + processSerialNumber);
+		
 		// 更新 MAIN_TBL 紀錄的table的 EFGP_PROCESS_STATUS_FIELD / EFGP_PROCESS_NO_FIELD 對印的欄位
 		
 	}
