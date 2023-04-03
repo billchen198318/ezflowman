@@ -1,8 +1,8 @@
 {
-	"WorkflowServiceWsdlAddress"				:	"http://61.219.43.159:8086/NaNaWeb/services/WorkflowService",
-	"EFGPTipTopIntegrationServiceWsdlAddress"	: 	"http://61.219.43.159:8086/NaNaWeb/services/TipTopIntegration",
-	"ReceiverIP"								:	"61.219.43.159",
+	"WorkflowServiceWsdlAddress"				:	"http://192.168.10.19:8086/NaNaWeb/services/WorkflowService",
+	"EFGPTipTopIntegrationServiceWsdlAddress"	: 	"http://192.168.10.19:8086/NaNaWeb/services/TipTopIntegration",
+	"ReceiverIP"								:	"192.168.10.19",
 	"EFSiteName"								:	"NaNaWeb",
-	"TPServerIP"								:	"192.168.36.76",
+	"TPServerIP"								:	"192.168.10.76",
 	"TPServerEnv"								:	"toptest"
 }
