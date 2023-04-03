@@ -15,6 +15,12 @@ public class EFGPSimpleProcessInfoState {
 	
 	public static final String CLOSED_TERMINATED = "closed.terminated";
 	
+	// 等待 EzfTaskRunnable 發單的資料
+	public static final String EZFLOW_WAIT_FOR_OPEN_STATE = "0";
+	
+	// EzfTaskRunnable 發單處理錯誤的資料
+	public static final String EZFLOW_EXCEPTION_STATE = "9";
+	
 	public static boolean isState(String state) {
 		return ( OPEN_RUNNING.equals(state) || CLOSED_COMPLETED.equals(state) || CLOSED_ABORTED.equals(state) || CLOSED_TERMINATED.equals(state) );
 	}

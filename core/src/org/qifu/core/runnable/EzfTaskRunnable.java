@@ -159,15 +159,21 @@ public class EzfTaskRunnable implements Runnable {
 				}
 				String stateVal = EFGPSimpleProcessInfoState.getValue((String)processInfoMap.get("state"));
 				if (!"1".equals(stateVal) && !StringUtils.isBlank(stateVal)) {
-					String updateStateSql = this.getUpdateMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getMainTblPkField(), dataForm.getEfgpProcessStatusField());
-					paramMap.clear();
-					paramMap.put("stateVal", stateVal);
-					paramMap.put("mainTblPkFieldVal", pkFieldVal);
-					paramMap.put("pProcessInstanceSerialNo", efgpProcessNoVal);
-					jdbcTemplate.update(updateStateSql, paramMap);
+					this.updateMasterTableState(ezfDs, dataForm, stateVal, pkFieldVal);
 				}
 			}
 		}
+	}
+	
+	private void updateMasterTableState(EzfDs ezfDs, EzfMap dataForm, Object stateVal, Object pkFieldVal) throws ServiceException, Exception {
+		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(ezfDs);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		String updateStateSql = this.getUpdateMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getMainTblPkField(), dataForm.getEfgpProcessStatusField());
+		paramMap.clear();
+		paramMap.put("stateVal", stateVal);
+		paramMap.put("mainTblPkFieldVal", pkFieldVal);
+		//paramMap.put("pProcessInstanceSerialNo", efgpProcessNoVal);
+		jdbcTemplate.update(updateStateSql, paramMap);		
 	}
 	
 	private void process() throws ServiceException, Exception {
@@ -360,10 +366,10 @@ public class EzfTaskRunnable implements Runnable {
 				this.processInvokeForm(formOid, dataForm, ezfDs, ezform, mData);
 			} catch (ServiceException e) {
 				e.printStackTrace();
-				// insert error log
+				this.updateMasterTableState(ezfDs, dataForm, EFGPSimpleProcessInfoState.EZFLOW_EXCEPTION_STATE, pkFieldVal);
 			} catch (Exception e) {
 				e.printStackTrace();
-				// insert error log
+				this.updateMasterTableState(ezfDs, dataForm, EFGPSimpleProcessInfoState.EZFLOW_EXCEPTION_STATE, pkFieldVal);
 			}
 			
 		}
