@@ -146,7 +146,16 @@ public class EzfTaskRunnable implements Runnable {
 				continue;
 			}			
 			if (!StringUtils.isBlank((String)efgpProcessNoVal)) {
-				String efgpSimpleProcessInfoXml = StringUtils.defaultString(EZFlowWebServiceUtils.fetchProcInstanceWithSerialNo((String)efgpProcessNoVal));
+				String efgpSimpleProcessInfoXml = "";
+				try {
+					efgpSimpleProcessInfoXml = StringUtils.defaultString(EZFlowWebServiceUtils.fetchProcInstanceWithSerialNo((String)efgpProcessNoVal));
+				} catch (Exception e) {
+					e.printStackTrace();
+					if (StringUtils.defaultString(e.getMessage()).indexOf("com.dsc.nana.services.exception.WSException") > -1) {
+						this.updateMasterTableState(ezfDs, dataForm, EFGPSimpleProcessInfoState.EZFLOW_EXCEPTION_STATE, pkFieldVal);
+						continue;
+					}
+				}
 				if (efgpSimpleProcessInfoXml.indexOf(_EFGP_SPI_Xml_PackageElemTagName) == -1) {
 					logger.warn("無可處理回復(fetchProcInstanceWithSerialNo): " + efgpSimpleProcessInfoXml);
 					continue;
