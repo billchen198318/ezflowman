@@ -334,7 +334,6 @@ public class EzfTaskRunnable implements Runnable {
 						int recordCount = 0;
 						for (Map<String, Object> dtlDataMap : queryDetailList) {	
 							EzFormRecord dRecord = new EzFormRecord();
-							//dRecord.setRecordId( cRecord.getRecordId() );	
 							dRecord.setRecordId( cnfGrid.getGridId() + "_" + recordCount);
 							for (EzFormRecordItem oriItem : cRecord.getItems()) {
 								for (EzfMapField ezfMapGridField : dGridItemList) {
