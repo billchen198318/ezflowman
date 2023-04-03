@@ -30,5 +30,5 @@
 <img src="https://raw.githubusercontent.com/billchen198318/ezflowman/main/doc/pic/002.png"/><br/>
 
 <br><br>
-EzFlowMan 系統會依照配置對應的流程/業務邏輯Table 進行表單拋送，並依配置的Cron expression時間進行排程處理，再將拋送結果與之後後續的簽核結果，依照配置更新至業務邏輯表定義的欄位中，
+EzFlowMan 系統會依照配置對應的流程/業務邏輯Table 進行表單拋送，並依配置的排程腳本時間進行排程處理，再將拋送結果與之後後續的簽核結果，依照配置更新至業務邏輯表定義的欄位中，
 異質系統直接用自己DB的業務表判定該欄位, 即可知道簽核結果.
