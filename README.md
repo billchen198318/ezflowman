@@ -1,5 +1,5 @@
-# EzFlowMan - 一個整合異質拋送表單給EasyFlow GP 的系統
-拋送發單給 EasyFlowGP 5.x 排程工具 
+# EzFlowMan - 一個整合異質系統拋送表單給EasyFlow GP 的系統
+拋送發單給 EasyFlowGP 5.x 排程服務工具 
 
 說明:<br>
 當使用鼎新 EasyFlow GP 時, 如果有些異質系統, 想要送簽核給 EasyFlow GP 時, 首先要在 EasyFlowGP上把表單於流程設計開發完成後, 再從異質系統處理介接拋送, 與取回簽核狀態.
