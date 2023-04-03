@@ -140,6 +140,11 @@ public class EzfTaskRunnable implements Runnable {
 		List<Map<String, Object>> checkStateList = jdbcTemplate.queryForList(queryStateSql, paramMap);	
 		for (Map<String, Object> m : checkStateList) {
 			Object efgpProcessNoVal = Ognl.getValue(dataForm.getEfgpProcessNoField(), m);
+			Object pkFieldVal = m.get(dataForm.getMainTblPkField());
+			if (null == pkFieldVal) {
+				logger.warn("資料錯誤,主表: " + dataForm.getMainTbl() + " , 主鍵: " + dataForm.getMainTblPkField() + " 沒有獲得PK值, 資料無法處理(processState)");
+				continue;
+			}			
 			if (!StringUtils.isBlank((String)efgpProcessNoVal)) {
 				String efgpSimpleProcessInfoXml = StringUtils.defaultString(EZFlowWebServiceUtils.fetchProcInstanceWithSerialNo((String)efgpProcessNoVal));
 				if (efgpSimpleProcessInfoXml.indexOf(_EFGP_SPI_Xml_PackageElemTagName) == -1) {
@@ -154,9 +159,10 @@ public class EzfTaskRunnable implements Runnable {
 				}
 				String stateVal = EFGPSimpleProcessInfoState.getValue((String)processInfoMap.get("state"));
 				if (!"1".equals(stateVal) && !StringUtils.isBlank(stateVal)) {
-					String updateStateSql = this.getUpdateMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField(), dataForm.getEfgpProcessNoField());
+					String updateStateSql = this.getUpdateMasterStateCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getMainTblPkField(), dataForm.getEfgpProcessStatusField());
 					paramMap.clear();
 					paramMap.put("stateVal", stateVal);
+					paramMap.put("mainTblPkFieldVal", pkFieldVal);
 					paramMap.put("pProcessInstanceSerialNo", efgpProcessNoVal);
 					jdbcTemplate.update(updateStateSql, paramMap);
 				}
@@ -212,6 +218,11 @@ public class EzfTaskRunnable implements Runnable {
 		String selectMasterTableSql = this.getSelectMasterCommand(ezfDs.getDriverType(), dataForm.getMainTbl(), dataForm.getEfgpProcessStatusField());
 		List<Map<String, Object>> queryMasterList = jdbcTemplate.queryForList(selectMasterTableSql, paramMap);		
 		for (Map<String, Object> mData : queryMasterList) {		
+			Object pkFieldVal = mData.get(dataForm.getMainTblPkField());
+			if (null == pkFieldVal) {
+				logger.warn("資料錯誤,主表: " + dataForm.getMainTbl() + " , 主鍵: " + dataForm.getMainTblPkField() + " 沒有獲得PK值, 資料無法處理(process)");
+				continue;
+			}
 			String formXml = formFieldTemplateMap.get(dataForm.getEfgpPkgId());
 			String formOid = EZFlowWebServiceUtils.findFormOIDsOfProcess( dataForm.getEfgpPkgId() );
 			if (StringUtils.isBlank(formOid)) {
@@ -240,7 +251,6 @@ public class EzfTaskRunnable implements Runnable {
 			for (EzFormField fField : ezform.getFields() ) {
 				for (EzfMapField dField : dataForm.getFields()) {
 					if ( fField.getId().equals(dField.getFormField()) ) {
-						//fField.setText( StringUtils.defaultString((String)Ognl.getValue(dField.getTblField(), mData)).trim() );
 						fField.setText( this.fieldValue(Ognl.getValue(dField.getTblField(), mData), false) );
 					}
 				}
@@ -411,7 +421,13 @@ public class EzfTaskRunnable implements Runnable {
 		logger.info("processInvokeForm 流程序號: " + processSerialNumber);
 		
 		// 更新 MAIN_TBL 紀錄的table的 EFGP_PROCESS_STATUS_FIELD / EFGP_PROCESS_NO_FIELD 對印的欄位
-		
+		String updateSql = this.getUpdateMasterProcessNoAndStateCommand(ds.getDriverType(), dataForm.getMainTbl(), dataForm.getMainTblPkField(), dataForm.getEfgpProcessNoField(), dataForm.getEfgpProcessStatusField());
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("stateVal", EFGPSimpleProcessInfoState.getValue(EFGPSimpleProcessInfoState.OPEN_RUNNING));
+		paramMap.put("processNoVal", processSerialNumber);
+		paramMap.put("mainTblPkFieldVal", masterTableDataMap.get(dataForm.getMainTblPkField()));
+		NamedParameterJdbcTemplate jdbcTemplate = this.getJdbcTemplate(ds);
+		jdbcTemplate.update(updateSql, paramMap);
 	}
 	
 	private NamedParameterJdbcTemplate getJdbcTemplate(EzfDs ezfDs) throws Exception {
@@ -431,14 +447,24 @@ public class EzfTaskRunnable implements Runnable {
 		return ManualDataSourceUtils.getJdbcTemplate(dsId);
 	}
 	
-	private String getUpdateMasterStateCommand(String dsDriverType, String tableName, String efgpProcessStatusField, String efgpProcessNoField) throws Exception {
+	private String getUpdateMasterStateCommand(String dsDriverType, String tableName, String mainTblPkField, String efgpProcessStatusField) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("driverType", dsDriverType);
 		paramMap.put("mainTbl", tableName);
+		paramMap.put("mainTblPkField", mainTblPkField);
 		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
-		paramMap.put("efgpProcessNoField", efgpProcessNoField);
-		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/update_master.ftl", paramMap);		
+		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/update_master_state.ftl", paramMap);		
 	}
+	
+	private String getUpdateMasterProcessNoAndStateCommand(String dsDriverType, String tableName, String mainTblPkField, String efgpProcessNoField, String efgpProcessStatusField) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("driverType", dsDriverType);
+		paramMap.put("mainTbl", tableName);
+		paramMap.put("mainTblPkField", mainTblPkField);
+		paramMap.put("efgpProcessNoField", efgpProcessNoField);
+		paramMap.put("efgpProcessStatusField", efgpProcessStatusField);
+		return TemplateUtils.processTemplate("getSelectMasterCommand", this.getClass().getClassLoader(), "org/qifu/core/runnable/update_master_processno_and_state.ftl", paramMap);		
+	}	
 	
 	private String getSelectMasterStateCommand(String dsDriverType, String tableName, String efgpProcessStatusField, String efgpProcessNoField) throws Exception {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
