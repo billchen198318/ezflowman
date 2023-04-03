@@ -21,7 +21,7 @@
 	 * '4' = closed.aborted 		取消流程
 	 * '5' = closed.terminated 	中止流程
 	 * '0' = 待EzFlowMan送單給 EFGP 的資料
-	 * '9' = 與EFGP處理中發生異常錯誤   
+	 * '9' = EzFlowMan 與 EFGP 介接處理中發生異常錯誤   
    
 定義確定完業務邏輯資料表後, 進入EzFlowMan 進行配置, 配置內容就是流程表單的欄位與DB 資料 Table欄位的對應, 也支持表單有Grid, 配置主Table與明細Table配置即可 , 如下圖
 <img src="https://raw.githubusercontent.com/billchen198318/ezflowman/main/doc/pic/004.png"/><br/>
