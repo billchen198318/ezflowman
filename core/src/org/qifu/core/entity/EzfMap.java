@@ -20,6 +20,7 @@ public class EzfMap implements java.io.Serializable {
     private String dsId;
     private String efgpPkgId;
     private String mainTbl;
+    private String mainTblPkField;
     private String efgpProcessStatusField;
     private String efgpProcessNoField;    
     private String efgpRequesterIdField;
@@ -85,7 +86,15 @@ public class EzfMap implements java.io.Serializable {
         this.mainTbl = mainTbl;
     }
     
-    public String getEfgpProcessStatusField() {
+    public String getMainTblPkField() {
+		return mainTblPkField;
+	}
+
+	public void setMainTblPkField(String mainTblPkField) {
+		this.mainTblPkField = mainTblPkField;
+	}
+
+	public String getEfgpProcessStatusField() {
 		return efgpProcessStatusField;
 	}
     

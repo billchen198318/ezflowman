@@ -286,6 +286,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		inpForm.setDsId( dataForm.getDsId() );
 		inpForm.setEfgpPkgId( dataForm.getEfgpPkgId() );
 		inpForm.setMainTbl( dataForm.getMainTbl() );
+		inpForm.setMainTblPkField( dataForm.getMainTblPkField() );
 		inpForm.setEfgpProcessStatusField( dataForm.getEfgpProcessStatusField() );
 		inpForm.setEfgpProcessNoField( dataForm.getEfgpProcessNoField() );
 		inpForm.setEfgpRequesterIdField( dataForm.getEfgpRequesterIdField() );
@@ -406,6 +407,7 @@ public class EzfMapperLogicServiceImpl extends BaseLogicService implements IEzfM
 		
 		// 處理頁面要顯示用的欄位
 		form.setMainTbl("");
+		form.setMainTblPkField("");
 		form.setCronExpr( "0 0/3 * * * ?" );
 		if (form.getFields() != null) {
 			form.getFields().clear();

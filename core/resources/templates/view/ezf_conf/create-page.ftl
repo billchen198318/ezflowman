@@ -60,6 +60,7 @@ msgFields['cnfId'] 			= 'cnfId';
 msgFields['cnfName'] 		= 'cnfName';
 msgFields['dsId'] 			= 'dsId';
 msgFields['mainTbl'] 		= 'mainTbl';
+msgFields['mainTblPkField'] 		= 'mainTblPkField';
 msgFields['efgpProcessStatusField']	= 'efgpProcessStatusField';
 msgFields['efgpProcessNoField'] 	= 'efgpProcessNoField';
 msgFields['efgpRequesterIdField'] 	= 'efgpRequesterIdField';
@@ -122,8 +123,12 @@ msgFields['cronExpr'] 		= 'cronExpr';
 					
 					<p style="margin-bottom: 10px"></p>
 					
-					<div class="row">
-						<div class="col-xs-12 col-md-12 col-lg-12 text-white">
+					<div class="row">					
+						<div class="col-xs-6 col-md-6 col-lg-6 text-white">
+							<label for="mainTblPkField">映射資料表主鍵(PK)欄位</label>
+							<input type="text" name="mainTblPkField" id="mainTblPkField" class="form-control" placeholder="請輸入映射資料表主鍵(PK)欄位" v-model="inpForm.mainTblPkField" >							
+						</div>							
+						<div class="col-xs-6 col-md-6 col-lg-6 text-white">
 							<label for="cronExpr">排程腳本</label>
 							<input type="text" name="cronExpr" id="cronExpr" class="form-control" placeholder="請輸入排程腳本" v-model="inpForm.cronExpr" >							
 						</div>			

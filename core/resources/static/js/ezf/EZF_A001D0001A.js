@@ -5,6 +5,7 @@ var _inpForm = {
 	'dsId'		:	_qifu_please_select_id,
     'efgpPkgId'	:	'',
     'mainTbl'	:	'',
+    'mainTblPkField'			:	'',
     'efgpProcessStatusField'	:	'',
     'efgpProcessNoField'		:	'',
     'efgpRequesterIdField'		:	'',
