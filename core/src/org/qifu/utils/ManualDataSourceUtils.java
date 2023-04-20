@@ -42,7 +42,13 @@ public class ManualDataSourceUtils {
 	}
 	
 	public static boolean isRunning(String poolName) {
-		return (dsThreadLocal.get().get(poolName) == null || dsThreadLocal.get().get(poolName).getDataSource() == null) ? false : dsThreadLocal.get().get(poolName).getDataSource().isRunning();
+		if (dsThreadLocal.get() == null || dsThreadLocal.get().size() < 1) {
+			return false;
+		}
+		if (dsThreadLocal.get().get(poolName) == null) {
+			return false;
+		}
+		return dsThreadLocal.get().get(poolName).getDataSource() == null ? false : dsThreadLocal.get().get(poolName).getDataSource().isRunning();
 	}
 	
 	public static NamedParameterJdbcTemplate getJdbcTemplate(String poolName) {
@@ -51,6 +57,12 @@ public class ManualDataSourceUtils {
 	
 	public static void remove(String poolName) throws Exception {
 		HikariDataSource ds = null;
+		if (dsThreadLocal.get() == null || dsThreadLocal.get().size() < 1) {
+			return;
+		}
+		if (dsThreadLocal.get().get(poolName) == null) {
+			return;
+		}
 		if (null == (ds = dsThreadLocal.get().get(poolName).getDataSource())) {
 			return;
 		}
@@ -62,7 +74,7 @@ public class ManualDataSourceUtils {
 	}
 	
 	public static HikariDataSource create(String poolName, String driverClassName, String user, String password, String jdbcUrl) throws Exception {
-		if (dsThreadLocal.get().get(poolName) != null && dsThreadLocal.get().get(poolName).getDataSource() != null) {
+		if (dsThreadLocal.get() != null && dsThreadLocal.get().get(poolName) != null && dsThreadLocal.get().get(poolName).getDataSource() != null) {
 			return dsThreadLocal.get().get(poolName).getDataSource();
 		}
 		Properties props = new Properties();
