@@ -28,6 +28,8 @@
     	<logger name="org.springframework.context" level="info"></logger>  
     	<logger name="org.springframework.web" level="info"></logger>      
     	
+    	<logger name="org.apache.axis.ConfigurationException" level="info"></logger>
+    	
     	<!-- [trace] or [debug] for developer mode , [info] for product mode -->
         <Logger name="org.qifu" level="trace" additivity="false">
             <AppenderRef ref="appLog" />
