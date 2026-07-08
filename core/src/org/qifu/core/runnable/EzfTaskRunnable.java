@@ -331,10 +331,10 @@ public class EzfTaskRunnable implements Runnable {
 					}
 					String selectDetailTableSql = gridSqlTempMap.get(dGrid.getGridId());
 					paramMap.clear();
-					paramMap.put(tblMp.getDtlFieldName(), Ognl.getValue(tblMp.getMstFieldName(), mData));
+					paramMap.put(tblMp.getMstFieldName(), Ognl.getValue(tblMp.getMstFieldName(), mData));
 					List<Map<String, Object>> queryDetailList = jdbcTemplate.queryForList(selectDetailTableSql, paramMap);
 					if (CollectionUtils.isEmpty(queryDetailList)) {
-						logger.warn( "沒有明細資料, 明細表: " + dGrid.getDtlTbl() + " , 條件欄位: " + tblMp.getDtlFieldName() + " , 值: " + paramMap.get(tblMp.getDtlFieldName()) );
+						logger.warn( "沒有明細資料, 明細表: " + dGrid.getDtlTbl() + " , 條件欄位: " + tblMp.getDtlFieldName() + " , 值: " + paramMap.get(tblMp.getMstFieldName()) );
 						continue;
 					}					
 					
